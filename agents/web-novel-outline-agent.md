@@ -47,11 +47,36 @@ strands, and the mix should be a deliberate choice, not an accident:
 - **Fire**: character relationships, interiority, emotional stakes.
 - **Constellation**: worldbuilding, faction/power dynamics, setting.
 
-The Depth Dial sets the default balance: **Popcorn** leans Quest-heavy with
-light Fire and Constellation; **Literary/Deep** carries more Fire (interior
-weight) and Constellation (world texture) even at some cost to plot
-velocity; **Balanced** sits between. State the intended percentage split
-per volume in the volume outline so drift is checkable later.
+The Depth Dial sets the default balance. Standard ranges (adapt within
+these per Depth Dial — Popcorn skews toward the Quest-heavy end, Literary/
+Deep skews toward more Fire and Constellation): Quest 55-65%, Fire 20-30%,
+Constellation 10-20%. The opening stretch of a book can run Quest-heavier
+(70-80%) to establish momentum, provided at least one Fire beat lands by
+around chapter 6-8 (first meeting/impression) even in a fast-opening book.
+
+**Hard enforcement rules, checked per chapter** (maintain a
+`strand_tracker` — see below): Quest cannot run more than 5 consecutive
+chapters without a Fire or Constellation beat; Fire cannot be absent more
+than 10 chapters; Constellation cannot be absent more than 15 chapters.
+These are load-bearing against reader fatigue, not soft suggestions — a
+long unbroken Quest stretch is the single most common pacing complaint in
+this format.
+
+**`strand_tracker`** (maintained in `.project-memory/strand_tracker.json`,
+updated by `/book-write` after each chapter finalizes):
+```json
+{
+  "last_quest_chapter": 45,
+  "last_fire_chapter": 43,
+  "last_constellation_chapter": 40,
+  "current_dominant": "quest",
+  "chapters_since_switch": 3,
+  "history": [{"chapter": 46, "dominant": "quest"}]
+}
+```
+Before finalizing each new chapter's outline entry, check this tracker
+against the three enforcement thresholds above and route the next chapter
+to whichever strand is due.
 
 ## Volume structure template
 
@@ -86,8 +111,9 @@ per volume in the volume outline so drift is checkable later.
 - Logic: does the plot progress without requiring a character to act
   implausibly dumb?
 - Payoff density: does the volume outline show a satisfying beat at a
-  reasonable interval (not every chapter needs one, but long stretches
-  without any is a real risk for reader retention)?
+  reasonable interval — load the `payoff-craft` skill for the specific
+  density targets (roughly every chapter some payoff, every ~5 chapters a
+  combined payoff, every ~10-15 a milestone payoff) rather than guessing?
 - Thread accountability: does every planted piece of foreshadowing have at
   least an approximate planned payoff point?
 - Length: does the projected total length fit the target platform

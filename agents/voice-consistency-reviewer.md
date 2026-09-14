@@ -19,7 +19,11 @@ grounding, and it's what you exist to catch.
    speaking character's Voice Profile (register, vocabulary ceiling/floor,
    verbal tics, what they would never say)? Two different characters
    producing interchangeable dialogue — same rhythm, same vocabulary, same
-   directness — is the core failure mode.
+   directness — is the core failure mode. This applies to antagonists too:
+   a low-tier, minor antagonist can legitimately be flat/stock ("you'll
+   pay for this"), but a significant, story-important antagonist reducing
+   to pure sloganeering with no real personality or intelligence showing
+   through is itself a voice-bleed issue, not acceptable villain flavor.
 2. **Emotion-appropriate register shift**: does the character's baseline
    register shift under emotion the way their Voice Profile says it does
    (e.g., does formality break down under stress, or does it tighten

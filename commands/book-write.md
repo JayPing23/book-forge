@@ -42,7 +42,12 @@ resumable from a fresh session with no conversation history.
 3. **Draft.** Using the writing brief plus the vault craft-lessons, draft
    the chapter. Load the `light-novel-style` skill before drafting (not
    after) so anti-AI-tell patterns are avoided at write-time, per that
-   skill's own guidance.
+   skill's own guidance. For web-novel projects, also check
+   `.project-memory/strand_tracker.json` against the outline agent's
+   enforcement thresholds (Quest ≤5 chapters unswitched, Fire absent ≤10,
+   Constellation absent ≤15) and load `payoff-craft` when this chapter's
+   planned beat calls for a payoff moment — don't improvise payoff
+   structure from scratch when a worked methodology exists for it.
 
    **Optional `--compete=N`**: if passed, draft N independent versions in
    isolated git worktrees (the agenthub pattern) and run an LLM-judge pass
@@ -102,7 +107,15 @@ resumable from a fresh session with no conversation history.
    AI-disclosure compliance, not used anywhere yet.
 
 9. **Post-finalize.** Dispatch `deconstruction-agent` to extract facts into
-   story-bible notes. Set `current_step: "finalized"`, save the state file.
+   story-bible notes. For web-novel projects, update
+   `.project-memory/strand_tracker.json` with this chapter's dominant
+   strand and append to its `history`. Append this chapter's QA outcome
+   (issue counts by severity, quality score) to
+   `.project-memory/review-metrics.json` — a running trend log the
+   dashboard reads, kept separate from the per-chapter state files since
+   it's for trend observation, never for gating (gating is always the raw
+   `verdict`/`blocking` fields from step 4, never a derived trend number).
+   Set `current_step: "finalized"`, save the state file.
 
 ## Hard rules
 
@@ -115,11 +128,39 @@ resumable from a fresh session with no conversation history.
   checks — extraction assumes the chapter is settled fact, not a draft that
   might still change.
 
+## Escalation: what can and can't be offered as an override
+
+When escalating (step 6), the options presented to the author depend on
+what kind of issue is stuck — don't offer a blanket "override" choice for
+everything alike:
+
+**Never offer override for**: a world-rule/setting conflict (a character's
+ability or a faction relationship contradicting the story-bible), a
+timeline conflict (event order or elapsed time contradicting prior
+chapters), a factual error (a character who died reappearing without
+explanation, a destroyed item recurring), or a continuity break (this
+chapter's opening doesn't connect to the prior chapter's ending). These
+need the underlying fact fixed — either the draft or the story-bible is
+wrong, and override would just launder the contradiction forward.
+
+**Override is reasonable to offer, with the author's explicit confirmation,
+for**: a deliberate pacing deviation (a chapter is intentionally slower as
+a planned lull, and the Outline-Adherence Reviewer flagged the pace
+without knowing it was deliberate), a soft character-voice deviation that
+the author judges still fits the character (e.g., a scholarly character's
+dialogue reads as more formal than their profile's floor, but that's
+plausible for this specific scene), or an optional/flexible outline node
+that's implicitly covered but not explicitly dramatized.
+
+An override is never "the issue doesn't exist" — it's "the author reviewed
+it and accepts it." Log every override in the state file's `escalation`
+field with the author's stated reason, and keep the original reviewer
+finding intact rather than clearing it.
+
 ## Output
 
 On success: report the chapter is finalized, its quality score, and flag if
 the score was low enough to warrant a read despite passing QA. On
 escalation: report exactly which check(s) are stuck, the evidence from the
-last failed attempt, and ask the author how to proceed (revise the outline,
-revise a story-bible fact, or override the check with an explicit reason
-logged in the state file).
+last failed attempt, whether this category of issue can reasonably be
+overridden (per the taxonomy above), and ask the author how to proceed.

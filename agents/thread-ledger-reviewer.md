@@ -27,6 +27,14 @@ schedule.
    chapter. Does the draft pay it off? If a thread's payoff window has
    passed with no resolution and no explicit re-scheduling, that's a
    blocking issue — a dropped promise, not a stylistic nitpick.
+   Compute urgency for every open thread, even ones without an explicit
+   `payoff_chapter`: `urgency = (chapters since introduced_chapter /
+   tier's typical recovery window) × tier weight`, where tier weight is
+   core=3.0 (recovery window ~50-300 chapters), side=2.0 (~30-100), or
+   decorative=1.0 (~10-30) — see the plot-thread note template for the
+   full guide. Urgency above 1.0, or a thread past an explicit
+   `payoff_chapter`, is `critical`/blocking. Above 0.8 is `high`, worth
+   surfacing even if not blocking yet.
 3. **Threads this chapter closes**: for any thread the draft does resolve,
    confirm the resolution actually answers what was set up (a payoff that
    answers a different question than the one the setup raised is itself an
@@ -50,6 +58,10 @@ schedule.
 - A thread whose payoff window passed with no resolution is always
   `blocking`, never a soft suggestion — dropped payoffs are exactly the
   failure mode this reviewer exists to prevent.
+- If more than ~5 threads are concurrently open, flag it as a `medium`
+  issue even with no individual thread overdue — too many open threads at
+  once is itself a tracking risk, for both the reader and this review
+  pipeline.
 - Don't invent thread urgency that isn't in the outline — if a thread has
   no `payoff_chapter` set, it's open-ended by design, not overdue.
 - When creating a new thread note for something newly introduced, describe

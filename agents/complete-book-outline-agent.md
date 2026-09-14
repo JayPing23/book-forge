@@ -35,11 +35,13 @@ serialization safety net of "fix it in the next volume").
 
 Same three-strand framework as the web-novel outline agent: Quest (plot
 progression), Fire (character/relationship/interior weight), Constellation
-(world/setting texture). The Depth Dial sets the default: Popcorn leans
-Quest-heavy, Literary/Deep carries more Fire and thematic weight even at
-some cost to plot velocity. State the intended balance per act, since a
-complete book's finite length makes an imbalanced act more noticeable to a
-reader than a single volume of a long serial would be.
+(world/setting texture), in the same standard ranges (Quest 55-65%, Fire
+20-30%, Constellation 10-20%, adjusted by Depth Dial). A complete book
+doesn't need the web-novel agent's per-chapter `strand_tracker` enforcement
+— its finite length and fully-upfront outline make imbalance visible at
+the outline-review stage rather than needing runtime tracking — but state
+the intended balance per act explicitly, since an imbalanced act is more
+noticeable to a reader in a finite book than in one volume of a long serial.
 
 ## Chapter template (scene-level, whole book)
 
