@@ -5,20 +5,33 @@ argument-hint: <project-name>
 
 # book-new
 
+If the author doesn't have a concept yet (no title, genre, or protagonist
+idea in mind), point them to `/book-forge:book-idea` first rather than
+pushing through this command's questions on a blank slate — that command
+converges fragments (or nothing at all) into a structured premise this
+command can then consume directly.
+
 Given a project name as `$ARGUMENTS`:
 
 1. If `$ARGUMENTS` is empty, ask for a project name before doing anything
-   else — do not guess one.
-2. Check whether `./projects/$ARGUMENTS` already exists. If it does, stop
+   else — do not guess one. If the author seems unsure what to name it
+   because they don't have a concept yet, that's the `/book-forge:book-idea`
+   signal — suggest it rather than pressing forward.
+2. Check whether `projects/_ideation/$ARGUMENTS-premise.md` exists (a
+   premise from a prior `/book-forge:book-idea` session). If so, use it
+   directly per that command's handoff process instead of asking the
+   protagonist/genre questions in step 5 from scratch.
+3. Check whether `./projects/$ARGUMENTS` already exists. If it does, stop
    and tell the user — never overwrite an existing project silently.
-3. Copy the entire tree from
+4. Copy the entire tree from
    `${CLAUDE_PLUGIN_ROOT}/templates/standalone-project/` into
    `./projects/$ARGUMENTS/`, including the `.gitkeep` files, the
    `story-bible/characters|world|plot-threads/` subfolders, the
    `plot-threads.base` view, and the `.story-system`/`.project-memory`
    dot-directories.
-4. Rename the copied `project.json.template` to `project.json`.
-5. Ask the user, one question at a time, for each field:
+5. Rename the copied `project.json.template` to `project.json`.
+6. Ask the user, one question at a time, for each field (skip any already
+   answered by an `_ideation/` premise):
    - `project_type`: `complete-book` or `web-novel`.
    - `genre`.
    - `depth_dial`: `popcorn`, `balanced`, or `literary-deep`.
@@ -29,33 +42,38 @@ Given a project name as `$ARGUMENTS`:
      `ip_status` is `fan-fiction` — do not let the user set it to `true` in
      that case without an explicit acknowledgment that this is their own
      informed call, not a recommendation.
-6. Write the answers into `project.json`, replacing every `REPLACE: ...`
+7. Write the answers into `project.json`, replacing every `REPLACE: ...`
    value with the real one.
-7. **Dispatch `research-agent`** automatically (this is not optional —
+8. **Dispatch `research-agent`** automatically (this is not optional —
    per the design spec, every project starts with craft + market research
    before outlining). Pass it the project's genre, project_type, and
    platform_convention. Its craft-research and market-research findings
    feed the outline agent in the next step; its reference-novel pattern
    extraction writes to `vault/craft-lessons/` as usual.
-8. **Dispatch the outline agent matching `project_type`**:
+9. **Dispatch the outline agent matching `project_type`**:
    `complete-book-outline-agent` for `complete-book`,
    `web-novel-outline-agent` for `web-novel`. Pass it the research
-   findings from step 7 and the project's `depth_dial` (which sets the
-   Quest/Fire/Constellation strand-balance default). It writes the
-   skeleton/volume/(chapter) outline into `outline/`.
-9. **Character creation**: before any chapter is drafted, walk the user
-   through creating at least the protagonist's story-bible note, using
-   `${CLAUDE_PLUGIN_ROOT}/templates/note-templates/character.md` as the
-   starting structure. Set the Voice Profile and Motivation Core fields
-   explicitly — these are foundational and don't get inferred later from
-   chapter content. Ask one question at a time rather than a long form.
-10. Report the final project structure, the outline summary, and the
+   findings from step 8, the project's `depth_dial` (which sets the
+   Quest/Fire/Constellation strand-balance default), and — if a premise
+   exists — its `core_conflict`, `constraints`, and `world` fields as
+   starting material. It writes the skeleton/volume/(chapter) outline
+   into `outline/`.
+10. **Character creation**: before any chapter is drafted, walk the user
+    through creating at least the protagonist's story-bible note, using
+    `${CLAUDE_PLUGIN_ROOT}/templates/note-templates/character.md` as the
+    starting structure. If a premise exists, seed the Voice Profile and
+    Motivation Core from its `protagonist` and `special_advantage` fields
+    instead of asking from scratch — confirm with the user rather than
+    silently accepting the premise's draft. These fields are foundational
+    and don't get inferred later from chapter content. Ask one question
+    at a time for anything not already answered.
+11. Report the final project structure, the outline summary, and the
     character(s) created, then tell the user they're ready to run
     `/book-forge:book-write $ARGUMENTS 0001`.
 
 ## Hard rules
 
-- Steps 7-8 are not optional and not deferred — research and outlining
+- Steps 8-9 are not optional and not deferred — research and outlining
   happen before any chapter gets written, per the design spec's
   orchestration flow.
 - Character Voice Profile and Motivation Core must be set at creation, not

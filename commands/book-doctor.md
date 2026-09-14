@@ -19,16 +19,18 @@ one broken thing doesn't hide the status of everything else.
    `${CLAUDE_PLUGIN_ROOT}/skills/humanizer/SKILL.md` exists and its first
    line contains YAML frontmatter (starts with `---`).
 
-3. **light-novel-style skill present**: confirm
-   `${CLAUDE_PLUGIN_ROOT}/skills/light-novel-style/SKILL.md` exists.
+3. **light-novel-style and payoff-craft skills present**: confirm
+   `${CLAUDE_PLUGIN_ROOT}/skills/light-novel-style/SKILL.md` and
+   `${CLAUDE_PLUGIN_ROOT}/skills/payoff-craft/SKILL.md` both exist.
 
-4. **Core agents present**: confirm all ten exist under
+4. **Core agents present**: confirm all eleven exist under
    `${CLAUDE_PLUGIN_ROOT}/agents/`: `context-agent.md`, `research-agent.md`,
-   `deconstruction-agent.md`, `web-novel-outline-agent.md`,
-   `complete-book-outline-agent.md`, `continuity-reviewer.md`,
-   `thread-ledger-reviewer.md`, `outline-adherence-reviewer.md`,
-   `voice-consistency-reviewer.md`, `motivation-agency-reviewer.md`. List
-   any missing by exact filename — don't just report a pass/fail count.
+   `ideation-agent.md`, `deconstruction-agent.md`,
+   `web-novel-outline-agent.md`, `complete-book-outline-agent.md`,
+   `continuity-reviewer.md`, `thread-ledger-reviewer.md`,
+   `outline-adherence-reviewer.md`, `voice-consistency-reviewer.md`,
+   `motivation-agency-reviewer.md`. List any missing by exact filename —
+   don't just report a pass/fail count.
 
 5. **Genre templates present**: confirm at least one file exists under
    `${CLAUDE_PLUGIN_ROOT}/templates/genres/`; list how many are found.
@@ -54,8 +56,8 @@ book-forge doctor report
 =========================
 [PASS/FAIL] Plugin templates present
 [PASS/FAIL] Bundled humanizer skill present
-[PASS/FAIL] light-novel-style skill present
-[PASS/FAIL] Core agents present (N/10 found)
+[PASS/FAIL] light-novel-style and payoff-craft skills present
+[PASS/FAIL] Core agents present (N/11 found)
 [PASS/FAIL] Genre templates present (N found)
 [PASS/FAIL] projects/ directory exists
 [PASS/FAIL] vault/ directory (+ subfolders) exists
