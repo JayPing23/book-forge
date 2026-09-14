@@ -1,0 +1,8 @@
+{
+  "project_type": "REPLACE: complete-book | web-novel",
+  "genre": "REPLACE: e.g. detective, litrpg, romance",
+  "depth_dial": "REPLACE: popcorn | balanced | literary-deep",
+  "platform_convention": "REPLACE: webnovel-qidian | royal-road | n-a | custom (n-a for complete-book)",
+  "ip_status": "REPLACE: original | fan-fiction",
+  "monetization_allowed": "REPLACE: true | false (must be false when ip_status is fan-fiction)"
+}
