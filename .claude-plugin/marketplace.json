@@ -1,0 +1,15 @@
+{
+  "name": "book-forge",
+  "description": "Marketplace for the book-forge multi-agent fiction-writing plugin",
+  "owner": {
+    "name": "aragondanielle32"
+  },
+  "plugins": [
+    {
+      "name": "book-forge",
+      "source": "./",
+      "description": "Multi-agent pipeline for writing novels and serialized web novels, with a five-check QA gate for plot holes, dropped threads, and voice consistency",
+      "version": "0.1.0"
+    }
+  ]
+}

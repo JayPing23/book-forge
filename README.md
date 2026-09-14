@@ -18,14 +18,18 @@ and `docs/plans/` for what's built so far vs. planned.
 
 ## Install (local development)
 
-This plugin isn't published to a marketplace yet. To use it locally:
+This plugin isn't published to a public host yet, but it ships its own
+single-plugin marketplace manifest, so it installs the same way any
+Claude Code plugin does — no manual file copying or symlinks:
 
-1. Clone this repo somewhere on disk.
-2. In your writing workspace, create a Windows directory junction (or
-   symlink on macOS/Linux) from `.claude/plugins/book-forge` to this
-   repo's path.
-3. Restart Claude Code in your workspace and run `/book-doctor` to
-   confirm the plugin loaded.
+```bash
+# From your writing workspace (e.g. C:\booq):
+claude plugin marketplace add ../book-forge   # or the full path to this repo
+claude plugin install book-forge@book-forge --scope project
+```
+
+Then restart Claude Code in your workspace and run `/book-doctor` to
+confirm the plugin loaded.
 
 ## License
 
