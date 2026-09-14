@@ -16,6 +16,13 @@ Forked and localized from
 Early scaffold. See `docs/design-spec.md` for the full architecture
 and `docs/plans/` for what's built so far vs. planned.
 
+## Dashboard
+
+A local React dashboard visualizes what you're working on — overview,
+characters, plot threads with computed urgency, strand-balance pacing, and
+per-project health. Run `/book-forge:book-dashboard` from Claude Code, or
+see `dashboard/README.md` to run it manually.
+
 ## Install (local development)
 
 This plugin isn't published to a public host yet, but it ships its own
