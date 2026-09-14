@@ -1,0 +1,46 @@
+filters:
+  and:
+    - 'file.inFolder("story-bible/plot-threads")'
+
+formulas:
+  status_icon: 'if(status == "open", "🟡", if(status == "paid-off", "✅", "⚪"))'
+
+properties:
+  status:
+    displayName: Status
+  introduced_chapter:
+    displayName: "Introduced"
+  payoff_chapter:
+    displayName: "Payoff due"
+  payoff_book:
+    displayName: "Payoff book (series)"
+  formula.status_icon:
+    displayName: ""
+
+views:
+  - type: table
+    name: "Open threads"
+    filters:
+      and:
+        - 'status == "open"'
+    order:
+      - formula.status_icon
+      - file.name
+      - introduced_chapter
+      - payoff_chapter
+      - payoff_book
+    groupBy:
+      property: payoff_chapter
+      direction: ASC
+
+  - type: table
+    name: "All threads"
+    order:
+      - formula.status_icon
+      - file.name
+      - status
+      - introduced_chapter
+      - payoff_chapter
+    groupBy:
+      property: status
+      direction: ASC
