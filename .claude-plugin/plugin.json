@@ -1,0 +1,11 @@
+{
+  "name": "book-forge",
+  "version": "0.1.0",
+  "description": "Multi-agent pipeline for writing novels and serialized web novels, with a five-check QA gate for plot holes, dropped threads, and voice consistency",
+  "author": {
+    "name": "aragondanielle32"
+  },
+  "repository": "https://github.com/aragondanielle32/book-forge",
+  "license": "GPL-3.0",
+  "keywords": ["fiction-writing", "novel", "web-novel", "light-novel", "multi-agent", "creative-writing"]
+}
