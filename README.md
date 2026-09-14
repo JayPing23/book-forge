@@ -28,8 +28,10 @@ claude plugin marketplace add ../book-forge   # or the full path to this repo
 claude plugin install book-forge@book-forge --scope project
 ```
 
-Then restart Claude Code in your workspace and run `/book-doctor` to
-confirm the plugin loaded.
+Then restart Claude Code in your workspace and run `/book-forge:book-doctor`
+to confirm the plugin loaded. Commands from a plugin are namespaced by
+plugin name (`/book-forge:book-doctor`, `/book-forge:book-new`), not bare
+`/book-doctor` — worth knowing before assuming a command failed to load.
 
 ## License
 
