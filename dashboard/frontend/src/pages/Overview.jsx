@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
+import { IconAlert } from "../components/icons.jsx";
 
 export default function Overview({ project }) {
   const [data, setData] = useState(null);
@@ -11,12 +12,26 @@ export default function Overview({ project }) {
     api.overview(project).then(setData).catch((e) => setError(e.message));
   }, [project]);
 
-  if (error) return <div className="error-banner">{error}</div>;
-  if (!data) return <div className="empty-state">Loading…</div>;
+  if (error) return <div className="error-banner" role="alert"><IconAlert /><span>{error}</span></div>;
+
+  if (!data) {
+    return (
+      <div>
+        <h1 className="page-title">{project}</h1>
+        <div className="stat-row" aria-hidden="true">
+          {[0, 1, 2, 3].map((i) => <div key={i} className="skeleton skeleton-tile" />)}
+        </div>
+        <span className="visually-hidden" role="status">Loading project overview</span>
+      </div>
+    );
+  }
+
+  const escalated = data.escalated_chapters.length;
 
   return (
     <div>
-      <h2>{project}</h2>
+      <h1 className="page-title">{project}</h1>
+
       <div className="stat-row">
         <div className="stat-tile">
           <div className="label">Chapters</div>
@@ -32,15 +47,13 @@ export default function Overview({ project }) {
         </div>
         <div className="stat-tile">
           <div className="label">Escalated</div>
-          <div className="value" style={{ color: data.escalated_chapters.length ? "var(--red)" : "var(--green)" }}>
-            {data.escalated_chapters.length}
-          </div>
+          <div className={`value ${escalated ? "is-danger" : "is-ok"}`}>{escalated}</div>
         </div>
       </div>
 
-      <div className="card">
-        <h3>Project settings</h3>
-        <table>
+      <section className="card">
+        <h2>Project settings</h2>
+        <table className="kv">
           <tbody>
             <tr><td>Project type</td><td>{data.project_type || "—"}</td></tr>
             <tr><td>Genre</td><td>{data.genre || "—"}</td></tr>
@@ -50,29 +63,29 @@ export default function Overview({ project }) {
             <tr>
               <td>Monetization allowed</td>
               <td>
-                <span className={`badge ${data.monetization_allowed ? "warning" : "normal"}`}>
+                <span className={`badge ${data.monetization_allowed ? "is-warn" : "is-neutral"}`}>
                   {String(data.monetization_allowed)}
                 </span>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </section>
 
-      {data.escalated_chapters.length > 0 && (
-        <div className="card">
-          <h3>Chapters awaiting your action</h3>
-          <p style={{ color: "var(--text-dim)" }}>
-            These chapters hit a QA check's retry cap and stopped rather
-            than forcing through — see each chapter's state file for the
-            specific failure and evidence.
+      {escalated > 0 && (
+        <section className="card">
+          <h2>Chapters awaiting your decision</h2>
+          <p className="card-note">
+            These hit a QA check's retry cap and stopped rather than forcing
+            through. Each chapter's state file holds the specific failure and
+            its evidence.
           </p>
           <ul>
             {data.escalated_chapters.map((c) => (
-              <li key={c}>Chapter {c}</li>
+              <li key={c} className="num">Chapter {c}</li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
     </div>
   );

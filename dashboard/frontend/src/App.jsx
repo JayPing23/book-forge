@@ -5,13 +5,21 @@ import Characters from "./pages/Characters.jsx";
 import PlotThreads from "./pages/PlotThreads.jsx";
 import Pacing from "./pages/Pacing.jsx";
 import SystemHealth from "./pages/SystemHealth.jsx";
+import {
+  IconOverview,
+  IconCharacters,
+  IconThreads,
+  IconPacing,
+  IconHealth,
+  IconAlert,
+} from "./components/icons.jsx";
 
 const PAGES = [
-  { key: "overview", label: "Overview", Component: Overview },
-  { key: "characters", label: "Characters", Component: Characters },
-  { key: "threads", label: "Plot Threads", Component: PlotThreads },
-  { key: "pacing", label: "Pacing", Component: Pacing },
-  { key: "system", label: "System Health", Component: SystemHealth },
+  { key: "overview", label: "Overview", Icon: IconOverview, Component: Overview },
+  { key: "characters", label: "Characters", Icon: IconCharacters, Component: Characters },
+  { key: "threads", label: "Plot Threads", Icon: IconThreads, Component: PlotThreads },
+  { key: "pacing", label: "Pacing", Icon: IconPacing, Component: Pacing },
+  { key: "system", label: "System Health", Icon: IconHealth, Component: SystemHealth },
 ];
 
 export default function App() {
@@ -19,6 +27,7 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [page, setPage] = useState("overview");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     api
@@ -27,48 +36,73 @@ export default function App() {
         setProjects(list);
         if (list.length > 0) setSelected(list[0]);
       })
-      .catch((e) => setError(e.message));
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   }, []);
 
   const ActivePage = PAGES.find((p) => p.key === page)?.Component;
 
   return (
     <div className="app">
-      <div className="sidebar">
-        <h1>book-forge</h1>
-        {projects.length > 0 ? (
-          <select value={selected || ""} onChange={(e) => setSelected(e.target.value)}>
-            {projects.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <select disabled>
-            <option>No projects yet</option>
-          </select>
-        )}
-        {PAGES.map((p) => (
-          <div
-            key={p.key}
-            className={`nav-item ${page === p.key ? "active" : ""}`}
-            onClick={() => setPage(p.key)}
+      <a className="skip-link" href="#main">Skip to content</a>
+
+      <nav className="sidebar" aria-label="Dashboard sections">
+        <div className="brand">book-forge</div>
+
+        <div className="project-picker">
+          <label htmlFor="project-select">Project</label>
+          <select
+            id="project-select"
+            value={selected || ""}
+            onChange={(e) => setSelected(e.target.value)}
+            disabled={projects.length === 0}
           >
-            {p.label}
-          </div>
+            {projects.length === 0 ? (
+              <option>No projects yet</option>
+            ) : (
+              projects.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))
+            )}
+          </select>
+        </div>
+
+        {PAGES.map(({ key, label, Icon }) => (
+          <button
+            key={key}
+            type="button"
+            className="nav-item"
+            aria-current={page === key ? "page" : undefined}
+            onClick={() => setPage(key)}
+          >
+            <Icon />
+            <span>{label}</span>
+            <span className="visually-hidden">{page === key ? " (current section)" : ""}</span>
+          </button>
         ))}
-      </div>
-      <div className="main">
-        {error && <div className="error-banner">{error}</div>}
-        {!error && !selected && (
-          <div className="empty-state">
-            No projects found. Run <code>/book-forge:book-new</code> in your
-            workspace to create one.
+      </nav>
+
+      <main className="main" id="main" tabIndex={-1}>
+        {error && (
+          <div className="error-banner" role="alert">
+            <IconAlert />
+            <span>{error}</span>
           </div>
         )}
+
+        {!error && loading && <div className="empty-state">Loading projects…</div>}
+
+        {!error && !loading && !selected && (
+          <div className="empty-state">
+            No projects found in this workspace. Run <code>/book-forge:book-new</code> in
+            Claude Code to create one, then reload this page.
+          </div>
+        )}
+
         {!error && selected && ActivePage && <ActivePage project={selected} />}
-      </div>
+      </main>
     </div>
   );
 }
