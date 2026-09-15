@@ -12,7 +12,6 @@ fear: "REPLACE: their core fear"
 wound: "REPLACE: the unhealed wound driving their default behavior"
 worldview: "REPLACE: how they see the world, in one or two sentences"
 decision_pattern: "REPLACE: their default way of making decisions under pressure"
-current_status: "REPLACE: updated by the Deconstruction Agent as the story progresses"
 tags: [character]
 ---
 
@@ -40,3 +39,15 @@ Deconstruction Agent updates this as relationships change. -->
 
 <!-- Optional: wikilinks to chapters or scenes where this character has
 pivotal moments, for quick navigation. -->
+
+## Facts Log
+
+<!-- Append-only, written by the Deconstruction Agent — never edited by
+hand to "correct" an old entry, since the old entry is the audit trail.
+Format: `[status] (source chapter) field: value — evidence`.
+Statuses: active (current truth) / outdated (superseded, kept for
+history) / contradicted (conflicts with another active entry, needs
+resolution) / tentative (implied, not yet confirmed).
+This section starts empty — the character's initial state lives in
+Voice/Motivation above; the Facts Log only tracks what *changes* as the
+story progresses. -->

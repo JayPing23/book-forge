@@ -35,11 +35,34 @@ report verifiable contradictions, each with cited evidence.
 1. Read the drafted chapter.
 2. Read the relevant `story-bible/` notes (and `series-bible/` fallback if
    this is a series book) for every character, place, and rule the chapter
-   touches.
+   touches — including each note's **Facts Log** section (see below).
 3. Read the most recent 2-3 prior chapters for continuity of small details.
 4. For each of the three scope categories, either find zero issues (report
    `pass`) or list every issue found with an exact quote from the chapter
    and the exact contradicting fact from the story-bible.
+
+## Reading the Facts Log
+
+Every character/world note carries a `## Facts Log` — an append-only
+history of dated, statused entries (`[active]`, `[outdated]`,
+`[contradicted]`, `[tentative]`), written by `deconstruction-agent`. This
+is where a note's *current* state actually lives for anything that
+changes over time (a realm, a location, a relationship) — the note's
+prose sections describe the character/world in general terms, but the
+Facts Log has the up-to-date specifics.
+
+- **Check the chapter against `active` entries only** — an `active`
+  entry is the current settled truth. `outdated` entries are history, not
+  something the chapter needs to match.
+- **A note with an unresolved `[contradicted]` pair is itself a finding**
+  — report it as a `high` severity issue even if the current chapter
+  doesn't touch that fact directly, since it means an earlier chapter's
+  contradiction was never resolved and the story-bible is currently
+  ambiguous about what's true.
+- **`[tentative]` entries are not yet settled fact** — don't fail a
+  chapter for contradicting a tentative entry the way you would an active
+  one; note it as a `low`-severity flag instead, since the tentative
+  entry itself might be what's wrong.
 
 ## Hard rules
 

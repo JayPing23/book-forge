@@ -1,0 +1,34 @@
+filters:
+  and:
+    - 'file.inFolder("story-bible/style-exemplars")'
+
+properties:
+  scene_type:
+    displayName: "Scene type"
+  source_chapter:
+    displayName: "Chapter"
+  quality_score:
+    displayName: "Score"
+
+views:
+  - type: table
+    name: "By scene type"
+    order:
+      - file.name
+      - scene_type
+      - source_chapter
+      - quality_score
+    groupBy:
+      property: scene_type
+      direction: ASC
+
+  - type: table
+    name: "By score"
+    order:
+      - file.name
+      - quality_score
+      - scene_type
+      - source_chapter
+    groupBy:
+      property: quality_score
+      direction: DESC
