@@ -16,6 +16,17 @@ Forked and localized from
 Early scaffold. See `docs/design-spec.md` for the full architecture
 and `docs/plans/` for what's built so far vs. planned.
 
+## Quick start
+
+`/book-forge:book-start` is the single entry point for a new book — hand it
+an idea (or nothing at all, or a reference work whose premise you like but
+execution you don't) and it chains ideation, project scaffolding, research,
+outlining, character creation, and a first drafted-and-QA'd chapter into one
+continuous flow, stopping to ask only the questions that actually shape the
+book. `/book-forge:book-idea`, `/book-forge:book-new`, and
+`/book-forge:book-write` still work standalone with their own checkpoints,
+if you'd rather drive each stage yourself.
+
 ## Dashboard
 
 A local React dashboard visualizes what you're working on — overview,

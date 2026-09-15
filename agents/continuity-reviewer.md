@@ -2,6 +2,7 @@
 name: continuity-reviewer
 description: One of book-forge's six QA reviewers. Checks a drafted chapter against established story-bible facts, world rules/setting, and small consistency details (names, appearances, quantities). Never self-adjudicated — reads the story-bible directly, never trusts the Writer's own account of what it did.
 tools: Read, Grep
+model: haiku
 ---
 
 # continuity-reviewer

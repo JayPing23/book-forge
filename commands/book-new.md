@@ -68,8 +68,18 @@ Given a project name as `$ARGUMENTS`:
     and don't get inferred later from chapter content. Ask one question
     at a time for anything not already answered.
 11. Report the final project structure, the outline summary, and the
-    character(s) created, then tell the user they're ready to run
-    `/book-forge:book-write $ARGUMENTS 0001`.
+    character(s) created.
+12. **Offer to continue straight into drafting.** If this command was
+    invoked directly (the author typed `/book-forge:book-new`), ask
+    whether they want to draft chapter 0001 now via
+    `/book-forge:book-write $ARGUMENTS 0001`, or stop here so they can
+    review the outline and character(s) first — either is fine, just
+    don't default silently. If this command was invoked as part of
+    `/book-forge:book-start`'s chained flow, skip the ask and continue
+    directly into chapter 0001's full pipeline — that continuity is the
+    entire point of that entry point. Either way, when chapter 0001 runs,
+    stop after it finalizes or escalates and report the result; don't
+    auto-continue into chapter 0002 without the author asking.
 
 ## Hard rules
 

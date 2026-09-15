@@ -58,7 +58,8 @@ C:\booq\                          # Obsidian vault root
 │   ├── plugins\book-forge\       # forked + English-localized webnovel-writer
 │   ├── skills\humanizer\         # installed as-is
 │   ├── skills\light-novel-style\ # new: accessible-prose conventions layered on humanizer
-│   └── commands\                 # /book-new, /book-write, /book-review, /book-learn, /book-doctor
+│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-cover,
+│   │                             # /book-learn, /book-doctor, /book-dashboard, /market-pulse
 └── projects\
     ├── <standalone-book-name>\   # a single, unconnected book — layout as below
     │   ├── project.json          # project type, genre, depth dial, platform convention,
@@ -236,6 +237,17 @@ refinements came out of this pass, applied below:
 
 ## Orchestration flow
 
+**`/book-start`** is the single entry point for a new book: it chains
+`/book-idea` → `/book-new` → chapter 0001's full `/book-write` pipeline
+continuously, skipping the "ready to continue?" checkpoint each of those
+commands has when run standalone, while still asking every question that
+actually shapes the book (genre, protagonist, constraints, `ip_status`,
+etc.). It stops after chapter 0001 finalizes or escalates — the intent is
+one command producing real drafted, QA'd output the author can react to,
+not unattended multi-chapter drafting. Running the three commands
+separately still works identically to before; `/book-start` only changes
+the handoff behavior between them. See `commands/book-start.md`.
+
 **`/book-new`** (optionally preceded by `/book-idea` for a blank-page
 start — see the Ideation Agent section):
 1. Pick project type (complete-book / web-novel), genre, depth dial, and (if
@@ -400,6 +412,40 @@ deliberately deferred:
    (book-doctor flags staleness past ~6 weeks) rather than the one-time
    research `research-agent` does at project creation. Each run compares
    against the prior pulse to surface what's actually changed.
+
+**Reference-work "fix the execution" workflow.** `ideation-agent`'s Step 0
+asks two questions when a reference work is named, not one: what worked
+(the premise/hook to preserve) and what didn't (specific execution
+problems — pacing, an undercutting genre convention, tonal baggage like
+heavy-handed ideological framing common to a market) the author wants
+this book to actively avoid. The second answer feeds directly into the
+premise's `anti_trope_rule`/`hard_constraints` fields, which
+`context-agent` now reads at every chapter's grounding step (not just
+outline creation) and folds into the writing brief every time — a
+standing constraint like "no propaganda-style framing" has to reach the
+drafting agent on every chapter to actually hold, not just the chapter
+where it was first set.
+
+**Model tiering.** The four QA reviewers doing comparatively mechanical
+pattern-matching against a fixed reference (`continuity-reviewer`,
+`thread-ledger-reviewer`, `outline-adherence-reviewer`,
+`voice-consistency-reviewer`) run on a cheaper/faster model
+(`model: haiku` in their agent frontmatter). `clarity-reviewer` and
+`motivation-agency-reviewer` — which require more interpretive judgment
+(readability, pacing, whether an action traces to a character's actual
+motivation) — and every creative/drafting agent stay on whatever model
+the author's session is running (no `model:` override, i.e. inherit).
+This is a cost lever, not a quality one: since every chapter runs all six
+reviewers, this is the highest-volume call site in the whole pipeline.
+
+**Cover art.** `cover-brief-agent` (via `/book-forge:book-cover`) produces
+a text art-direction brief — subject, composition, palette, mood,
+typography direction, comp titles — grounded in the project's story-bible
+and outline. It does not render an image; no image-generation tool is
+available in this environment, and the agent says so explicitly rather
+than faking one. The brief is the input to a separate step (a commissioned
+artist, or an image-generation tool run outside book-forge) — see
+`commands/book-cover.md`.
 
 **Deliberately deferred: reader-feedback ingestion.** Learning from actual
 published-book reviews/comments once a book is live (external platform

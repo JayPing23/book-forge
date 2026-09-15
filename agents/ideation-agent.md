@@ -44,11 +44,22 @@ from, or are they starting from nothing?
 - **Existing fragments**: collect them, however partial. Don't demand
   completeness — a single scrap ("I like the idea of a system that only
   gives out debuffs") is a valid, workable starting point.
-- **A reference work**: dispatch `research-agent`'s reference-novel
+- **A reference work**: ask two things before dispatching research, not
+  just one — (1) what worked (the premise, hook, or appeal to preserve),
+  and (2) what didn't (specific execution problems the author wants this
+  book to actively avoid repeating — e.g. pacing that dragged, a genre
+  convention that undercut the appeal, tonal baggage like heavy-handed
+  ideological framing common to that market). The second question is easy
+  to skip past if the author only volunteers the first, so ask for it
+  explicitly rather than assuming "inspired by X" implies "identical to X
+  minus nothing." Then dispatch `research-agent`'s reference-novel
   pattern-extraction job (the same copyright-safe do-not-copy/
   contamination-checked process used for an existing project) to extract
   transferable structural patterns as inspiration — never treat it as a
-  template to imitate wholesale.
+  template to imitate wholesale. Feed the author's own "what didn't work"
+  answer directly into the premise's `anti_trope_rule` and `hard_constraints`
+  fields below — those fields aren't just for originality, they're the
+  mechanism for "keep the premise, fix the execution."
 - **Nothing at all**: use the core-concept formula below to generate
   starting candidates rather than waiting for inspiration that isn't
   coming.

@@ -28,30 +28,40 @@ never overrides plot facts).
 
 ## Process
 
-1. **Read the chapter's planned beat** from `outline/` — this is the
+1. **Read `project.json`'s `constraints` section** first (`anti_trope_rule`
+   and `hard_constraints` — set at ideation/project-creation and never
+   auto-updated afterward). These are standing, whole-book guardrails, not
+   a one-time outline note — they belong in every chapter's brief, not just
+   the chapter where they were first established. This is the mechanism
+   for "keep the premise, fix what didn't work in the reference work": a
+   constraint like "no heavy-handed ideological framing" has to reach the
+   primary agent at every single chapter's draft time to actually hold.
+2. **Read the chapter's planned beat** from `outline/` — this is the
    contract for what must happen in this chapter. If the outline is only
    chapter-level (not yet scene-level), note that gap in your brief's
    guidance paragraph rather than inventing scene detail yourself.
-2. **Read `.project-memory/plot-threads/` (or the project's `plot-threads.base`
+3. **Read `.project-memory/plot-threads/` (or the project's `plot-threads.base`
    view if easier)** — identify: threads that must pay off in this chapter
    (urgent), threads open but not yet due (optional), and any thread this
    chapter is expected to introduce per the outline.
-3. **Read the relevant character notes** in `story-bible/characters/` for
+4. **Read the relevant character notes** in `story-bible/characters/` for
    every character appearing in this chapter's planned beat — their Voice
    Profile and Motivation Core. If a character isn't in the plan but the
    previous chapter's ending implies their presence, check for them too.
-4. **Read relevant world notes** in `story-bible/world/` for any setting,
+5. **Read relevant world notes** in `story-bible/world/` for any setting,
    rule, or world-iceberg fact this chapter's beat touches.
-5. **Read the previous chapter's ending** (`manuscript/`) — specifically:
+6. **Read the previous chapter's ending** (`manuscript/`) — specifically:
    what hook or emotional note it ended on, since this chapter must
    respond to it (a chapter cannot silently drop the prior chapter's hook).
-6. **Check `vault/craft-lessons/`** for durable style/craft notes relevant
+7. **Check `vault/craft-lessons/`** for durable style/craft notes relevant
    to this project's genre or depth dial — style guidance only, never
    plot facts.
-7. **Assemble and self-check** before writing the brief: does every named
+8. **Assemble and self-check** before writing the brief: does every named
    character have a non-empty motivation for being in this scene? Does the
    chapter's ending point somewhere (not a dead stop)? Does this brief
-   respond to the prior chapter's hook? If any check fails, redo step 3-6
+   respond to the prior chapter's hook? Does paragraph 2 or 4 actually
+   carry the project's standing constraints from step 1, not just this
+   chapter's outline beat? If any check fails, redo the relevant step
    rather than shipping an incomplete brief.
 
 ## Hard rules
@@ -77,8 +87,10 @@ Return exactly five paragraphs, natural tone, nothing else:
    one-sentence goal for this chapter.
 2. **This chapter's story**: prior-chapter recap in brief, this chapter's
    goal and obstacle, the plot beats it must hit, anything it must NOT do
-   (established constraints), and which plot threads are urgent vs.
-   optional for this chapter.
+   (this chapter's specific outline constraints AND the project's standing
+   `anti_trope_rule`/`hard_constraints` from `project.json` — restate the
+   standing ones naturally every chapter, not just once), and which plot
+   threads are urgent vs. optional for this chapter.
 3. **This chapter's characters**: one short paragraph per character
    appearing — their current state, what's driving them right now, their
    function in this chapter, and their speech tendency (drawn from their

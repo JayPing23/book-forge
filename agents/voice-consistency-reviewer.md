@@ -2,6 +2,7 @@
 name: voice-consistency-reviewer
 description: One of book-forge's six QA reviewers. Checks every dialogue line against its speaker's Voice Profile, flags voice bleed between characters, POV/perspective slips, and tone shifts.
 tools: Read, Grep
+model: haiku
 ---
 
 # voice-consistency-reviewer
