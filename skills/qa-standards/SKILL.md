@@ -33,11 +33,26 @@ the five checks ask "did anything actually change this chapter."
 Examples: a chapter-end hook that's weaker than the moment calls for, a
 missing micro-payoff, a flat emotional arc, pattern fatigue (the same
 cool-point pattern three times running), paragraphs long enough to hurt
-readability.
+readability. Three conditional checks are also soft by design, and only
+run on certain chapters: opening-hook intensity (chapters 0001-0003,
+`thread-ledger-reviewer`), opening-scene conflict positioning (chapter
+0001, `clarity-reviewer`), and longitudinal voice drift (every 20th
+chapter, `voice-consistency-reviewer`).
 
 A soft-guidance violation can be accepted rather than fixed — but only
-through an explicit **Override Contract**, never a silent pass. Creating
-one requires a `rationale_type`:
+through an explicit **Override Contract**, never a silent pass.
+
+**"Never a silent pass" includes findings on a passing verdict.** A
+reviewer's `verdict` answers "must this chapter be revised before it
+ships," not "did this reviewer find anything" — so a reviewer can return
+`verdict: "pass"` while still reporting real non-blocking findings. Those
+findings still need disposition (revise, contract, or report); see
+`book-write`'s step 7a. This matters for more than the single chapter:
+the debt tracking below is fed by the contract log, so findings that
+never reach the contract flow are findings this system can never learn
+from.
+
+Creating a contract requires a `rationale_type`:
 
 | rationale_type | Meaning | Debt weight |
 |---|---|---|
@@ -82,7 +97,7 @@ creating a new contract:
 Nothing here replaces `continuity-reviewer`, `thread-ledger-reviewer`,
 `outline-adherence-reviewer`, `voice-consistency-reviewer`, or
 `motivation-agency-reviewer`. This taxonomy adds a sixth reviewer
-(`clarity-reviewer`) for the two Hard Invariants no existing reviewer
-covers, sharpens `thread-ledger-reviewer`'s scope to explicitly own
-HARD-002, and gives every reviewer a shared, structured way to escalate a
+(`clarity-reviewer`) owning the three Hard Invariants no existing
+reviewer covers (HARD-001, HARD-003, HARD-004), sharpens
+`thread-ledger-reviewer`'s scope to explicitly own HARD-002, and gives every reviewer a shared, structured way to escalate a
 soft finding as an Override Contract instead of an ad hoc note.

@@ -51,6 +51,35 @@ schedule.
    confirm the resolution actually answers what was set up (a payoff that
    answers a different question than the one the setup raised is itself an
    issue, not a completed thread).
+4. **Opening-chapter hook intensity — chapters 0001, 0002, 0003 only**:
+   for these three chapters specifically, check the chapter-ending hook's
+   intensity against `payoff-craft`'s strong/medium/weak taxonomy. A
+   `medium` or `weak` hook here is a `high`-severity soft-guidance finding
+   (not a Hard Invariant — the chapter isn't broken, just under-optimized
+   at the single highest-leverage point in the whole book).
+
+   **Why these chapters, and how well-supported that is**: serialized-
+   fiction authors consistently report that the chapter 1 → 2 transition
+   is the sharpest reader drop-off of the whole book (commonly 30-40% of
+   readers lost there), with retention stabilizing around 80% from
+   roughly chapter 5 onward — see the Royal Road author forums'
+   recurring retention threads, e.g.
+   [What is the average first to second chapter retention rate?](https://www.royalroad.com/forums/thread/134345)
+   and [Reader Drop Rate and Retention](https://www.royalroad.com/forums/thread/111699).
+   Treat this as **platform-community self-reported data, not a
+   controlled study** — it's directionally consistent across many
+   independent authors, and it's the best evidence available for this
+   question, but it is a weaker evidence tier than the peer-reviewed work
+   the design spec cites elsewhere, and retention reportedly varies a lot
+   by genre and platform. It's enough to justify extra scrutiny at the
+   opening; it is not enough to justify a Hard Invariant, which is
+   exactly why this check is soft. **Does not apply past chapter 0003.**
+
+   If the author wants an Override Contract on this specific finding,
+   flag prominently in your output that this is the highest-risk place in
+   the book to accept a weak hook, per the taxonomy above — don't refuse
+   the contract, but don't let it pass through the same as any other
+   soft-guidance finding either.
 
 ## Process
 
@@ -94,7 +123,7 @@ schedule.
   "issues": [
     {
       "severity": "critical | high | medium | low",
-      "category": "broken-promise | dropped-payoff | unlogged-thread | mismatched-payoff",
+      "category": "broken-promise | dropped-payoff | unlogged-thread | mismatched-payoff | weak-opening-hook",
       "invariant": "HARD-002 (only for category: broken-promise)",
       "thread_note": "story-bible/plot-threads/<name>.md",
       "description": "what's wrong",

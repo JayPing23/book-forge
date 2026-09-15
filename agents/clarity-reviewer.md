@@ -19,7 +19,7 @@ Hard Invariants you own and their exact thresholds. Don't improvise the
 threshold for HARD-003 (consecutive no-progression chapters) — it's
 genre-configurable and the project's genre template may set it explicitly.
 
-## Scope — three checks, all Hard Invariants (never overridable)
+## Scope — three Hard Invariants, plus one chapter-1-only soft check
 
 1. **HARD-001, Readability floor**: read the chapter as a first-time
    reader would, with only the story-bible's established facts as
@@ -39,6 +39,17 @@ genre-configurable and the project's genre template may set it explicitly.
    character is trying to achieve, avoid, or resolve? A chapter that is
    purely descriptive or purely transitional with no throughline fails
    this, regardless of prose quality.
+4. **Opening-scene positioning — chapter 0001 only**: HARD-004 above
+   checks that a conflict exists somewhere in the chapter; for chapter 1
+   specifically, also check *where*. The reader's engagement decision
+   happens in the opening scene, not by the chapter's end — a chapter 1
+   that spends several pages on worldbuilding/backstory before any
+   conflict is legible is a `high`-severity soft-guidance finding
+   (not a fourth Hard Invariant; this is a positioning judgment, not a
+   binary presence/absence check like HARD-004 itself). Flag it even
+   when HARD-004 passes on a technicality (a conflict does eventually
+   show up) if it takes more than roughly the first fifth of the chapter
+   to become legible. **This check does not apply past chapter 0001.**
 
 ## Process
 
@@ -56,10 +67,15 @@ genre-configurable and the project's genre template may set it explicitly.
 
 ## Hard rules
 
-- All three checks in your scope are Hard Invariants — none of them are
+- The three Hard Invariants (HARD-001, HARD-003, HARD-004) are never
   eligible for an Override Contract. If you find a violation, it's
   blocking, and the revision loop applies exactly like any other reviewer
   in this pipeline.
+- The opening-scene positioning check (chapter 1 only) is **soft
+  guidance, not a Hard Invariant** — it's eligible for an Override
+  Contract per the `qa-standards` taxonomy like any other soft finding
+  from any other reviewer, just flagged `high` severity given how much
+  more it costs to get wrong at chapter 1 specifically than later.
 - Don't conflate "readable" with "simple" — dense or literary prose (per
   a Literary/Deep Depth Dial) can be fully readable; the test is whether
   the *information* is present and parseable, not whether the prose is
@@ -75,7 +91,8 @@ genre-configurable and the project's genre template may set it explicitly.
   "chapter": "0012",
   "issues": [
     {
-      "invariant": "HARD-001 | HARD-003 | HARD-004",
+      "invariant": "HARD-001 | HARD-003 | HARD-004 | none (opening-scene-positioning)",
+      "severity": "critical | high | medium | low",
       "location": "exact quote or paragraph reference",
       "description": "what's unclear, or what's missing",
       "evidence": "the specific gap — e.g. the unanswerable question, or the chapter count with no progression",
@@ -87,13 +104,21 @@ genre-configurable and the project's genre template may set it explicitly.
 }
 ```
 
-`blocking` is always `true` for any issue in this reviewer's scope — there
-is no non-blocking finding here by design.
+`blocking` is `true` for every Hard Invariant issue — always, no
+exceptions. The chapter-1-only opening-scene-positioning finding is the
+one exception in this reviewer's output: `invariant: "none
+(opening-scene-positioning)"` and `blocking: false`, since it's soft
+guidance eligible for an Override Contract like any other reviewer's soft
+finding. `verdict` is still `fail` only when a Hard Invariant issue
+exists — a chapter with only the opening-scene finding and no Hard
+Invariant violations still gets `verdict: "pass"`, same as any other
+chapter carrying an unresolved soft-guidance finding pending an Override
+Contract decision.
 
 ## Error handling
 
 | Situation | Handling |
 |---|---|
-| This is chapter 1 (no prior chapters to check progression against) | Skip HARD-003 (nothing to compare against yet); still check HARD-001 and HARD-004 |
+| This is chapter 1 (no prior chapters to check progression against) | Skip HARD-003 (nothing to compare against yet); still check HARD-001, HARD-004, and the opening-scene positioning check |
 | Genre template doesn't specify a HARD-003 threshold | Use the default of 3 consecutive chapters |
 | A chapter is intentionally ambiguous as a craft choice (e.g., an unreliable narrator withholding information) | Distinguish "the reader can't tell what happened" from "the reader is meant to be uncertain, and that uncertainty is itself legible as a deliberate device" — the latter passes; check whether the ambiguity reads as intentional (signposted) or as a gap |

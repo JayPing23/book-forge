@@ -58,8 +58,8 @@ C:\booq\                          # Obsidian vault root
 │   ├── plugins\book-forge\       # forked + English-localized webnovel-writer
 │   ├── skills\humanizer\         # installed as-is
 │   ├── skills\light-novel-style\ # new: accessible-prose conventions layered on humanizer
-│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-cover,
-│   │                             # /book-learn, /book-doctor, /book-dashboard, /market-pulse
+│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-export,
+│   │                             # /book-cover, /book-learn, /book-doctor, /book-dashboard, /market-pulse
 └── projects\
     ├── <standalone-book-name>\   # a single, unconnected book — layout as below
     │   ├── project.json          # project type, genre, depth dial, platform convention,
@@ -446,6 +446,76 @@ available in this environment, and the agent says so explicitly rather
 than faking one. The brief is the input to a separate step (a commissioned
 artist, or an image-generation tool run outside book-forge) — see
 `commands/book-cover.md`.
+
+**Manuscript file format.** `manuscript/` holds one Markdown file per
+chapter (`<chapter_id>-<title-slug>.md`, frontmatter + prose), never one
+growing book-length file — this holds for every project type, including
+`complete-book`, so the revision loop, QA gate, and git history all stay
+scoped to the chapter actually being touched. `/book-forge:book-export`
+is the one place that assembles finalized chapters into a single document
+(for submission, or a web-novel "everything published so far" snapshot);
+it reads `manuscript/`, never writes to it. Paragraph formatting is
+platform-conditional: `web-novel` projects default to short paragraphs
+(1-4 sentences, blank-line separated) for phone-screen scanability, on
+top of `light-novel-style`'s rhythm guidance, not instead of it;
+`complete-book` projects use ordinary prose paragraphing. In-world
+system/status-window formatting (LitRPG-style `[System]` popups, stat
+blocks) is deliberately left unspecified here — it's a per-project
+stylistic choice the author records as a `hard_constraint` when ready,
+not a platform default this pipeline imposes. See
+`commands/book-write.md`'s finalize step.
+
+**Opening-chapter and longitudinal checks.** Three QA-gate checks
+activate conditionally rather than on every chapter, each grounded in a
+structural pattern rather than any claim about individual reader taste:
+`thread-ledger-reviewer`'s opening-hook-intensity check and
+`clarity-reviewer`'s opening-scene-positioning check (chapters 0001-0003)
+target the opening drop-off; `voice-consistency-reviewer`'s
+longitudinal-drift check (every 20th chapter) compares current dialogue
+against early style-exemplars rather than only the static Voice Profile
+note, catching slow drift that per-chapter checks miss by design. All
+three are soft guidance (Override-Contract eligible), not new Hard
+Invariants — see each reviewer's own spec.
+
+**Two different curves, not a contradiction.** The `--compete=N` guidance
+above says error-clustering data puts *consistency failures* at 40-60% of
+narrative length, "not concentrated at the bookends intuition suggests" —
+while the opening-chapter checks target the *opening*. These describe
+different phenomena and both hold at once: **where the writing breaks**
+(consistency/continuity errors, per ConStory-Bench, mid-book) is not
+**where the reader leaves** (retention drop-off, per platform author
+reports, chapter 1 → 2). Mid-book gets the expensive independent-draft
+treatment; the opening gets a cheap extra check on hook strength and
+conflict positioning. Note the evidence tiers differ too: the
+mid-book clustering claim comes from published research, the opening
+retention claim from platform-community self-reports — weaker, and
+labeled as such at the point of use.
+
+**Manuscript auto-backup.** `/book-forge:book-write`'s finalize step
+commits the finalized chapter, its state file, and everything the
+post-finalize step touched to git, if the workspace is a git repo — a
+disaster-recovery safety net, never a push to a remote, and silently
+skipped for a non-git workspace.
+
+**Pre-outline interrogation pass.** Before the outline agent locks a
+plan, `/book-forge:book-new` runs a `grill-me`-style one-question-at-a-time
+coherence pass across the premise's own fields (does the special
+advantage trivialize the core conflict, does the protagonist's flaw
+actually create friction against their desire, etc.) — required for
+`complete-book` projects (a fixed-length outline is expensive to
+restructure once chapters are drafted against it), optional for
+`web-novel` (the rolling outline is cheaper to patch as you go). This
+catches cross-field incoherence the ideation sufficiency gate doesn't —
+that gate confirms fields are filled, not that they agree with each
+other.
+
+**Override Contract debt visibility.** The dashboard's System Health page
+now reads `.project-memory/override-contracts.json` directly and surfaces
+the same 3+-same-reviewer-plus-rationale pattern `qa-standards` already
+detects at write time, so it's visible without re-deriving it from the
+raw log. Deliberately not built: a per-chapter cost/token-usage panel —
+nothing in the pipeline currently records actual token spend, and a
+fabricated number would be worse than no panel at all.
 
 **Deliberately deferred: reader-feedback ingestion.** Learning from actual
 published-book reviews/comments once a book is live (external platform

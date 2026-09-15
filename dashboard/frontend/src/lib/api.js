@@ -16,4 +16,5 @@ export const api = {
   plotThreads: (name) => getJSON(`/projects/${encodeURIComponent(name)}/plot-threads`).then((d) => d.threads),
   pacing: (name) => getJSON(`/projects/${encodeURIComponent(name)}/pacing`),
   doctor: (name) => getJSON(`/projects/${encodeURIComponent(name)}/doctor`),
+  overrideDebt: (name) => getJSON(`/projects/${encodeURIComponent(name)}/override-debt`),
 };

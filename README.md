@@ -25,7 +25,9 @@ outlining, character creation, and a first drafted-and-QA'd chapter into one
 continuous flow, stopping to ask only the questions that actually shape the
 book. `/book-forge:book-idea`, `/book-forge:book-new`, and
 `/book-forge:book-write` still work standalone with their own checkpoints,
-if you'd rather drive each stage yourself.
+if you'd rather drive each stage yourself. `/book-forge:book-export`
+assembles a project's finalized chapters (one file per chapter in
+`manuscript/`) into a single manuscript document.
 
 ## Dashboard
 

@@ -50,15 +50,61 @@ Given a project name as `$ARGUMENTS`:
    platform_convention. Its craft-research and market-research findings
    feed the outline agent in the next step; its reference-novel pattern
    extraction writes to `vault/craft-lessons/` as usual.
-9. **Dispatch the outline agent matching `project_type`**:
-   `complete-book-outline-agent` for `complete-book`,
-   `web-novel-outline-agent` for `web-novel`. Pass it the research
-   findings from step 8, the project's `depth_dial` (which sets the
-   Quest/Fire/Constellation strand-balance default), and — if a premise
-   exists — its `core_conflict`, `constraints`, and `world` fields as
-   starting material. It writes the skeleton/volume/(chapter) outline
-   into `outline/`.
-10. **Character creation**: before any chapter is drafted, walk the user
+9. **Interrogation pass — before the outline locks, not after.** Skip this
+   step entirely if no `_ideation/` premise exists (nothing decided yet
+   beyond `project.json`'s own minimal fields to cross-check — point the
+   author to `/book-forge:book-idea` first if they want this level of
+   rigor). When a premise does exist, walk it one question at a time,
+   grill-me style: state the tension, give your own recommended answer
+   and why, then ask the author to confirm or override — never bundle
+   multiple questions into one message. This is a coherence pass across
+   fields that are individually complete but might conflict with each
+   other, which the ideation sufficiency gate doesn't check (it confirms
+   fields are *filled*, not that they're *consistent*). Always required
+   for `complete-book` projects (the outline will be fixed-length and
+   expensive to restructure once chapters are written against it — a gap
+   found at chapter 50 costs far more than one found now); offer it as
+   optional for `web-novel` projects (the rolling outline is cheaper to
+   patch as you go, so ask whether the author wants the extra rigor or
+   would rather start writing sooner).
+
+   Forcing questions to walk, using the premise's own fields — skip any
+   that don't apply to this premise, don't force a question onto a field
+   combination that isn't actually in tension:
+   - Does `special_advantage` make `core_conflict` trivially easy to
+     resolve? If so, what's the counterbalancing cost or limitation —
+     `special_advantage.irreversible_cost` should already answer this;
+     if it's thin or generic, push on it here.
+   - Does the protagonist's `flaw` actually create friction against their
+     `desire`, or are they unrelated traits that happen to both be true?
+   - Is `antagonist_tiers`' top tier meaningfully above what the
+     protagonist's `special_advantage.growth_rhythm` gets them to by the
+     story's climax — or does the power curve flatten the threat?
+   - Does any entry in `hard_constraints` quietly undercut an entry in
+     `core_selling_points`?
+   - If `special_advantage.visibility` is hidden, what happens if it's
+     discovered — is that consequence decided, or left to be improvised
+     mid-draft?
+   - Given `target_scale`, does `core_conflict` plus the antagonist
+     structure generate enough material to fill it without padding — or
+     is there an unstated second conflict layer the author has in mind
+     that never made it into the premise?
+
+   Record the author's answers as amendments to the premise file in
+   `projects/_ideation/` before proceeding — don't just resolve them in
+   conversation and let the written premise fall out of sync with what
+   was actually decided.
+
+10. **Dispatch the outline agent matching `project_type`**:
+    `complete-book-outline-agent` for `complete-book`,
+    `web-novel-outline-agent` for `web-novel`. Pass it the research
+    findings from step 8, the project's `depth_dial` (which sets the
+    Quest/Fire/Constellation strand-balance default), and — if a premise
+    exists — its `core_conflict`, `constraints`, and `world` fields
+    (amended per step 9's interrogation pass, if it ran) as starting
+    material. It writes the skeleton/volume/(chapter) outline into
+    `outline/`.
+11. **Character creation**: before any chapter is drafted, walk the user
     through creating at least the protagonist's story-bible note, using
     `${CLAUDE_PLUGIN_ROOT}/templates/note-templates/character.md` as the
     starting structure. If a premise exists, seed the Voice Profile and
@@ -67,9 +113,9 @@ Given a project name as `$ARGUMENTS`:
     silently accepting the premise's draft. These fields are foundational
     and don't get inferred later from chapter content. Ask one question
     at a time for anything not already answered.
-11. Report the final project structure, the outline summary, and the
+12. Report the final project structure, the outline summary, and the
     character(s) created.
-12. **Offer to continue straight into drafting.** If this command was
+13. **Offer to continue straight into drafting.** If this command was
     invoked directly (the author typed `/book-forge:book-new`), ask
     whether they want to draft chapter 0001 now via
     `/book-forge:book-write $ARGUMENTS 0001`, or stop here so they can
@@ -83,9 +129,10 @@ Given a project name as `$ARGUMENTS`:
 
 ## Hard rules
 
-- Steps 8-9 are not optional and not deferred — research and outlining
-  happen before any chapter gets written, per the design spec's
-  orchestration flow.
+- Steps 8 and 10 are not optional and not deferred — research and
+  outlining happen before any chapter gets written, per the design
+  spec's orchestration flow. Step 9 (interrogation pass) is required for
+  `complete-book` projects with a premise, optional for `web-novel`.
 - Character Voice Profile and Motivation Core must be set at creation, not
   left blank for the Deconstruction Agent to fill in later — that agent
   only updates `current_status` and relationships, never these foundational

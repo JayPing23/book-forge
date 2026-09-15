@@ -37,6 +37,29 @@ grounding, and it's what you exist to catch.
    project's genre and Depth Dial setting, without unexplained shifts
    (e.g., a Popcorn-dial project suddenly reading as literary-introspective
    for one paragraph with no in-story reason)?
+5. **Longitudinal voice drift — periodic only, not every chapter**: the
+   checks above compare this chapter against the Voice Profile note,
+   which is a static snapshot — they can't catch *slow* drift, where each
+   chapter individually looks fine against the profile but the character
+   has gradually shifted away from how they actually sounded early in the
+   book. `book-write` triggers this check specifically on chapters whose
+   number is a multiple of 20 (0020, 0040, 0060, …) — on any other
+   chapter, skip this item entirely; it isn't cheap enough to run every
+   time and doesn't need to be. When triggered: pull the earliest
+   available dialogue-classified passages for each major character from
+   `story-bible/style-exemplars/` (ideally from the book's first ~10
+   chapters) and compare this chapter's dialogue against that early
+   baseline directly, not just against the profile note. A character who
+   still passes the per-chapter checks above but reads noticeably
+   different from their own early-book self is a `medium`-severity
+   finding (soft guidance, Override-Contract eligible — this is a drift
+   observation for the author's judgment, not proof the current chapter
+   is wrong; the story-bible's Voice Profile itself may be what should
+   update, if the drift is an intentional character arc).
+
+   If `story-bible/style-exemplars/` has fewer than 2 early passages for
+   a given character, skip the comparison for that character and say so
+   — don't manufacture a baseline from too little material.
 
 ## Process
 
@@ -66,7 +89,7 @@ grounding, and it's what you exist to catch.
   "issues": [
     {
       "severity": "critical | high | medium | low",
-      "category": "voice-bleed | register-shift | pov-slip | tone-drift",
+      "category": "voice-bleed | register-shift | pov-slip | tone-drift | longitudinal-drift",
       "character": "name, if applicable",
       "location": "exact quote",
       "description": "what's inconsistent",

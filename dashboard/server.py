@@ -73,19 +73,32 @@ def read_note(path):
     return fm
 
 
+def chapter_number(identifier):
+    """Turn any chapter identifier into an int, or None if it isn't one.
+
+    The single place that knows how a chapter is named. Handles the
+    manuscript filename convention (`0042-the-broken-oath.md` -> 42), a
+    bare zero-padded id (`"0042"` -> 42), and an int already. Returns
+    None for anything genuinely unparseable so callers can distinguish
+    "no chapter yet" from "chapter zero".
+    """
+    if identifier is None:
+        return None
+    if isinstance(identifier, int):
+        return identifier
+    match = re.match(r"^\s*(\d+)", str(identifier))
+    return int(match.group(1)) if match else None
+
+
 TIER_WEIGHTS = {"core": 3.0, "side": 2.0, "decorative": 1.0}
 TIER_WINDOWS = {"core": 175, "side": 65, "decorative": 20}  # midpoint of the guide's recovery windows
 
 
 def compute_urgency(thread, current_chapter):
     tier = thread.get("tier", "side")
-    introduced = thread.get("introduced_chapter")
-    if introduced is None:
-        return None
-    try:
-        introduced_num = int(str(introduced).lstrip("0") or "0")
-        current_num = int(str(current_chapter).lstrip("0") or "0")
-    except ValueError:
+    introduced_num = chapter_number(thread.get("introduced_chapter"))
+    current_num = chapter_number(current_chapter)
+    if introduced_num is None or current_num is None:
         return None
     elapsed = max(current_num - introduced_num, 0)
     window = TIER_WINDOWS.get(tier, TIER_WINDOWS["side"])
@@ -94,13 +107,11 @@ def compute_urgency(thread, current_chapter):
 
 
 def urgency_status(urgency, thread, current_chapter):
-    payoff_chapter = thread.get("payoff_chapter")
-    if payoff_chapter and str(payoff_chapter).strip():
-        try:
-            if int(str(current_chapter).lstrip("0") or "0") > int(str(payoff_chapter).lstrip("0") or "0") and thread.get("status") == "open":
-                return "critical"
-        except ValueError:
-            pass
+    payoff_num = chapter_number(thread.get("payoff_chapter"))
+    current_num = chapter_number(current_chapter)
+    if payoff_num is not None and current_num is not None:
+        if current_num > payoff_num and thread.get("status") == "open":
+            return "critical"
     if urgency is None:
         return "normal"
     if urgency > 1.0:
@@ -141,23 +152,45 @@ class Workspace:
         except json.JSONDecodeError:
             return {}
 
-    def latest_chapter_id(self, name):
+    def chapters(self, name):
+        """Parsed manuscript chapters, sorted by chapter number.
+
+        Word counts are computed from the prose body with frontmatter and
+        heading lines excluded — the prose is the source of truth, never a
+        stored count, which goes stale the moment the author hand-edits a
+        chapter.
+        """
         manuscript = self.project_dir(name) / "manuscript"
         if not manuscript.exists():
-            return None
-        chapters = sorted(p.stem for p in manuscript.glob("*.md"))
-        return chapters[-1] if chapters else None
+            return []
+        out = []
+        for path in manuscript.glob("*.md"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            fm, body = parse_frontmatter(text)
+            # Prefer the frontmatter id; fall back to the filename prefix
+            # so chapters written before the format was specified still work.
+            number = chapter_number(fm.get("chapter_id")) or chapter_number(path.stem)
+            prose = "\n".join(ln for ln in body.split("\n") if not ln.lstrip().startswith("#"))
+            out.append({
+                "chapter_id": fm.get("chapter_id") or path.stem,
+                "number": number,
+                "title": fm.get("title"),
+                "status": fm.get("status"),
+                "word_count": len(prose.split()),
+            })
+        return sorted(out, key=lambda c: (c["number"] is None, c["number"]))
+
+    def latest_chapter_id(self, name):
+        chapters = self.chapters(name)
+        return chapters[-1]["chapter_id"] if chapters else None
 
     def overview(self, name):
         info = self.read_project_json(name)
-        manuscript = self.project_dir(name) / "manuscript"
-        chapter_files = sorted(manuscript.glob("*.md")) if manuscript.exists() else []
-        total_words = 0
-        for f in chapter_files:
-            try:
-                total_words += len(f.read_text(encoding="utf-8").split())
-            except OSError:
-                pass
+        chapter_files = self.chapters(name)
+        total_words = sum(c["word_count"] for c in chapter_files)
         chapter_state_dir = self.project_dir(name) / ".project-memory" / "chapter-state"
         escalated = []
         if chapter_state_dir.exists():
@@ -244,6 +277,56 @@ class Workspace:
                 pass
         return {"strand_tracker": strand_tracker, "review_metrics": review_metrics}
 
+    def override_debt(self, name):
+        mem = self.project_dir(name) / ".project-memory"
+        path = mem / "override-contracts.json"
+        contracts = []
+        if path.exists():
+            try:
+                content = json.loads(path.read_text(encoding="utf-8"))
+                contracts = content if isinstance(content, list) else content.get("entries", [])
+            except (OSError, json.JSONDecodeError):
+                pass
+
+        # Increased debt weight for EDITORIAL_INTENT per the qa-standards
+        # taxonomy; standard for everything else except the two explicitly
+        # reduced-weight rationales.
+        WEIGHT = {
+            "EDITORIAL_INTENT": 2.0,
+            "LOGIC_INTEGRITY": 0.5,
+            "CHARACTER_CREDIBILITY": 0.5,
+            "WORLD_RULE_CONSTRAINT": 0.5,
+        }
+        DEFAULT_WEIGHT = 1.0
+
+        by_combo = {}
+        total_weight = 0.0
+        for c in contracts:
+            reviewer = c.get("reviewer", "unknown")
+            rationale = c.get("rationale_type", "unknown")
+            weight = WEIGHT.get(rationale, DEFAULT_WEIGHT)
+            total_weight += weight
+            key = (reviewer, rationale)
+            by_combo.setdefault(key, []).append(c)
+
+        patterns = [
+            {
+                "reviewer": reviewer,
+                "rationale_type": rationale,
+                "count": len(entries),
+                "chapters": [e.get("chapter") for e in entries],
+            }
+            for (reviewer, rationale), entries in sorted(by_combo.items())
+            if len(entries) >= 3
+        ]
+
+        return {
+            "contracts_count": len(contracts),
+            "total_debt_weight": round(total_weight, 2),
+            "patterns": patterns,  # same reviewer+rationale_type used 3+ times — a self-improvement signal, not just a count
+            "contracts": contracts,
+        }
+
     def doctor(self, name):
         pdir = self.project_dir(name)
         checks = []
@@ -294,6 +377,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     return self._json(self.workspace.pacing(name))
                 if endpoint == "doctor":
                     return self._json(self.workspace.doctor(name))
+                if endpoint == "override-debt":
+                    return self._json(self.workspace.override_debt(name))
                 return self._json({"error": "unknown endpoint"}, 404)
 
             if parts and parts[0] == "api":

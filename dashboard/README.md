@@ -41,11 +41,17 @@ proxies `/api` to 5173). Rebuild with `npm run build` when done.
 
 | Page | Source files |
 |---|---|
-| Overview | `project.json`, `manuscript/*.md` (word count), `.project-memory/chapter-state/*.json` (escalations) |
+| Overview | `project.json`, `manuscript/*.md` (word count from the prose body only — frontmatter and heading lines excluded), `.project-memory/chapter-state/*.json` (escalations) |
 | Characters | `story-bible/characters/*.md` frontmatter |
 | Plot Threads | `story-bible/plot-threads/*.md` frontmatter, urgency computed from the tier/formula in the design spec |
 | Pacing | `.project-memory/strand_tracker.json`, `.project-memory/review-metrics.json` |
-| System Health | presence/parseability of the above, project-scoped (distinct from `/book-forge:book-doctor`, which checks the plugin install itself) |
+| System Health | presence/parseability of the above, plus `.project-memory/override-contracts.json` for Override Contract debt and repeated-pattern detection. Project-scoped — distinct from `/book-forge:book-doctor`, which checks the plugin install itself |
+
+Chapter files are read as `<chapter_id>-<title-slug>.md` (see
+`commands/book-write.md`'s finalize step), but the chapter number is
+parsed from the frontmatter `chapter_id` with a fallback to the filename's
+numeric prefix — so chapters written before that format was specified
+(`0007.md`) still resolve correctly.
 
 ## Dependencies
 
