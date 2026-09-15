@@ -19,18 +19,19 @@ one broken thing doesn't hide the status of everything else.
    `${CLAUDE_PLUGIN_ROOT}/skills/humanizer/SKILL.md` exists and its first
    line contains YAML frontmatter (starts with `---`).
 
-3. **light-novel-style and payoff-craft skills present**: confirm
-   `${CLAUDE_PLUGIN_ROOT}/skills/light-novel-style/SKILL.md` and
-   `${CLAUDE_PLUGIN_ROOT}/skills/payoff-craft/SKILL.md` both exist.
+3. **light-novel-style, payoff-craft, and qa-standards skills present**:
+   confirm `${CLAUDE_PLUGIN_ROOT}/skills/light-novel-style/SKILL.md`,
+   `${CLAUDE_PLUGIN_ROOT}/skills/payoff-craft/SKILL.md`, and
+   `${CLAUDE_PLUGIN_ROOT}/skills/qa-standards/SKILL.md` all exist.
 
-4. **Core agents present**: confirm all eleven exist under
+4. **Core agents present**: confirm all twelve exist under
    `${CLAUDE_PLUGIN_ROOT}/agents/`: `context-agent.md`, `research-agent.md`,
    `ideation-agent.md`, `deconstruction-agent.md`,
    `web-novel-outline-agent.md`, `complete-book-outline-agent.md`,
    `continuity-reviewer.md`, `thread-ledger-reviewer.md`,
    `outline-adherence-reviewer.md`, `voice-consistency-reviewer.md`,
-   `motivation-agency-reviewer.md`. List any missing by exact filename —
-   don't just report a pass/fail count.
+   `motivation-agency-reviewer.md`, `clarity-reviewer.md`. List any
+   missing by exact filename — don't just report a pass/fail count.
 
 5. **Genre templates present**: confirm at least one file exists under
    `${CLAUDE_PLUGIN_ROOT}/templates/genres/`; list how many are found.
@@ -49,6 +50,15 @@ one broken thing doesn't hide the status of everything else.
    this is informational, not a failure, since not every writer will use
    git for their personal workspace.
 
+9. **Market-pulse freshness** (informational, not a failure): for each
+   project under `./projects`, read its genre and check
+   `vault/craft-lessons/market-pulse/` for the most recent pulse matching
+   that genre. If the newest one (or the project's original
+   research-agent init research, if no pulse has ever run) is older than
+   roughly 6 weeks, note it as a reminder to run
+   `/book-forge:market-pulse <project>` — don't block on this, just
+   surface it.
+
 Summarize as:
 
 ```
@@ -56,12 +66,13 @@ book-forge doctor report
 =========================
 [PASS/FAIL] Plugin templates present
 [PASS/FAIL] Bundled humanizer skill present
-[PASS/FAIL] light-novel-style and payoff-craft skills present
-[PASS/FAIL] Core agents present (N/11 found)
+[PASS/FAIL] light-novel-style, payoff-craft, qa-standards skills present
+[PASS/FAIL] Core agents present (N/12 found)
 [PASS/FAIL] Genre templates present (N found)
 [PASS/FAIL] projects/ directory exists
 [PASS/FAIL] vault/ directory (+ subfolders) exists
 [INFO] Git repository: yes/no
+[INFO] Market-pulse freshness: per-project, flag anything >6 weeks stale
 ```
 
 If any check reports FAIL, explain specifically what's missing and what

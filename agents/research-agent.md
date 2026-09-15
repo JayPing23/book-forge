@@ -31,6 +31,13 @@ exists (e.g., genre-specific subreddits for web novels/light novels). Every
 claim about "what's trending" must cite a dated source — a genre-101 page
 from three years ago is not evidence of current market position.
 
+**This job runs once, at project creation.** A market snapshot goes stale
+over the months a real project takes to write — `/book-forge:market-pulse`
+re-runs this specific discipline on demand, and additionally compares
+against the prior pulse to surface what's *changed*, not just another
+snapshot. Prompt the author toward that command periodically rather than
+assuming this one-time run stays valid for the life of the project.
+
 ## Job 3: Reference-novel pattern extraction
 
 Select 3-5 fresh genre-appropriate reference novels per project (never a

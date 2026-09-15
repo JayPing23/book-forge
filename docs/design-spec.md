@@ -338,6 +338,58 @@ cross-project vault specifically:
   vault has enough real content to audit) rather than assumed permanent by
   default.
 
+## Self-improvement loop
+
+The system is meant to actually get better at writing *for this author*
+the more it's used — not just accumulate files. Four mechanisms do this,
+each addressing a different dimension of "better," plus one piece
+deliberately deferred:
+
+1. **Fact accuracy** — the Facts Log status-lifecycle
+   (active/outdated/contradicted/tentative) on every character/world note.
+   A contradiction between chapters becomes visible and flagged instead of
+   silently overwritten, so the story-bible's reliability doesn't quietly
+   degrade over a long project the way a flat "current state" field would.
+2. **Voice-matching** — the style-exemplar library
+   (`story-bible/style-exemplars/`). Chapters scoring ≥80 on the QA gate's
+   quality score contribute 1-3 passages, classified by scene type, that
+   future drafting retrieves as models of this author's actual demonstrated
+   voice — not abstract craft advice, but "here's what *your* good dialogue
+   scenes actually read like." This is genuinely per-author: two writers
+   using book-forge on the same genre accumulate different exemplar
+   libraries and drift toward different voices, because they're each
+   modeling their own best work.
+3. **Craft calibration** — two feeding paths into `vault/craft-lessons/`:
+   `/book-forge:book-learn`'s periodic, deliberate promotion of durable
+   technique (existing mechanism), and the Override Contract system's
+   repeated-pattern detection (`qa-standards`): three or more Override
+   Contracts for the same reviewer + rationale_type in one project is a
+   signal that either a standing story-bible/genre-template rule is
+   missing (the "violation" is actually a consistent authorial choice
+   that should stop tripping the guidance at all) or there's a genuine
+   recurring weakness worth fixing. Either way, repeated friction becomes
+   a prompt to actually adapt the system, not an accumulating pile of
+   individually-approved exceptions.
+4. **Market awareness** — `/book-forge:market-pulse`, run periodically
+   (book-doctor flags staleness past ~6 weeks) rather than the one-time
+   research `research-agent` does at project creation. Each run compares
+   against the prior pulse to surface what's actually changed.
+
+**Deliberately deferred: reader-feedback ingestion.** Learning from actual
+published-book reviews/comments once a book is live (external platform
+review scraping, sentiment analysis feeding back into craft lessons or
+story-bible decisions) is out of scope for this spec. It was raised
+explicitly during design and set aside as a distinct, later problem —
+integrating with external publishing-platform APIs is its own scope
+(auth, rate limits, platform-specific review formats) and belongs with
+the publishing-pipeline follow-up spec, not bolted onto the writing loop
+described here. Noting it here so it isn't lost: the natural integration
+point, when that spec gets written, is a new ingestion path feeding into
+the same `/book-forge:book-learn` promotion mechanism already described
+above — reader feedback would become another *source* of candidate craft
+lessons, subject to the same classify/never-auto-merge/prune discipline
+the vault already applies to everything else.
+
 ## Risks and open technical unknowns
 
 - **Localizing `book-forge` is real translation work**, not a config flip —
