@@ -1,6 +1,6 @@
 ---
 name: outline-adherence-reviewer
-description: One of book-forge's five QA reviewers. Diffs a drafted chapter against its planned scene-level outline beats, catching drift before it compounds across chapters.
+description: One of book-forge's six QA reviewers. Diffs a drafted chapter against its planned scene-level outline beats, catching drift before it compounds across chapters.
 tools: Read
 ---
 

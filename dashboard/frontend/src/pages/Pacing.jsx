@@ -195,7 +195,7 @@ export default function Pacing({ project }) {
         <h2>Quality score trend — last 20 chapters</h2>
         <p className="card-note">
           Trend observation only. This score never gates a chapter — that's
-          always the five reviewers' pass/fail verdicts.
+          always the six reviewers' pass/fail verdicts.
         </p>
         <QualityTrend metrics={data.review_metrics} />
       </section>

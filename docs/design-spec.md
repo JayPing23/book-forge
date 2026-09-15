@@ -236,7 +236,8 @@ refinements came out of this pass, applied below:
 
 ## Orchestration flow
 
-**`/book-new`:**
+**`/book-new`** (optionally preceded by `/book-idea` for a blank-page
+start — see the Ideation Agent section):
 1. Pick project type (complete-book / web-novel), genre, depth dial, and (if
    web-novel) platform convention.
 2. Research Agent runs automatically (craft + market research, reference
@@ -249,12 +250,18 @@ refinements came out of this pass, applied below:
 **`/book-write <chapter>`:** driven as an agent-harness-style state machine,
 persisted to `.project-memory\chapter-state\<id>.json` at every step — a fresh
 session can resume a chapter mid-pipeline by reading that file alone, with no
-conversation history required.
+conversation history required. Current implementation: see
+`commands/book-write.md` for the authoritative step-by-step (this section
+is a summary, kept in sync but not a substitute for it).
 
-1. **Context Agent** (project continuity from `.project-memory`) and a
+1. **Beat validity pre-check** (cheap, pre-draft): the planned beat is
+   checked against story-bible facts, the prior chapter's ending, and
+   recent-beat repetition *before* any prose is written — catches a broken
+   outline beat before paying for a full draft-and-review cycle on it.
+2. **Context Agent** (project continuity from `.project-memory`) and a
    **vault lookup** (relevant notes from `vault\craft-lessons\`) run in
    parallel — both are read-only grounding lookups.
-2. Primary agent drafts the chapter using that grounding plus the chapter's
+3. Primary agent drafts the chapter using that grounding plus the chapter's
    planned beat. Optionally, `--compete=N` runs N independent drafts in
    isolated git worktrees (agenthub pattern) and an LLM-judge pass picks the
    winner — opt-in, not default behavior. Reserve it for chapters that
@@ -263,39 +270,58 @@ conversation history required.
    error-clustering data (see Grounding in published research) puts
    consistency errors at 40-60% of narrative length, not concentrated at the
    bookends intuition suggests.
-3. Five independent, parallelizable checks run against the draft, each
+4. **Six** independent, parallelizable checks run against the draft, each
    reading the story-bible/ledger notes directly rather than trusting the
    Writer's own account of what it did (no check is self-adjudicated):
-   - **Continuity Reviewer** — contradicts established story-bible facts, world rules/setting (a magic-system rule broken, a geography contradiction), or small details (nomenclature, appearance, quantities changing without explanation)? Pass/fail with citation, not a subjective score.
-   - **Thread-Ledger Reviewer** — introduces an unlogged setup, or drops a thread that owed a payoff?
-   - **Outline-Adherence Reviewer** — diffs the chapter against its planned scene-level beats (see Project types below — outlines are scene-granular, not just chapter-level), catching drift before it compounds.
+   - **Continuity Reviewer** — contradicts established story-bible facts (reading each note's status-lifecycle Facts Log), world rules/setting (a magic-system rule broken, a geography contradiction), or small details (nomenclature, appearance, quantities changing without explanation)? Pass/fail with citation, not a subjective score.
+   - **Thread-Ledger Reviewer** — owns HARD-002 (broken promise: does this chapter respond to the prior chapter's ending hook?); also introduces an unlogged setup, or drops a thread that owed a payoff (urgency computed from tier weight × elapsed/recovery-window)?
+   - **Outline-Adherence Reviewer** — diffs the chapter against its planned scene-level beats, catching drift before it compounds.
    - **Voice-Consistency Reviewer** — checks each dialogue line against its speaker's voice profile, flags voice bleed, POV/perspective slips, and tone shifts.
    - **Motivation/Agency Reviewer** — checks whether each character action traces to their motivation core and the world's internal logic, or only makes sense because the outline needed them there; flags the specific paragraph/beat responsible, not just the chapter as a whole.
-4. **Humanizer + light-novel-style skills** run last, as a prose pass on a
+   - **Clarity Reviewer** (added after a gap was found — no other reviewer checked this) — owns HARD-001 (readability floor: can a reader tell what happened, who, and why), HARD-003 (pacing disaster: N consecutive chapters with zero progression), and HARD-004 (conflict vacuum: does this chapter have an identifiable problem/goal/stakes).
+5. **Humanizer + light-novel-style skills** run last, as a prose pass on a
    draft that has already passed structural QA — style polish is not asked to
    also catch plot holes.
-4.5. **Weighted quality score** (a sixth signal, distinct from the five
+6. **Weighted quality score** (a seventh signal, distinct from the six
    pass/fail checks): coherence, insight/scene-craft quality, and readability,
    scored and weighted the way `x-to-book-system`'s evaluation stage does.
-   The five checks above catch binary violations — plot holes, voice bleed,
-   dropped threads. None of them catch a chapter that passes every check and
-   is still just bland. A score below threshold doesn't block finalization
-   the way a failed check does, but it does flag the chapter for your review
-   rather than silently shipping mediocre-but-technically-correct prose.
-5. **Revision loop with a hard cap**: if any check fails, the primary agent
-   revises and only the failing check re-runs (not the whole pipeline) — up to
-   3 attempts per check. Exhausting the cap is not a pass: the chapter's state
-   moves to `escalated`, the specific failure and evidence are surfaced to
-   you, and the pipeline stops rather than forcing the chapter through or
+   The six checks above catch binary violations — plot holes, voice bleed,
+   dropped threads, unreadable/static chapters. None of them catch a chapter
+   that passes every check and is still just bland. A score below threshold
+   doesn't block finalization the way a failed check does, but it does flag
+   the chapter for your review rather than silently shipping
+   mediocre-but-technically-correct prose.
+7. **Revision loop with a hard cap, and Override Contracts for soft findings**:
+   a **Hard Invariant** failure (HARD-001 through HARD-004, per the
+   `qa-standards` skill) is never overridable — the primary agent revises
+   and only the failing check re-runs, up to 3 attempts, then escalates. A
+   **soft-guidance** finding (weak hook, missing micro-payoff, a deliberate
+   pacing/voice/outline deviation) can instead be resolved via an **Override
+   Contract** — a logged, reasoned trade-off with a `rationale_type` from a
+   fixed taxonomy, tracked as debt. Three or more contracts with the same
+   reviewer + rationale_type in one project trigger a prompt to either fix
+   the recurring issue or promote it to a standing story-bible/
+   genre-template rule — see the Self-improvement loop section. Exhausting
+   the Hard Invariant attempt cap is never a pass: the chapter's state moves
+   to `escalated`, the specific failure and evidence are surfaced to you,
+   and the pipeline stops rather than forcing the chapter through or
    looping indefinitely.
-6. Chapter commits to the versioned chapter chain (`.story-system`), with
+8. Chapter commits to the versioned chapter chain (`.story-system`), with
    provenance metadata (AI-drafted vs. human-revised proportion) recorded
    alongside it for future KDP AI-disclosure compliance.
-7. **Deconstruction Agent** extracts new facts into `.project-memory` (this book
-   only — plot-specific, not durable craft knowledge).
-8. `/book-learn` pushes durable craft lessons (what worked, what didn't, prose
-   patterns, humanizer tuning) — not plot facts — up to `vault\craft-lessons\`,
-   so the next project, any genre, starts smarter.
+9. **Deconstruction Agent** extracts new facts into each affected note's
+   status-lifecycle **Facts Log** (active/outdated/contradicted/tentative —
+   an update never silently overwrites a prior value, a genuine
+   contradiction is flagged rather than resolved unilaterally) and, for
+   chapters scoring ≥80, captures 1-3 strong passages into
+   `story-bible/style-exemplars/` classified by scene type — this book only,
+   plot- and voice-specific, not durable cross-project craft knowledge.
+10. `/book-learn` pushes durable craft lessons (what worked, what didn't,
+    prose patterns, humanizer tuning) — not plot facts — up to
+    `vault\craft-lessons\`, so the next project, any genre, starts smarter.
+    `/book-forge:market-pulse` separately refreshes the market-research half
+    of Research Agent's job on demand, since that snapshot goes stale over a
+    project's real timeline in a way craft lessons don't.
 
 ## Context management (borrowed from `x-to-book-system`)
 
@@ -419,8 +445,9 @@ writers should be able to clone it, use it, and suggest improvements. That
 splits the workspace into two repositories:
 
 - **`book-forge`** (new, separate git repo): the reusable plugin. Every
-  agent (Research, Context, the five QA reviewers, Deconstruction, both
-  outline agents), the `light-novel-style` skill, `humanizer` bundled
+  agent (Research, Ideation, Context, the six QA reviewers, Deconstruction,
+  both outline agents), the `light-novel-style`/`payoff-craft`/
+  `qa-standards` skills, `humanizer` bundled
   in-repo (MIT license, attribution notice preserved), every slash command,
   project-scaffolding templates (empty skeletons, not real content), and
   this design spec itself — recast as the plugin's own architecture
@@ -504,17 +531,26 @@ phase entirely — Obsidian's skills are already installed and verified.
    rebuild can lag).
 2. **Core writing loop**: `/book-new` → outline → `/book-write` → one chapter
    out, no QA reviewers yet — proves the basic pipeline end-to-end.
-3. **QA gate**: the five reviewers (continuity, thread-ledger, outline-adherence,
-   voice-consistency, motivation/agency), built as an agent-harness-style state
+3. **QA gate** *(done — grew from five reviewers to six; see Orchestration
+   flow above)*: the reviewers, built as an agent-harness-style state
    machine with the persistent per-chapter state file, retry caps, and
    escalation path.
-4. **Research Agent**: craft/market research, per-project reference selection
-   and structural analysis, feeding `vault\craft-lessons\`.
-5. **Cross-project learning**: `/book-learn` writing durable craft lessons to
-   the shared vault, and later projects reading them back.
-6. **Optional — competing drafts**: `/book-write --compete=N` via the agenthub
-   pattern, for high-stakes chapters only. Lowest priority; add once the core
-   pipeline is proven and only if single-draft quality isn't already enough.
+4. **Research Agent** *(done)*: craft/market research, per-project reference
+   selection and structural analysis, feeding `vault\craft-lessons\`.
+5. **Cross-project learning** *(done)*: `/book-learn` writing durable craft
+   lessons to the shared vault, and later projects reading them back.
+6. **Optional — competing drafts** *(done)*: `/book-write --compete=N` via
+   the agenthub pattern, for high-stakes chapters only.
+7. **Self-improvement loop** *(done, added after the original six phases)*:
+   status-lifecycle Facts Log, style-exemplar capture, Override Contract
+   repeated-pattern detection, ongoing market-pulse research. See that
+   section above.
+
+This list is kept as a historical record of the original phasing — several
+items grew in scope well past their original one-line description as the
+design continued (most notably phase 3's QA gate). The Orchestration flow
+and Self-improvement loop sections above are the current, authoritative
+description; this list should not be read as still-accurate detail.
 
 ## Testing / validation approach
 
@@ -522,8 +558,12 @@ This is a content pipeline, not application code — there is no traditional uni
 test suite. Validation is:
 - `/book-doctor` (carried over from the fork): confirms the vault folder
   structure is intact, `obsidian-*` skills are available, plugin commands
-  resolve.
-- The five-check QA gate on every chapter *is* the test suite equivalent — a
-  chapter that fails continuity, thread-ledger, outline-adherence, voice, or
-  motivation checks does not get finalized, and repeated failure escalates to
-  you rather than silently passing.
+  resolve, and (as of the self-improvement loop) flags stale market-pulse
+  research per project.
+- The six-check QA gate on every chapter *is* the test suite equivalent — a
+  chapter that fails a Hard Invariant (readability, broken promise, pacing
+  disaster, conflict vacuum) or any of the other structural checks does not
+  get finalized, and repeated failure escalates to you rather than silently
+  passing. A soft-guidance finding can be resolved via a logged Override
+  Contract instead of a revision — but never silently, and never for a
+  Hard Invariant.

@@ -1,6 +1,6 @@
 ---
 name: thread-ledger-reviewer
-description: One of book-forge's five QA reviewers. Checks a drafted chapter against the plot-thread ledger (Obsidian notes in story-bible/plot-threads/) — flags unlogged new setups and dropped threads that owed a payoff.
+description: One of book-forge's six QA reviewers. Checks a drafted chapter against the plot-thread ledger (Obsidian notes in story-bible/plot-threads/) — flags unlogged new setups and dropped threads that owed a payoff.
 tools: Read, Grep, Write
 ---
 

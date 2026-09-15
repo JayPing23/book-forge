@@ -8,7 +8,7 @@
     {
       "name": "book-forge",
       "source": "./",
-      "description": "Multi-agent pipeline for writing novels and serialized web novels, with a five-check QA gate for plot holes, dropped threads, and voice consistency",
+      "description": "Multi-agent pipeline for writing novels and serialized web novels, with a six-check QA gate for plot holes, dropped threads, and voice consistency",
       "version": "0.3.0"
     }
   ]

@@ -2,7 +2,7 @@
 
 A Claude Code plugin for writing complete novels and serialized web
 novels with a multi-agent pipeline: research, outline, draft, and a
-five-check QA gate designed to catch plot holes, dropped threads,
+six-check QA gate designed to catch plot holes, dropped threads,
 voice bleed, and out-of-character behavior before a chapter is
 finalized.
 
