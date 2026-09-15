@@ -52,6 +52,33 @@ Edit `PLUGIN_DIR` at the top of the file if the book-forge repo isn't at
 serves the prebuilt `frontend/dist` directly and the dashboard is a single
 Python process with no dependencies outside the standard library.
 
+## Images (the one thing it writes)
+
+Cover art and character portraits can be uploaded from the dashboard — drag
+and drop, or pick a file. They're stored in
+`projects/<name>/story-bible/images/` and shown on the library shelf and in
+the sidebar. An uploaded cover replaces the generated typographic one.
+
+Uploading is the **only** write this dashboard performs; everything else
+below is strictly read-only. Because it is a write path, it is deliberately
+narrow:
+
+- File type is decided by **magic bytes**, never the filename or the
+  `Content-Type` header — a `.png` that is actually a script is rejected.
+- The stored filename is **generated**, never taken from the request, so a
+  crafted name cannot traverse out of the project.
+- Size is capped at 10 MB before anything touches disk.
+- Writes are confined to `story-bible/images/`.
+
+Portraits are for your own reference while writing. **No agent reads them**
+and they are never included in an export.
+
+The upload panel checks your image against the target platform's own rule
+(Royal Road 400×600+, Webnovel exactly 600×800, Scribble Hub 250×350 display,
+KDP 1600×2560 at 1.6:1) and tells you when it doesn't match. That check is
+advisory — it never blocks an upload, since a work-in-progress cover is a
+perfectly reasonable thing to have on the shelf.
+
 ## What it reads (read-only — this dashboard never writes to your project)
 
 | Page | Source files |

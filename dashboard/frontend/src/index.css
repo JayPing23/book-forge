@@ -287,6 +287,85 @@ code {
 }
 .cover-wide { aspect-ratio: 16 / 7; }
 
+/* An uploaded cover replaces the generated one entirely — no gradient, no
+   overlaid title, because a real cover already carries its own typography. */
+.cover-photo { padding: 0; background: var(--surface-sunk); }
+.cover-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ============ IMAGE UPLOAD ============ */
+.uploader { max-width: 280px; }
+.uploader-title { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+
+.dropzone {
+  position: relative;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunk);
+  overflow: hidden;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.dropzone.is-dragging {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+  border-style: solid;
+}
+.dropzone.has-image { border-style: solid; border-color: var(--rule); }
+.dropzone-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.dropzone-empty {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 7px; padding: 18px;
+  background: none; border: 0; cursor: pointer;
+  color: var(--text-muted); font: inherit; text-align: center;
+}
+.dropzone-empty:hover { color: var(--text); }
+.dropzone-plus {
+  font-size: 26px; line-height: 1; font-weight: 300;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+}
+.dropzone-text { font-size: 12px; max-width: 20ch; line-height: 1.5; }
+.dropzone-spec {
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted); opacity: 0.85;
+}
+.dropzone-busy {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  font-size: 12px; font-weight: 600;
+}
+
+.uploader-actions {
+  display: flex; align-items: center; gap: 7px; margin-top: 9px; flex-wrap: wrap;
+}
+.uploader-dims {
+  font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);
+  margin-left: auto;
+}
+.uploader-spec {
+  margin: 8px 0 0; font-size: 11px; line-height: 1.5;
+}
+.uploader-spec.is-ok { color: var(--text-muted); }
+.uploader-spec.is-warn { color: var(--warn); }
+.uploader-error {
+  margin: 8px 0 0; font-size: 11px; color: var(--danger); line-height: 1.5;
+}
+
+/* Character card: portrait beside the profile table */
+.character-row { display: grid; grid-template-columns: 148px 1fr; gap: 20px; }
+.character-row .uploader { max-width: 148px; }
+.character-detail { min-width: 0; }
+.character-detail h2 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.character-detail .chip { display: inline-flex; align-items: center; gap: 4px; }
+
+@media (max-width: 560px) {
+  .character-row { grid-template-columns: 1fr; }
+  .character-row .uploader { max-width: 148px; }
+}
+
 .book-card-body { padding-top: 13px; }
 .book-card-title {
   font-family: var(--font-serif);

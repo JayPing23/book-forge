@@ -30,7 +30,7 @@ function BookCard({ book, navigate }) {
           navigate({ view: "book", project: book.name, section: "overview" });
         }}
       >
-        <CoverArt title={book.name} genre={book.genre} />
+        <CoverArt title={book.name} genre={book.genre} project={book.name} />
         <div className="book-card-body">
           <h3 className="book-card-title">{book.name}</h3>
           <div className="book-card-meta">

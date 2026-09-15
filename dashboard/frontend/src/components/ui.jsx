@@ -91,11 +91,28 @@ export function Card({ title, hint, note, children, actions }) {
  * the way a real cover would be. Deterministic: the same book always gets the
  * same colour across reloads and machines.
  */
-export function CoverArt({ title, genre, size = "grid" }) {
+export function CoverArt({ title, genre, size = "grid", project }) {
+  // Try the uploaded cover first; fall back to the generated one on error.
+  // Cheaper and simpler than probing with a HEAD request, and self-correcting
+  // when a cover is added or removed.
+  const [useUploaded, setUseUploaded] = useState(Boolean(project));
+
   let h = 0;
   for (let i = 0; i < title.length; i++) h = (h * 31 + title.charCodeAt(i)) % 360;
   const h2 = (h + 38) % 360;
   const words = title.split(/[\s_-]+/).filter(Boolean);
+
+  if (project && useUploaded) {
+    return (
+      <div className={`cover cover-${size} cover-photo`}>
+        <img
+          src={`/api/projects/${encodeURIComponent(project)}/cover`}
+          alt=""
+          onError={() => setUseUploaded(false)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div

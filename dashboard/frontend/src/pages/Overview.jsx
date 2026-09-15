@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
 import { IconAlert } from "../components/icons.jsx";
 import { Card, StatTile, Spinner, InfoTip } from "../components/ui.jsx";
+import ImageUpload, { specForProject } from "../components/ImageUpload.jsx";
 
 export default function Overview({ project }) {
   const [data, setData] = useState(null);
@@ -89,6 +90,26 @@ export default function Overview({ project }) {
           )}
         </div>
       )}
+
+      <Card
+        title="Cover"
+        hint={<>Stored in <code>story-bible/images/</code> and shown on the library shelf. The dimension check below is the target platform's own rule — advisory, never enforced, since you may be uploading a work in progress.</>}
+        note={
+          <>
+            book-forge writes a cover <em>brief</em> (art direction —
+            composition, palette, mood) via <code>/book-forge:book-cover</code>,
+            not an image. Take that brief to an illustrator or an image tool,
+            then upload the result here to see it on the shelf.
+          </>
+        }
+      >
+        <ImageUpload
+          project={data}
+          kind="cover"
+          aspect={data.project_type === "complete-book" ? "1 / 1.6" : "3 / 4"}
+          spec={specForProject(data)}
+        />
+      </Card>
 
       <Card
         title="Project settings"

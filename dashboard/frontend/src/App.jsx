@@ -67,7 +67,7 @@ function BookShell({ project, section, navigate }) {
     <div className="book-shell">
       <nav className="sidebar" aria-label={`${project} sections`}>
         <div className="sidebar-book">
-          <CoverArt title={project} size="wide" />
+          <CoverArt title={project} size="wide" project={project} />
           <h2 className="sidebar-title">{project}</h2>
           <p className="sidebar-note">
             Everything below reads this project's own files. Nothing here writes

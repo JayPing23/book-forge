@@ -90,6 +90,49 @@ def chapter_number(identifier):
     return int(match.group(1)) if match else None
 
 
+"""Image upload support.
+
+This is the ONE place the dashboard writes to a project, so it is deliberately
+narrow. The server binds to 127.0.0.1 only, but that is not treated as the
+security boundary on its own:
+
+  - File type is decided by MAGIC BYTES, never by the supplied filename or
+    Content-Type. A caller can claim anything; the first bytes of the file
+    cannot be faked as cheaply.
+  - The stored filename is generated, never taken from the request, so a
+    crafted name can't traverse out of the project.
+  - Size is capped before anything touches disk.
+  - Writes are confined to <project>/story-bible/images/.
+"""
+
+MAX_IMAGE_BYTES = 10 * 1024 * 1024  # 10 MB — above every platform's own cap
+
+IMAGE_SIGNATURES = (
+    (b"\x89PNG\r\n\x1a\n", "png", "image/png"),
+    (b"\xff\xd8\xff", "jpg", "image/jpeg"),
+    (b"GIF87a", "gif", "image/gif"),
+    (b"GIF89a", "gif", "image/gif"),
+)
+
+
+def sniff_image(data):
+    """Return (extension, mime) from the file's own bytes, or (None, None)."""
+    for sig, ext, mime in IMAGE_SIGNATURES:
+        if data.startswith(sig):
+            return ext, mime
+    # WEBP is RIFF....WEBP — the size field sits between the two markers.
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "webp", "image/webp"
+    return None, None
+
+
+def safe_slug(value):
+    """A conservative slug for a filename component. Anything outside the
+    allowlist is dropped, so '../../etc/passwd' reduces to 'etcpasswd'."""
+    cleaned = re.sub(r"[^A-Za-z0-9_-]", "", (value or "").strip())
+    return cleaned[:64]
+
+
 TIER_WEIGHTS = {"core": 3.0, "side": 2.0, "decorative": 1.0}
 TIER_WINDOWS = {"core": 175, "side": 65, "decorative": 20}  # midpoint of the guide's recovery windows
 
@@ -239,6 +282,10 @@ class Workspace:
                 continue
             out.append({
                 "name": note.get("name", note["_filename"]),
+                # Stable key for the portrait image — the note's filename, not
+                # the display name, so renaming a character in frontmatter
+                # doesn't orphan their picture.
+                "slug": note["_filename"],
                 "is_protagonist": note.get("is_protagonist", False),
                 "speech_register": note.get("speech_register"),
                 "want": note.get("want"),
@@ -348,6 +395,49 @@ class Workspace:
                 continue
         return out
 
+    def images_dir(self, name):
+        d = self.project_dir(name) / "story-bible" / "images"
+        d.mkdir(parents=True, exist_ok=True)
+        return d
+
+    def image_stem(self, kind, slug=None):
+        """Generated stem — never derived from the uploaded filename."""
+        if kind == "cover":
+            return "cover"
+        if kind == "portrait" and slug:
+            return f"portrait-{safe_slug(slug)}"
+        raise ValueError("unknown image kind")
+
+    def find_image(self, name, kind, slug=None):
+        stem = self.image_stem(kind, slug)
+        for ext in ("png", "jpg", "gif", "webp"):
+            p = self.images_dir(name) / f"{stem}.{ext}"
+            if p.exists():
+                return p
+        return None
+
+    def save_image(self, name, kind, slug, data):
+        ext, mime = sniff_image(data)
+        if not ext:
+            raise ValueError("not a recognised image (expected PNG, JPEG, GIF or WEBP)")
+        stem = self.image_stem(kind, slug)
+        # Remove any prior extension for this slot so we never leave two files
+        # claiming the same role.
+        for old in ("png", "jpg", "gif", "webp"):
+            prior = self.images_dir(name) / f"{stem}.{old}"
+            if prior.exists():
+                prior.unlink()
+        path = self.images_dir(name) / f"{stem}.{ext}"
+        path.write_bytes(data)
+        return {"path": path.name, "mime": mime, "bytes": len(data)}
+
+    def delete_image(self, name, kind, slug=None):
+        p = self.find_image(name, kind, slug)
+        if p:
+            p.unlink()
+            return True
+        return False
+
     def override_debt(self, name):
         mem = self.project_dir(name) / ".project-memory"
         path = mem / "override-contracts.json"
@@ -418,6 +508,72 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     workspace: Workspace = None  # set by main()
     frontend_dist: Path = None  # set by main()
 
+    def _send_image(self, path):
+        data = path.read_bytes()
+        _, mime = sniff_image(data)
+        self.send_response(200)
+        self.send_header("Content-Type", mime or "application/octet-stream")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def _image_target(self, parts):
+        """Map a URL to (project, kind, slug), or None if it isn't an image route."""
+        if parts[:2] != ["api", "projects"]:
+            return None
+        if len(parts) == 4 and parts[3] == "cover":
+            return parts[2], "cover", None
+        if len(parts) == 5 and parts[3] == "portrait":
+            return parts[2], "portrait", parts[4]
+        return None
+
+    def _read_body(self):
+        """Read the raw body with a hard size cap.
+
+        The client posts the file bytes directly rather than multipart: we
+        control both ends, and Python 3.13 removed the `cgi` module that used
+        to parse multipart, so this avoids hand-rolling a parser for no gain.
+        """
+        length = int(self.headers.get("Content-Length") or 0)
+        if length <= 0:
+            raise ValueError("empty upload")
+        if length > MAX_IMAGE_BYTES:
+            raise ValueError(
+                f"file is {length // 1024 // 1024} MB; the limit is "
+                f"{MAX_IMAGE_BYTES // 1024 // 1024} MB"
+            )
+        return self.rfile.read(length)
+
+    def do_POST(self):
+        parts = [p for p in urlparse(self.path).path.split("/") if p]
+        target = self._image_target(parts)
+        if not target:
+            return self._json({"error": "not found"}, 404)
+        name, kind, slug = target
+        try:
+            data = self._read_body()
+            return self._json(self.workspace.save_image(name, kind, slug, data))
+        except FileNotFoundError:
+            return self._json({"error": f"project not found: {name}"}, 404)
+        except ValueError as e:
+            return self._json({"error": str(e)}, 400)
+        except Exception as e:  # noqa: BLE001
+            return self._json({"error": str(e)}, 500)
+
+    def do_DELETE(self):
+        parts = [p for p in urlparse(self.path).path.split("/") if p]
+        target = self._image_target(parts)
+        if not target:
+            return self._json({"error": "not found"}, 404)
+        name, kind, slug = target
+        try:
+            removed = self.workspace.delete_image(name, kind, slug)
+            return self._json({"removed": removed})
+        except FileNotFoundError:
+            return self._json({"error": f"project not found: {name}"}, 404)
+        except Exception as e:  # noqa: BLE001
+            return self._json({"error": str(e)}, 500)
+
     def _json(self, payload, status=200):
         body = json.dumps(payload).encode("utf-8")
         self.send_response(status)
@@ -434,6 +590,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         try:
             if parts[:2] == ["api", "projects"] and len(parts) == 2:
                 return self._json({"projects": self.workspace.list_projects()})
+
+            # Image routes come first: /cover and /portrait/<slug> serve bytes,
+            # not JSON, so they must not fall through to the endpoint table.
+            target = self._image_target(parts)
+            if target:
+                name, kind, slug = target
+                found = self.workspace.find_image(name, kind, slug)
+                if not found:
+                    return self._json({"error": "no image"}, 404)
+                return self._send_image(found)
 
             if parts == ["api", "library"]:
                 return self._json({"books": self.workspace.library()})
