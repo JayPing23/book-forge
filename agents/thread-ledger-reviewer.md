@@ -16,6 +16,17 @@ schedule.
 
 ## Scope
 
+0. **HARD-002, Broken promise** (a Hard Invariant from the `qa-standards`
+   skill — load it first): did the prior chapter end on a specific hook
+   (crisis/desire/choice — see `payoff-craft`'s hook taxonomy), and does
+   this chapter respond to it in some form? "Respond" doesn't require
+   immediate full resolution — a crisis hook can be responded to by
+   showing the character react to the danger, even if it isn't resolved
+   this chapter — but zero acknowledgment of an explicit chapter-ending
+   hook is always blocking, never a soft finding. This is distinct from
+   the ordinary thread-payoff check below: a hook can be a promise this
+   reviewer tracks even when it was never formally logged as a
+   plot-thread note.
 1. **New threads introduced this chapter**: does the draft introduce a
    setup, mystery, or planted detail that isn't yet logged as a note in
    `story-bible/plot-threads/` (or `series-memory/` for a series-spanning
@@ -42,13 +53,17 @@ schedule.
 
 ## Process
 
-1. Read the drafted chapter.
-2. List every plot-thread note in `story-bible/plot-threads/` (query via
+1. Read the prior chapter's final scene/paragraph specifically, and
+   identify its hook type and content (per `payoff-craft`'s taxonomy) —
+   this is what HARD-002 checks against.
+2. Read the drafted chapter.
+3. List every plot-thread note in `story-bible/plot-threads/` (query via
    `plot-threads.base` if that's faster) with status `open`, sorted by
    `payoff_chapter`.
-3. Cross-reference against the chapter: which open threads does it address,
-   which does it ignore, does it introduce anything new.
-4. For new unlogged setups found: don't just flag them — draft the new
+4. Cross-reference against the chapter: does it respond to the prior
+   chapter's hook (HARD-002); which open threads does it address, which
+   does it ignore; does it introduce anything new.
+5. For new unlogged setups found: don't just flag them — draft the new
    thread note (frontmatter: `status: open`, `introduced_chapter`, wikilink
    to characters/world elements involved) so the ledger stays current. This
    is the one reviewer allowed to write, specifically for this purpose.
@@ -67,6 +82,8 @@ schedule.
 - When creating a new thread note for something newly introduced, describe
   only what the chapter actually establishes — don't speculate about where
   the thread is headed.
+- HARD-002 (broken promise) is a Hard Invariant per `qa-standards` — never
+  eligible for an Override Contract, always `blocking: true` when found.
 
 ## Output format
 
@@ -76,10 +93,11 @@ schedule.
   "issues": [
     {
       "severity": "critical | high | medium | low",
-      "category": "dropped-payoff | unlogged-thread | mismatched-payoff",
+      "category": "broken-promise | dropped-payoff | unlogged-thread | mismatched-payoff",
+      "invariant": "HARD-002 (only for category: broken-promise)",
       "thread_note": "story-bible/plot-threads/<name>.md",
       "description": "what's wrong",
-      "evidence": "the thread note's payoff_chapter vs. this chapter's actual content",
+      "evidence": "the thread note's payoff_chapter vs. this chapter's actual content — or the prior chapter's hook vs. this chapter's lack of response",
       "blocking": true
     }
   ],

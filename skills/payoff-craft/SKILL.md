@@ -8,6 +8,40 @@ description: Use when planning or drafting a chapter's payoff beat (a "cool poin
 A payoff beat isn't luck — it has a structure. This skill gives that
 structure so drafting doesn't rely on improvising tension from nothing.
 
+## Hook types (what closes a scene or chapter)
+
+Five types, each with a different reader mechanism — don't reach for the
+same one out of habit:
+
+- **Crisis Hook**: danger arrives or closes in. Strongest at chapter end.
+- **Mystery Hook**: an information gap opens (something is withheld or
+  unexplained). Works well mid-chapter to sustain immersion, not just at
+  the end.
+- **Desire Hook**: a wanted outcome is now visible on the horizon. Five
+  flavors — growth ("three more days to breakthrough"), relationship
+  ("she said yes"), revenge ("he doesn't know his reckoning is near"),
+  truth ("the answer might be in this pendant"), reward ("this find alone
+  could remake him"). Match the flavor to what this project's reader
+  actually wants more of.
+- **Emotion Hook**: a strong feeling — anger, heartbreak, empathy,
+  injustice, shame, a spark of attraction. Needs real setup; an emotion
+  the text hasn't earned reads as manipulative. Works mid-chapter for
+  immersion, or at chapter end for a gut-punch close.
+- **Choice Hook**: a genuine dilemma with real cost on both sides. The
+  wrong-answer option must be genuinely wrong for someone, and the choice
+  must fit the character making it — a hook where the "right" answer is
+  obvious isn't actually a hook.
+
+**Placement**: Crisis, Desire, and Choice hooks are strongest as chapter
+endings — they're what pulls a reader into the next chapter. Mystery and
+Emotion hooks work well *inside* a chapter to keep a reader immersed
+scene-to-scene, not just at the boundary.
+
+**Intensity**: strong (volume-end, major turn, before a big confrontation
+— reader must know what happens next immediately), medium (an ordinary
+plot chapter — reader wants to know, but can wait), weak (a transition/
+setup chapter — just needs to maintain reading momentum, not demand it).
+
 ## Six payoff patterns
 
 1. **Status-flex reveal**: someone underestimates the protagonist →
@@ -27,6 +61,50 @@ structure so drafting doesn't rely on improvising tension from nothing.
 6. **Sweet exceeds expectation**: an ordinary moment → an unexpected,
    pleasant surprise → emotional warmth rises. Fits romance/sweet-focused
    projects.
+7. **Misunderstanding elevation**: the protagonist does something
+   throwaway-casual → a side character lacks the context to know that →
+   they over-interpret it as evidence of hidden mastery → the reader,
+   who has the missing context, gets the pleasure of being in on it.
+   Strong fit for progression-fantasy/system stories and comedy; actively
+   damages tone in serious or mystery-driven projects — check the
+   project's genre and Depth Dial before reaching for this one. Needs the
+   side character's misreading to be a *plausible* leap from what they
+   actually observed, not just credulity for its own sake — an
+   unsupported misunderstanding reads as the side character being written
+   stupid, which is its own failure mode (see common failures below).
+8. **Identity reveal**: a concealed identity, held under deliberate
+   long-form setup, breaks open at a high-pressure moment → the people
+   around the protagonist react with shock, regret, or newfound respect.
+   The setup has to be real — established concealment across prior
+   chapters, not a fact invented at the moment of the reveal.
+
+Rotate patterns deliberately — three uses of the same pattern in a row is
+exactly the fatigue this skill's density guidance exists to prevent (see
+"Common failures" below).
+
+## Micro-payoffs (distinct from the six patterns above)
+
+A micro-payoff is not a cool-point beat — it's the light, frequent "this
+chapter wasn't wasted" feeling that keeps a chapter engaging between the
+bigger patterns above. Lower stakes, much higher frequency.
+
+Seven types: **information** (a clue or fact revealed), **relationship**
+(a relationship visibly moves — confirmed, deepened, tested),
+**ability** (a skill or capability advances), **resource** (an item or
+asset gained), **recognition** (the protagonist earns acknowledgment or
+standing), **emotional** (a feeling gets released or resolved, even
+briefly), **clue** (a planted thread advances toward its payoff).
+
+**Genre-tuned frequency per chapter** (guidance, not a hard rule):
+power-fantasy/progression leans ability/resource/recognition, 2-3 per
+chapter; romance leans relationship/emotional/recognition, 1-2 per
+chapter; mystery leans information/clue, 1-2 per chapter; slice-of-life
+leans relationship/emotional, about 1 per chapter.
+
+A transition chapter can drop to a single micro-payoff (prefer
+information or a light relationship/emotional beat) but should never
+drop to zero — a chapter with no micro-payoff at all is what "this
+chapter felt like nothing happened" actually means mechanically.
 
 ## The 30/40/30 structure
 
