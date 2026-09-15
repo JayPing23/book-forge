@@ -290,6 +290,64 @@ class Workspace:
                 pass
         return {"strand_tracker": strand_tracker, "review_metrics": review_metrics}
 
+    def chapter_detail(self, name, chapter_id):
+        """One chapter's prose plus its neighbours, for the reader view."""
+        target = chapter_number(chapter_id)
+        chapters = self.chapters(name)
+        idx = next((i for i, c in enumerate(chapters) if c["number"] == target), None)
+        if idx is None:
+            raise FileNotFoundError(f"chapter {chapter_id}")
+
+        manuscript = self.project_dir(name) / "manuscript"
+        path = next(
+            (p for p in manuscript.glob("*.md")
+             if chapter_number(p.stem) == target), None
+        )
+        if path is None:
+            raise FileNotFoundError(f"chapter {chapter_id}")
+
+        fm, body = parse_frontmatter(path.read_text(encoding="utf-8"))
+        # Drop a leading H1 — the reader renders its own chapter header, and
+        # showing both reads as a duplicated title.
+        lines = body.strip().split("\n")
+        while lines and (not lines[0].strip() or lines[0].lstrip().startswith("# ")):
+            lines.pop(0)
+
+        meta = chapters[idx]
+        return {
+            "chapter_id": meta["chapter_id"],
+            "number": meta["number"],
+            "title": meta["title"] or f"Chapter {meta['number']}",
+            "status": meta["status"],
+            "word_count": meta["word_count"],
+            "body": "\n".join(lines).strip(),
+            "prev": chapters[idx - 1]["chapter_id"] if idx > 0 else None,
+            "next": chapters[idx + 1]["chapter_id"] if idx + 1 < len(chapters) else None,
+        }
+
+    def library(self):
+        """Enriched project cards for the library home."""
+        out = []
+        for name in self.list_projects():
+            try:
+                info = self.read_project_json(name)
+                chapters = self.chapters(name)
+                pdir = self.project_dir(name)
+                mtimes = [p.stat().st_mtime for p in pdir.rglob("*.md")]
+                out.append({
+                    "name": name,
+                    "project_type": info.get("project_type"),
+                    "genre": info.get("genre"),
+                    "length_tier": info.get("length_tier"),
+                    "chapter_count": len(chapters),
+                    "total_words": sum(c["word_count"] for c in chapters),
+                    "published_through": info.get("published_through"),
+                    "last_activity": max(mtimes) if mtimes else None,
+                })
+            except (OSError, FileNotFoundError):
+                continue
+        return out
+
     def override_debt(self, name):
         mem = self.project_dir(name) / ".project-memory"
         path = mem / "override-contracts.json"
@@ -377,6 +435,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             if parts[:2] == ["api", "projects"] and len(parts) == 2:
                 return self._json({"projects": self.workspace.list_projects()})
 
+            if parts == ["api", "library"]:
+                return self._json({"books": self.workspace.library()})
+
+            # /api/projects/<name>/chapters/<chapter_id>
+            if parts[:2] == ["api", "projects"] and len(parts) == 5 and parts[3] == "chapters":
+                return self._json(self.workspace.chapter_detail(parts[2], parts[4]))
+
             if parts[:2] == ["api", "projects"] and len(parts) == 4:
                 name, endpoint = parts[2], parts[3]
                 if endpoint == "overview":
@@ -392,6 +457,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     return self._json(self.workspace.doctor(name))
                 if endpoint == "override-debt":
                     return self._json(self.workspace.override_debt(name))
+                if endpoint == "chapters":
+                    return self._json({"chapters": self.workspace.chapters(name)})
                 return self._json({"error": "unknown endpoint"}, 404)
 
             if parts and parts[0] == "api":
@@ -410,6 +477,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self._json({
             "error": "Frontend not built yet. Run: cd dashboard/frontend && npm install && npm run build",
         }, 503)
+
+    def end_headers(self):
+        # index.html must never be cached: Vite fingerprints the JS/CSS
+        # filenames, so a cached shell keeps pointing at the previous build's
+        # assets and a rebuild appears to do nothing. The fingerprinted assets
+        # are themselves safe to cache, since their names change on rebuild.
+        path = urlparse(self.path).path
+        last = path.rsplit("/", 1)[-1]
+        if path.endswith(".html") or path == "/" or "." not in last:
+            self.send_header("Cache-Control", "no-store, must-revalidate")
+        super().end_headers()
 
     def log_message(self, format, *args):  # noqa: A002 - quiet by default
         pass

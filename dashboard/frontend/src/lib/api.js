@@ -9,12 +9,17 @@ async function getJSON(path) {
   return res.json();
 }
 
+const enc = encodeURIComponent;
+
 export const api = {
   listProjects: () => getJSON("/projects").then((d) => d.projects),
-  overview: (name) => getJSON(`/projects/${encodeURIComponent(name)}/overview`),
-  characters: (name) => getJSON(`/projects/${encodeURIComponent(name)}/characters`).then((d) => d.characters),
-  plotThreads: (name) => getJSON(`/projects/${encodeURIComponent(name)}/plot-threads`).then((d) => d.threads),
-  pacing: (name) => getJSON(`/projects/${encodeURIComponent(name)}/pacing`),
-  doctor: (name) => getJSON(`/projects/${encodeURIComponent(name)}/doctor`),
-  overrideDebt: (name) => getJSON(`/projects/${encodeURIComponent(name)}/override-debt`),
+  library: () => getJSON("/library").then((d) => d.books),
+  overview: (name) => getJSON(`/projects/${enc(name)}/overview`),
+  characters: (name) => getJSON(`/projects/${enc(name)}/characters`).then((d) => d.characters),
+  plotThreads: (name) => getJSON(`/projects/${enc(name)}/plot-threads`).then((d) => d.threads),
+  pacing: (name) => getJSON(`/projects/${enc(name)}/pacing`),
+  doctor: (name) => getJSON(`/projects/${enc(name)}/doctor`),
+  overrideDebt: (name) => getJSON(`/projects/${enc(name)}/override-debt`),
+  chapters: (name) => getJSON(`/projects/${enc(name)}/chapters`).then((d) => d.chapters),
+  chapter: (name, id) => getJSON(`/projects/${enc(name)}/chapters/${enc(id)}`),
 };
