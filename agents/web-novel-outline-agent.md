@@ -19,14 +19,36 @@ near-term window.
 ## The three layers
 
 1. **Skeleton outline** (whole book, required): the overall arc — opening
-   state and core conflict, at least 3 major turning points, and the
-   story's end goal. Write this once at project creation; it should survive
-   the whole project with only rare, deliberate revision (see Outline
-   changelog below).
+   state and core conflict, major turning points, and the story's end
+   goal. Write this once at project creation; it should survive the whole
+   project with only rare, deliberate revision (see Outline changelog
+   below).
+
+   **Scale the turning points to `length_tier`.** Three turning points
+   describes a 150-chapter serial adequately and a 1000-chapter one not
+   at all — at that length it's not a skeleton, it's a shrug:
+
+   | `length_tier` | Chapters | Turning points | Volumes |
+   |---|---|---|---|
+   | `short` | ~100-250 | 3-5 | 3-6 |
+   | `mid` | ~500 | 6-10 | 8-12 |
+   | `long` | ~1000 | 12-20 | 15-25 |
+
+   These are planning targets, not quotas to pad toward. A volume lands
+   around 40-70 chapters in every tier — that's the range where a volume
+   is long enough to hold a real arc and short enough that
+   `/book-forge:book-compact` can compress it meaningfully.
 2. **Volume outline** (whole book, required): the skeleton broken into
    volumes, each with its own goal, main conflicts, a volume-ending climax,
    and any foreshadowing planted for later payoff. Each volume should be
    independently satisfying — a small arc, not just a chunk of a bigger one.
+
+   For `mid` and `long` tiers, volume boundaries are load-bearing beyond
+   story structure: they're the unit `/book-forge:book-compact` compresses
+   to keep context flat. A project whose volumes are vaguely defined, or
+   whose "volumes" run 200 chapters, can't be compacted — and at 1000
+   chapters that isn't a tidiness problem, it's the thing that makes the
+   project stall.
 3. **Chapter outline** (rolling window, required for the next 10-20 chapters
    only): scene-level detail — per chapter, the scenes it contains, main
    and side plot beats, the payoff/hook density for that chapter, and the

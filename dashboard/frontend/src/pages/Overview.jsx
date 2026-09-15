@@ -51,6 +51,22 @@ export default function Overview({ project }) {
         </div>
       </div>
 
+      {/* Publication frontier — only meaningful once something is published. */}
+      {data.published_through && (
+        <div className="stat-row">
+          <div className="stat-tile">
+            <div className="label">Published through</div>
+            <div className="value">{data.published_through}</div>
+          </div>
+          <div className="stat-tile">
+            <div className="label">Buffer (unpublished)</div>
+            <div className={`value ${data.buffer === 0 ? "is-danger" : ""}`}>
+              {data.buffer ?? "—"}
+            </div>
+          </div>
+        </div>
+      )}
+
       <section className="card">
         <h2>Project settings</h2>
         <table className="kv">
@@ -59,6 +75,15 @@ export default function Overview({ project }) {
             <tr><td>Genre</td><td>{data.genre || "—"}</td></tr>
             <tr><td>Depth dial</td><td>{data.depth_dial || "—"}</td></tr>
             <tr><td>Platform convention</td><td>{data.platform_convention || "—"}</td></tr>
+            <tr><td>Length tier</td><td>{data.length_tier || "—"}</td></tr>
+            <tr>
+              <td>Target chapter words</td>
+              <td className="num">
+                {data.target_chapter_words
+                  ? Number(data.target_chapter_words).toLocaleString()
+                  : "—"}
+              </td>
+            </tr>
             <tr><td>IP status</td><td>{data.ip_status || "—"}</td></tr>
             <tr>
               <td>Monetization allowed</td>

@@ -256,6 +256,23 @@ somewhere to hold them, those findings are computed and thrown away.
     `verdict`/`blocking` fields from step 5, never a derived trend number).
     Set `current_step: "finalized"`, save the state file.
 
+    **Session log.** Append this chapter's outcome to
+    `.project-memory/session-log.md` under today's session entry
+    (create the entry if this is the session's first finalized chapter;
+    otherwise extend the existing one rather than opening a second entry
+    for the same day). Record it in the `**Progress**` line — chapter
+    number, and anything notable like an escalation and how it resolved.
+    If this chapter produced a decision that will matter later (a plot
+    direction changed, a convention locked, a thread deliberately
+    dropped), add it under `**Decisions**`; if it raised something
+    unresolved, add it under `**Open questions**`. Always update
+    `**Resume here**`. Format and rules: see `/book-forge:book-resume`.
+
+    This is what makes a project that takes two months across dozens of
+    sessions actually resumable — the per-chapter state files handle a
+    single interrupted chapter, but nothing else records *why* things
+    were decided the way they were.
+
     **Auto-backup**: if the workspace is a git repository (check
     `git rev-parse --is-inside-work-tree`; if not, skip this silently —
     not every writer uses git and that's fine), commit the finalized

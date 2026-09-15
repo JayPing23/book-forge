@@ -201,6 +201,13 @@ class Workspace:
                     continue
                 if state.get("current_step") == "escalated":
                     escalated.append(state.get("chapter_id", f.stem))
+        published_through = info.get("published_through")
+        published_num = chapter_number(published_through)
+        latest_num = chapter_number(chapter_files[-1]["chapter_id"]) if chapter_files else None
+        buffer = None
+        if latest_num is not None:
+            buffer = latest_num - (published_num or 0)
+
         return {
             "name": name,
             "project_type": info.get("project_type"),
@@ -209,9 +216,15 @@ class Workspace:
             "platform_convention": info.get("platform_convention"),
             "ip_status": info.get("ip_status"),
             "monetization_allowed": info.get("monetization_allowed"),
+            "length_tier": info.get("length_tier"),
+            "target_chapter_words": info.get("target_chapter_words"),
             "chapter_count": len(chapter_files),
             "total_words": total_words,
             "latest_chapter": self.latest_chapter_id(name),
+            "published_through": published_through,
+            # Chapters finalized but not yet published — the serial author's
+            # safety margin. None for a project that has published nothing.
+            "buffer": buffer,
             "escalated_chapters": escalated,
         }
 

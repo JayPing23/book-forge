@@ -25,9 +25,27 @@ outlining, character creation, and a first drafted-and-QA'd chapter into one
 continuous flow, stopping to ask only the questions that actually shape the
 book. `/book-forge:book-idea`, `/book-forge:book-new`, and
 `/book-forge:book-write` still work standalone with their own checkpoints,
-if you'd rather drive each stage yourself. `/book-forge:book-export`
-assembles a project's finalized chapters (one file per chapter in
-`manuscript/`) into a single manuscript document.
+if you'd rather drive each stage yourself.
+
+## Serialized web novels
+
+A long serial runs for months across many sessions, so four commands
+exist for that shape specifically:
+
+- `/book-forge:book-resume` — returning after a gap: what was decided,
+  what's unresolved, what's next, without re-reading chapters.
+- `/book-forge:book-publish` — record what's actually live on your
+  platform. Past that frontier chapters are treated as immutable, so
+  reviewers propose fix-forward solutions instead of edits you can't make.
+- `/book-forge:book-compact` — compress a closed volume and consolidate
+  story-bible Facts Logs, so context cost stays flat at chapter 950 as at
+  chapter 50. This is what makes a 1,000-chapter project feasible.
+- `/book-forge:book-export` — an upload-ready package: listing document
+  (blurb, tags, characters, cover spec), plain-text chapter files, and a
+  posting schedule, built against a real platform profile (Royal Road,
+  Webnovel/Qidian, Scribble Hub). For a `complete-book` project it
+  instead produces front/back matter, an assembled manuscript, and a KDP
+  metadata document.
 
 ## Dashboard
 

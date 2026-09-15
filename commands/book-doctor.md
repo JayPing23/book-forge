@@ -24,18 +24,24 @@ one broken thing doesn't hide the status of everything else.
    `${CLAUDE_PLUGIN_ROOT}/skills/payoff-craft/SKILL.md`, and
    `${CLAUDE_PLUGIN_ROOT}/skills/qa-standards/SKILL.md` all exist.
 
-4. **Core agents present**: confirm all thirteen exist under
+4. **Core agents present**: confirm all fourteen exist under
    `${CLAUDE_PLUGIN_ROOT}/agents/`: `context-agent.md`, `research-agent.md`,
    `ideation-agent.md`, `deconstruction-agent.md`,
    `web-novel-outline-agent.md`, `complete-book-outline-agent.md`,
    `continuity-reviewer.md`, `thread-ledger-reviewer.md`,
    `outline-adherence-reviewer.md`, `voice-consistency-reviewer.md`,
    `motivation-agency-reviewer.md`, `clarity-reviewer.md`,
-   `cover-brief-agent.md`. List any missing by exact filename — don't
-   just report a pass/fail count.
+   `cover-brief-agent.md`, `continuity-archivist.md`. List any missing by
+   exact filename — don't just report a pass/fail count.
 
 5. **Genre templates present**: confirm at least one file exists under
    `${CLAUDE_PLUGIN_ROOT}/templates/genres/`; list how many are found.
+
+5b. **Platform profiles present**: confirm `royal-road.md`,
+   `webnovel-qidian.md`, and `scribble-hub.md` exist under
+   `${CLAUDE_PLUGIN_ROOT}/templates/platforms/` — `/book-forge:book-export`
+   falls back to a generic package without them, which is a silent
+   quality loss rather than an error.
 
 6. **Workspace `projects/` directory exists**: confirm `./projects` exists
    relative to the current working directory (create it if missing, and
@@ -68,8 +74,9 @@ book-forge doctor report
 [PASS/FAIL] Plugin templates present
 [PASS/FAIL] Bundled humanizer skill present
 [PASS/FAIL] light-novel-style, payoff-craft, qa-standards skills present
-[PASS/FAIL] Core agents present (N/13 found)
+[PASS/FAIL] Core agents present (N/14 found)
 [PASS/FAIL] Genre templates present (N found)
+[PASS/FAIL] Platform profiles present (N/3 found)
 [PASS/FAIL] projects/ directory exists
 [PASS/FAIL] vault/ directory (+ subfolders) exists
 [INFO] Git repository: yes/no

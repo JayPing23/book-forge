@@ -103,10 +103,25 @@ schedule.
 - A thread whose payoff window passed with no resolution is always
   `blocking`, never a soft suggestion — dropped payoffs are exactly the
   failure mode this reviewer exists to prevent.
-- If more than ~5 threads are concurrently open, flag it as a `medium`
-  issue even with no individual thread overdue — too many open threads at
-  once is itself a tracking risk, for both the reader and this review
-  pipeline.
+- **Concurrent-open-thread ceiling, scaled by `length_tier`.** Too many
+  live threads at once is a tracking risk for the reader and for this
+  pipeline — but the ceiling is not one number. Read `project.json`:
+
+  | Project | Ceiling (flag `medium` above this) |
+  |---|---|
+  | `complete-book` | 5 |
+  | web-novel, `length_tier: short` (~100-250 ch) | 8 |
+  | web-novel, `length_tier: mid` (~500 ch) | 15 |
+  | web-novel, `length_tier: long` (~1000 ch) | 25 |
+
+  A long-running serial legitimately sustains far more open threads than
+  a standalone novel — that's the form working as intended, not a defect.
+  Applying the standalone number to a 1000-chapter serial would fire on
+  essentially every chapter past the opening arc, which trains the author
+  to ignore the reviewer whose entire purpose is catching dropped
+  promises. If `length_tier` is missing or unreadable, use the
+  `complete-book` number and say in your output that you fell back,
+  rather than silently picking a ceiling.
 - Don't invent thread urgency that isn't in the outline — if a thread has
   no `payoff_chapter` set, it's open-ended by design, not overdue.
 - When creating a new thread note for something newly introduced, describe

@@ -65,6 +65,29 @@ Facts Log has the up-to-date specifics.
   one; note it as a `low`-severity flag instead, since the tentative
   entry itself might be what's wrong.
 
+## Published chapters are immutable
+
+Read `project.json`'s `published_through` before writing any `fix_hint`.
+Chapters at or below that number are already live and have been read —
+they cannot be edited. This changes what a valid fix looks like:
+
+- **If the contradiction is with an unpublished chapter**: either side
+  can be corrected. Say which one you believe is wrong, as usual.
+- **If the contradiction is with a published chapter**: the published
+  text is now canon, whether or not it was the better version. The fix
+  is either to change the chapter under review, or to update the
+  story-bible to match what was actually published. Never write a
+  `fix_hint` that asks the author to edit a published chapter — it's
+  advice they cannot take, and it hides the real choice they do have.
+- **If the published text contradicts the story-bible**, the story-bible
+  is what's wrong, by definition. Flag it so `deconstruction-agent` can
+  reconcile the Facts Log to reality rather than leaving the note
+  asserting something the book has already disproved in public.
+
+If `published_through` is null or absent, nothing is published yet and
+every chapter is freely editable — the normal case for a `complete-book`
+project, and for a serial before launch.
+
 ## Hard rules
 
 - Every issue must have evidence: the chapter's exact wording plus the

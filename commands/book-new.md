@@ -36,12 +36,29 @@ Given a project name as `$ARGUMENTS`:
    - `genre`.
    - `depth_dial`: `popcorn`, `balanced`, or `literary-deep`.
    - `platform_convention`: only if `project_type` is `web-novel`
-     (`webnovel-qidian`, `royal-road`, or `custom`) — otherwise `"n/a"`.
+     (`royal-road`, `webnovel-qidian`, `scribble-hub`, or `custom`) —
+     otherwise `"n/a"`. Each has a profile in
+     `${CLAUDE_PLUGIN_ROOT}/templates/platforms/` that
+     `/book-forge:book-export` reads; `custom` means no profile and a
+     generic export.
    - `ip_status`: `original` or `fan-fiction`.
    - `monetization_allowed`: must default to `false` and stay `false` if
      `ip_status` is `fan-fiction` — do not let the user set it to `true` in
      that case without an explicit acknowledgment that this is their own
      informed call, not a recommendation.
+   - `length_tier` (web-novel only; `"n/a"` for complete-book):
+     `short` (~100-250 chapters), `mid` (~500), or `long` (~1000). This
+     is not cosmetic — it scales the concurrent-open-thread threshold,
+     the volume count the outline agent plans for, and how often
+     `/book-forge:book-compact` needs to run. Getting it wrong means
+     either constant false alarms or none at all.
+   - `target_chapter_words`: **ask, never assume.** Typical web-novel
+     chapters run 2,000-3,000 words, but that's a starting point for the
+     conversation, not a default to write in silently. Offer the typical
+     range, let the author name their own number.
+   - `target_total_words` (complete-book only; `null` for web-novel):
+     ask for the target length. Genre norms vary widely enough that
+     guessing is worse than asking.
 7. Write the answers into `project.json`, replacing every `REPLACE: ...`
    value with the real one.
 8. **Dispatch `research-agent`** automatically (this is not optional —

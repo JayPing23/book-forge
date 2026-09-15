@@ -58,8 +58,9 @@ C:\booq\                          # Obsidian vault root
 │   ├── plugins\book-forge\       # forked + English-localized webnovel-writer
 │   ├── skills\humanizer\         # installed as-is
 │   ├── skills\light-novel-style\ # new: accessible-prose conventions layered on humanizer
-│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-export,
-│   │                             # /book-cover, /book-learn, /book-doctor, /book-dashboard, /market-pulse
+│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-resume,
+│   │                             # /book-publish, /book-compact, /book-export, /book-cover,
+│   │                             # /book-learn, /book-doctor, /book-dashboard, /market-pulse
 └── projects\
     ├── <standalone-book-name>\   # a single, unconnected book — layout as below
     │   ├── project.json          # project type, genre, depth dial, platform convention,
@@ -508,6 +509,66 @@ restructure once chapters are drafted against it), optional for
 catches cross-field incoherence the ideation sufficiency gate doesn't —
 that gate confirms fields are filled, not that they agree with each
 other.
+
+**Serialization: publication frontier, session continuity, compaction.**
+Three mechanisms that only matter once a project runs at real serial
+length and real serial *duration* (a long web novel is 1-2 months of
+calendar time across dozens of sessions, not one sitting):
+
+- **Publication frontier.** `project.json`'s `published_through`, advanced
+  by `/book-forge:book-publish`. Past it, chapters are **immutable** —
+  readers have already read them. This is a genuine constraint on QA, not
+  bookkeeping: `continuity-reviewer` must not propose editing a published
+  chapter, because that's advice the author cannot take, and it hides the
+  real choice (fix forward in the current chapter, or correct the
+  story-bible to match what actually shipped). Where the published text
+  and the story-bible disagree, the published text is canon by
+  definition. Buffer = finalized − published, shown on the dashboard.
+- **Session log** (`.project-memory/session-log.md`, append-only).
+  Per-chapter state files make one interrupted *chapter* resumable; they
+  record nothing about *why* things were decided. Over two months a
+  decision made in week 2 is unrecoverable in week 6 except by re-reading
+  chapters. The log carries progress, decisions, open questions, and a
+  "resume here" pointer; `/book-forge:book-resume` reads it and briefs
+  you back in. `book-write` appends automatically at finalize.
+- **Volume compaction + Facts Log consolidation**
+  (`continuity-archivist`, via `/book-forge:book-compact`). The scaling
+  mechanism: closed volumes compress to summaries that `context-agent`
+  reads instead of raw chapters; stable Facts Log entries fold into note
+  descriptions; outdated ones archive out. Raw chapters stay on disk
+  permanently and are never bulk-read. Cost per chapter stays flat from
+  chapter 50 to chapter 950. **Constraints, because this agent moves
+  established facts**: never delete, never resolve a contradiction
+  unilaterally (stop and surface it), never compact an open volume,
+  never touch published text. A drafting error costs one chapter; a bad
+  consolidation corrupts what the book believes is true and every later
+  chapter inherits it.
+
+**Length tiers drive calibration, not labels.** `length_tier` (`short`
+~100-250 / `mid` ~500 / `long` ~1000) and `target_chapter_words` are
+asked at project creation — never assumed, since a default written in
+silently is a decision made for the author. The tier then scales the
+concurrent-open-thread ceiling (5 for a standalone book, up to 25 for a
+1000-chapter serial — a long serial legitimately sustains far more live
+threads, and applying the standalone number to it fires on every chapter
+and trains the author to ignore the reviewer), the skeleton's turning-point
+and volume counts, and compaction cadence.
+
+**Publishing packages.** `/book-forge:book-export` branches on
+`project_type`. Web novel: a platform package (listing document with
+blurb/tags/characters/cover spec, plain-text chapter files, posting
+schedule) built against a real profile in `templates/platforms/` —
+Royal Road, Webnovel/Qidian, and Scribble Hub, each with its verified
+requirements and its unverified gaps labeled as such. Their constraints
+genuinely differ (RR: cover 400×600-or-larger, no links in synopsis, and
+avoid `:00`/`:30` scheduling slots; Webnovel: cover *exactly* 600×800 JPG
+≤5 MB; Scribble Hub: 25 tags, cover <3 MB). Book: front matter (fiction's
+short set — title, copyright, dedication), assembled manuscript, back
+matter, and a KDP metadata document (4,000-char description whose first
+~140 characters carry the hook, 3 categories, 7 keywords × 50 chars).
+EPUB generation is explicitly out of scope — KDP needs embedded NCX
+navigation, which is Calibre/Vellum/Pandoc's job, not a Markdown
+export's.
 
 **Override Contract debt visibility.** The dashboard's System Health page
 now reads `.project-memory/override-contracts.json` directly and surfaces

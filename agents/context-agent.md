@@ -56,6 +56,16 @@ never overrides plot facts).
 7. **Check `vault/craft-lessons/`** for durable style/craft notes relevant
    to this project's genre or depth dial — style guidance only, never
    plot facts.
+8. **For long projects, read volume summaries, not old chapters.** If
+   `outline/volume-summaries/` exists, that's where earlier volumes live
+   (written by `continuity-archivist`). When this chapter references
+   something from an earlier volume, read that volume's summary — do not
+   go read the raw chapters. The summaries exist precisely so that a
+   chapter-950 brief costs the same as a chapter-50 one; reading raw
+   back-catalogue defeats the entire mechanism. The raw chapters remain
+   on disk for the rare case where exact wording genuinely matters (a
+   direct callback quoting an earlier line), but that's a deliberate
+   single-file read, never a sweep.
 8. **Assemble and self-check** before writing the brief: does every named
    character have a non-empty motivation for being in this scene? Does the
    chapter's ending point somewhere (not a dead stop)? Does this brief
