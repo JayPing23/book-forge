@@ -26,9 +26,10 @@ Given a project name as `$ARGUMENTS`:
 4. Copy the entire tree from
    `${CLAUDE_PLUGIN_ROOT}/templates/standalone-project/` into
    `./projects/$ARGUMENTS/`, including the `.gitkeep` files, the
-   `story-bible/characters|world|plot-threads/` subfolders, the
-   `plot-threads.base` view, and the `.story-system`/`.project-memory`
-   dot-directories.
+   `story-bible/characters|world|plot-threads|style-exemplars|archive/`
+   subfolders, `outline/volume-summaries/`, the `plot-threads.base` and
+   `style-exemplars.base` views, and the
+   `.story-system`/`.project-memory` dot-directories.
 5. Rename the copied `project.json.template` to `project.json`.
 6. Ask the user, one question at a time, for each field (skip any already
    answered by an `_ideation/` premise):
@@ -138,7 +139,7 @@ Given a project name as `$ARGUMENTS`:
     `/book-forge:book-write $ARGUMENTS 0001`, or stop here so they can
     review the outline and character(s) first — either is fine, just
     don't default silently. If this command was invoked as part of
-    `/book-forge:book-start`'s chained flow, skip the ask and continue
+    `/book-forge:book`'s chained flow, skip the ask and continue
     directly into chapter 0001's full pipeline — that continuity is the
     entire point of that entry point. Either way, when chapter 0001 runs,
     stop after it finalizes or escalates and report the result; don't

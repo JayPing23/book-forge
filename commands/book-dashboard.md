@@ -5,6 +5,19 @@ argument-hint: "[optional: port, default 5173]"
 
 # book-dashboard
 
+**Prefer the launcher if one exists.** Check for `dashboard.bat` in the
+workspace root — if it's there, the author can just double-click it
+(Windows) rather than going through Claude Code at all, and that's the
+easier path for daily use. Mention it once rather than starting a second
+server on top of one they may already have running.
+`${CLAUDE_PLUGIN_ROOT}/dashboard/start-dashboard.bat` is the shippable
+copy to place in a workspace that doesn't have one yet.
+
+**Node is not needed for normal use.** `server.py` serves the prebuilt
+`dashboard/frontend/dist` as static files, so once it's built, starting
+the dashboard is a single Python process. npm is only required to
+*rebuild* after the dashboard's own source changes.
+
 1. Check whether `${CLAUDE_PLUGIN_ROOT}/dashboard/frontend/dist` exists. If
    not, this is a first run — tell the user you're building it once, then
    run:

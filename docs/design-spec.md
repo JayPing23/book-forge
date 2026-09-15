@@ -58,7 +58,8 @@ C:\booq\                          # Obsidian vault root
 │   ├── plugins\book-forge\       # forked + English-localized webnovel-writer
 │   ├── skills\humanizer\         # installed as-is
 │   ├── skills\light-novel-style\ # new: accessible-prose conventions layered on humanizer
-│   └── commands\                 # /book-start, /book-idea, /book-new, /book-write, /book-resume,
+│   └── commands\                 # /book  <- the only one you need; drives the rest:
+│   │                             # /book-idea, /book-new, /book-write, /book-resume,
 │   │                             # /book-publish, /book-compact, /book-export, /book-cover,
 │   │                             # /book-learn, /book-doctor, /book-dashboard, /market-pulse
 └── projects\
@@ -238,16 +239,26 @@ refinements came out of this pass, applied below:
 
 ## Orchestration flow
 
-**`/book-start`** is the single entry point for a new book: it chains
-`/book-idea` → `/book-new` → chapter 0001's full `/book-write` pipeline
-continuously, skipping the "ready to continue?" checkpoint each of those
-commands has when run standalone, while still asking every question that
-actually shapes the book (genre, protagonist, constraints, `ip_status`,
-etc.). It stops after chapter 0001 finalizes or escalates — the intent is
-one command producing real drafted, QA'd output the author can react to,
-not unattended multi-chapter drafting. Running the three commands
-separately still works identically to before; `/book-start` only changes
-the handoff behavior between them. See `commands/book-start.md`.
+**`/book-forge:book` is the single entry point — the only command the
+author needs.** Everything else is machinery it drives. It reads current
+state (projects, `project.json`, session log, chapter-state, outline
+window, publication frontier) and routes to the next right action: start
+a new project, resume an interrupted chapter, brief the author back in
+after weeks away, extend the outline, draft, compact a closed volume,
+publish, or export. It presents no command menus — the author asked to
+talk to one agent, so it makes the routing decision and says what it's
+doing.
+
+Two routing rules are load-bearing rather than cosmetic: an **escalated
+chapter is surfaced before any new work** (routing around a stuck chapter
+buries a known problem under twenty more), and **drafting never outruns
+the outline window**. See `commands/book.md` for the full routing table.
+
+The underlying commands (`book-idea`, `book-new`, `book-write`,
+`book-resume`, `book-publish`, `book-compact`, `book-export`, …) all still
+work standalone with their own checkpoints, for driving a single stage
+deliberately. `book` changes routing between them, never their pipelines
+or standards.
 
 **`/book-new`** (optionally preceded by `/book-idea` for a blank-page
 start — see the Ideation Agent section):

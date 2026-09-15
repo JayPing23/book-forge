@@ -37,6 +37,12 @@ one broken thing doesn't hide the status of everything else.
 5. **Genre templates present**: confirm at least one file exists under
    `${CLAUDE_PLUGIN_ROOT}/templates/genres/`; list how many are found.
 
+5a. **Single entry point present**: confirm
+   `${CLAUDE_PLUGIN_ROOT}/commands/book.md` exists. This is the command
+   the author actually uses; every other command is machinery it drives.
+   If it's missing, the workflow still functions but only for someone who
+   remembers all thirteen commands — report it as a failure, not a note.
+
 5b. **Platform profiles present**: confirm `royal-road.md`,
    `webnovel-qidian.md`, and `scribble-hub.md` exist under
    `${CLAUDE_PLUGIN_ROOT}/templates/platforms/` — `/book-forge:book-export`

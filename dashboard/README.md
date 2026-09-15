@@ -37,6 +37,21 @@ For frontend changes with hot reload: run the backend on port 5173
 separately (`cd dashboard/frontend && npm run dev`, serves on 5174 and
 proxies `/api` to 5173). Rebuild with `npm run build` when done.
 
+## Easiest way to run it
+
+Copy `start-dashboard.bat` into your workspace root (next to `projects/`
+and `vault/`), rename it to `dashboard.bat`, and double-click it. It finds
+Python, builds the frontend once if needed, starts the server, and opens
+your browser. Close the window to stop it. Pass a port to use a different
+one: `dashboard.bat 5174`.
+
+Edit `PLUGIN_DIR` at the top of the file if the book-forge repo isn't at
+`C:\book-forge`.
+
+**Node.js is only needed for the one-time build.** After that, the server
+serves the prebuilt `frontend/dist` directly and the dashboard is a single
+Python process with no dependencies outside the standard library.
+
 ## What it reads (read-only — this dashboard never writes to your project)
 
 | Page | Source files |

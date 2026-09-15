@@ -18,14 +18,15 @@ and `docs/plans/` for what's built so far vs. planned.
 
 ## Quick start
 
-`/book-forge:book-start` is the single entry point for a new book — hand it
-an idea (or nothing at all, or a reference work whose premise you like but
-execution you don't) and it chains ideation, project scaffolding, research,
-outlining, character creation, and a first drafted-and-QA'd chapter into one
-continuous flow, stopping to ask only the questions that actually shape the
-book. `/book-forge:book-idea`, `/book-forge:book-new`, and
-`/book-forge:book-write` still work standalone with their own checkpoints,
-if you'd rather drive each stage yourself.
+**`/book-forge:book` is the only command you need.** Run it with an idea,
+a project name, or nothing at all. It works out where your book is and does
+the next right thing — starting from scratch, resuming a chapter it left
+mid-pipeline, briefing you back in after weeks away, drafting, compacting a
+closed volume, publishing, or building an upload package — asking only the
+questions that shape the book, never which command to run.
+
+Every other command below is machinery `book` drives. They all still work
+standalone if you'd rather run one stage deliberately.
 
 ## Serialized web novels
 

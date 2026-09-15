@@ -230,7 +230,7 @@ somewhere to hold them, those findings are computed and thrown away.
    platform convention this pipeline should impose. If a project wants one
    locked in, record it as a `hard_constraint` in `project.json` (e.g.
    "system messages use square brackets, stat displays use curly braces")
-   during `/book-forge:book-new` or `/book-forge:book-start` — `context-agent`
+   during `/book-forge:book-new` or `/book-forge:book` — `context-agent`
    already reads `hard_constraints` into every chapter's writing brief (see
    that agent's spec), so this needs no new plumbing, just a decision
    recorded when the author is ready to make it.
