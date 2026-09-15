@@ -1,6 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
 import { IconAlert, IconCheck, IconX } from "../components/icons.jsx";
+import { Card, InfoTip, Spinner } from "../components/ui.jsx";
+
+const DEBT_HINT = (
+  <>
+    An Override Contract is a soft QA finding you accepted instead of fixing —
+    logged with a reason, never a silent pass. Debt weight reflects how much
+    each reason costs: <code>EDITORIAL_INTENT</code> counts double because it's
+    the only rationale with no external check behind it, while reasons grounded
+    in world rules or character logic count half.
+  </>
+);
+
+const PATTERN_HINT = (
+  <>
+    The same reviewer plus the same reason, accepted three or more times. That
+    usually means one of two things: a standing authorial choice that belongs in
+    the story-bible so it stops tripping the check at all, or a real recurring
+    weakness. Either way it's a prompt to change something rather than keep
+    excusing it — this is the loop that turns repeated friction into a fix.
+  </>
+);
 
 function OverrideDebt({ project }) {
   const [debt, setDebt] = useState(null);
@@ -16,8 +37,7 @@ function OverrideDebt({ project }) {
   if (!debt) return <div className="skeleton skeleton-tile" aria-hidden="true" />;
 
   return (
-    <section className="card">
-      <h2>Override Contract debt</h2>
+    <Card title="Override Contract debt" hint={DEBT_HINT}>
       <table className="kv" style={{ marginBottom: debt.patterns.length ? 14 : 0 }}>
         <tbody>
           <tr><td>Open contracts</td><td className="num">{debt.contracts_count}</td></tr>
@@ -28,13 +48,10 @@ function OverrideDebt({ project }) {
       {debt.patterns.length > 0 && (
         <>
           <p className="card-note">
-            The same reviewer + rationale accepted 3 or more times — per the
-            <code> qa-standards</code> skill, this means either a standing
-            authorial choice belongs in the story-bible/genre-template (so it
-            stops tripping the check at all) or it's a real recurring
-            weakness worth fixing.
+            Recurring patterns worth acting on
+            <InfoTip label="Recurring pattern">{PATTERN_HINT}</InfoTip>
           </p>
-          <ul className="check-list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+          <ul className="check-list">
             {debt.patterns.map((p) => (
               <li className="check-row is-fail" key={`${p.reviewer}-${p.rationale_type}`}>
                 <IconAlert width={15} height={15} />
@@ -50,7 +67,7 @@ function OverrideDebt({ project }) {
       {debt.contracts_count === 0 && (
         <p className="card-note">No Override Contracts logged yet.</p>
       )}
-    </section>
+    </Card>
   );
 }
 
@@ -69,9 +86,9 @@ export default function SystemHealth({ project }) {
   if (!data) {
     return (
       <div>
+        <div className="eyebrow">Diagnostics</div>
         <h1 className="page-title">System Health</h1>
-        <div className="skeleton skeleton-tile" aria-hidden="true" />
-        <span className="visually-hidden" role="status">Running health checks</span>
+        <Spinner label="Running health checks" />
       </div>
     );
   }
@@ -81,15 +98,22 @@ export default function SystemHealth({ project }) {
 
   return (
     <div>
+      <div className="eyebrow">Diagnostics</div>
       <h1 className="page-title">System Health</h1>
+      <p className="page-sub">
+        Structural checks on this project's own files — whether the folders and
+        notes the pipeline depends on are actually present.
+      </p>
 
-      <section className="card">
-        <h2>
-          {allPass
+      <Card
+        title={
+          allPass
             ? `All ${data.checks.length} checks pass`
-            : `${failed.length} of ${data.checks.length} checks need attention`}
-        </h2>
-        <ul className="check-list" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            : `${failed.length} of ${data.checks.length} checks need attention`
+        }
+        hint={<>These check structure, not quality: that <code>story-bible/</code>, <code>outline/</code> and <code>manuscript/</code> exist, that a protagonist note is present, and that no chapter is sitting escalated. A failure here means something the pipeline reads is missing, not that the writing is weak.</>}
+      >
+        <ul className="check-list">
           {data.checks.map((c) => (
             <li className={`check-row ${c.pass ? "" : "is-fail"}`} key={c.label}>
               {/* Icon + color, never color alone */}
@@ -103,7 +127,7 @@ export default function SystemHealth({ project }) {
             </li>
           ))}
         </ul>
-      </section>
+      </Card>
 
       <OverrideDebt project={project} />
 

@@ -384,6 +384,25 @@ code {
 .book-card-when { color: var(--text-muted); font-family: var(--font-mono); font-size: 10px; }
 .book-card-read { margin-top: 11px; align-self: flex-start; }
 
+/* Status badge. Always icon + text + colour, never colour alone — and it
+   never wraps, because a pill broken across two lines reads as two badges. */
+.badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 2px 8px; border-radius: 999px;
+  border: 1px solid currentColor;
+  font-size: 11px; font-weight: 600; line-height: 1.6;
+  white-space: nowrap;
+}
+.badge.is-ok { color: var(--ok); }
+.badge.is-warn { color: var(--warn); }
+.badge.is-danger { color: var(--danger); }
+.badge svg { flex-shrink: 0; }
+
+.skeleton-row { height: 38px; margin-bottom: 8px; }
+
+.library { padding: 0; }
+.sidebar-book { margin-bottom: 22px; }
+
 .chip {
   display: inline-block; padding: 2px 7px;
   border: 1px solid var(--rule); border-radius: var(--radius-sm);

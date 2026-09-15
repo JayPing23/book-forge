@@ -1,6 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../lib/api.js";
 import { IconAlert } from "../components/icons.jsx";
+import { Card, Spinner } from "../components/ui.jsx";
+
+const STRAND_HINT = (
+  <>
+    Every chapter leans on one of three strands: <strong>Quest</strong> (plot
+    progression), <strong>Fire</strong> (relationships and interiority),{" "}
+    <strong>Constellation</strong> (world and factions). The thresholds are
+    enforced, not stylistic — Quest can't run more than 5 chapters without a
+    switch, Fire can't be absent more than 10, Constellation more than 15. A
+    long unbroken Quest stretch is the most common pacing complaint in
+    serialized fiction.
+  </>
+);
+
+const QUALITY_HINT = (
+  <>
+    A 0–100 read on coherence, scene craft and readability, recorded per
+    chapter. It is <strong>observation only and never gates a chapter</strong> —
+    that is always the six reviewers' pass/fail verdicts. Its job is catching
+    "technically correct but bland," which no individual reviewer checks for.
+  </>
+);
 
 const STRAND_LETTER = { quest: "Q", fire: "F", constellation: "C" };
 
@@ -158,9 +180,9 @@ export default function Pacing({ project }) {
   if (!data) {
     return (
       <div>
+        <div className="eyebrow">Rhythm</div>
         <h1 className="page-title">Pacing</h1>
-        <div className="skeleton skeleton-tile" aria-hidden="true" />
-        <span className="visually-hidden" role="status">Loading pacing data</span>
+        <Spinner label="Loading pacing data" />
       </div>
     );
   }
@@ -170,12 +192,16 @@ export default function Pacing({ project }) {
 
   return (
     <div>
+      <div className="eyebrow">Rhythm</div>
       <h1 className="page-title">Pacing</h1>
+      <p className="page-sub">
+        Whether the book is varying what it asks of the reader, and whether
+        quality is holding as it goes.
+      </p>
 
       {hasTracker && <StrandWarnings tracker={tracker} />}
 
-      <section className="card">
-        <h2>Strand balance — recent chapters</h2>
+      <Card title="Strand balance — recent chapters" hint={STRAND_HINT}>
         <StrandHistory history={tracker.history} />
 
         {hasTracker && (
@@ -189,16 +215,15 @@ export default function Pacing({ project }) {
             </tbody>
           </table>
         )}
-      </section>
+      </Card>
 
-      <section className="card">
-        <h2>Quality score trend — last 20 chapters</h2>
-        <p className="card-note">
-          Trend observation only. This score never gates a chapter — that's
-          always the six reviewers' pass/fail verdicts.
-        </p>
+      <Card
+        title="Quality score trend — last 20 chapters"
+        hint={QUALITY_HINT}
+        note="Trend observation only. This score never gates a chapter — that's always the six reviewers' pass/fail verdicts."
+      >
         <QualityTrend metrics={data.review_metrics} />
-      </section>
+      </Card>
     </div>
   );
 }

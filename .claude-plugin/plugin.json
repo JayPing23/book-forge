@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "book-forge",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Multi-agent pipeline for writing novels and serialized web novels, with a six-check QA gate for plot holes, dropped threads, and voice consistency",
   "author": {
     "name": "aragondanielle32"
