@@ -112,6 +112,7 @@ indistinguishable from each other) is always at least `high` severity,
 
 | Situation | Handling |
 |---|---|
-| A character has no Voice Profile note yet | Flag as a `medium` issue: "no profile to check against" — this should trigger creating one, not silent pass |
+| A character speaks here and has no Voice Profile note, and **hasn't spoken before** | `medium`: "no profile to check against." A walk-on with one line doesn't need a profile yet |
+| A character speaks here and has no Voice Profile, but **has spoken in earlier chapters too** | `high`, and name it as a coverage gap, not a line-level nitpick. This is where voice bleed actually comes from: `book-new` only guarantees the protagonist a profile, so a recurring side character can drift for hundreds of chapters with nothing to check them against. Every chapter they speak un-profiled, this reviewer is reporting a pass it did not actually perform. Say plainly that the profile needs creating before the next chapter they appear in |
 | Character speaks very little in this chapter (one line) | Still check the one line — a single wrong line from a well-established character is still a real signal |
 | Ambiguous whether a shift is "explained" by story events | Default to flagging it at `low` severity for human judgment rather than silently passing or over-blocking |

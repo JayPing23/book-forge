@@ -23,6 +23,8 @@ import socketserver
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
+import craft
+
 
 def parse_frontmatter(text):
     """Minimal YAML-frontmatter parser for the simple key:value / list
@@ -438,6 +440,34 @@ class Workspace:
             return True
         return False
 
+    def craft_analysis(self, name):
+        """Mechanical craft checks across the whole manuscript.
+
+        Deliberately whole-manuscript: these defects (repeated phrasing,
+        uniform chapter openings) don't exist inside any single chapter, so no
+        per-chapter reviewer can see them. Computed here rather than asked of
+        a model — it's counting, and counting shouldn't cost tokens or invite
+        a judgement call.
+        """
+        manuscript = self.project_dir(name) / "manuscript"
+        if not manuscript.exists():
+            return craft.analyze([])
+
+        entries = []
+        for path in manuscript.glob("*.md"):
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            fm, _ = parse_frontmatter(text)
+            entries.append({
+                "chapter_id": fm.get("chapter_id") or path.stem,
+                "number": chapter_number(fm.get("chapter_id")) or chapter_number(path.stem),
+                "prose": craft.extract_prose(text),
+            })
+        entries.sort(key=lambda c: (c["number"] is None, c["number"]))
+        return craft.analyze(entries)
+
     def override_debt(self, name):
         mem = self.project_dir(name) / ".project-memory"
         path = mem / "override-contracts.json"
@@ -625,6 +655,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                     return self._json(self.workspace.override_debt(name))
                 if endpoint == "chapters":
                     return self._json({"chapters": self.workspace.chapters(name)})
+                if endpoint == "craft":
+                    return self._json(self.workspace.craft_analysis(name))
                 return self._json({"error": "unknown endpoint"}, 404)
 
             if parts and parts[0] == "api":

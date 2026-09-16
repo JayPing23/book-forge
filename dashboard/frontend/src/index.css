@@ -354,6 +354,25 @@ code {
   margin: 8px 0 0; font-size: 11px; color: var(--danger); line-height: 1.5;
 }
 
+/* Craft analysis — repeated phrases read as quoted prose, not as data */
+.echo-phrase {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+}
+.echo-chapters {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+details > summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 6px 0;
+}
+details > summary:hover { color: var(--text); }
+
 /* Character card: portrait beside the profile table */
 .character-row { display: grid; grid-template-columns: 148px 1fr; gap: 20px; }
 .character-row .uploader { max-width: 148px; }

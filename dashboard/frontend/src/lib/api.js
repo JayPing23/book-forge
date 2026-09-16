@@ -22,6 +22,7 @@ export const api = {
   overrideDebt: (name) => getJSON(`/projects/${enc(name)}/override-debt`),
   chapters: (name) => getJSON(`/projects/${enc(name)}/chapters`).then((d) => d.chapters),
   chapter: (name, id) => getJSON(`/projects/${enc(name)}/chapters/${enc(id)}`),
+  craft: (name) => getJSON(`/projects/${enc(name)}/craft`),
 
   /* Images. The URL is stable, so <img> can point straight at it and fall back
      on error rather than us probing with a HEAD request first. The cache-buster

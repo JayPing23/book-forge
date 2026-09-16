@@ -59,9 +59,10 @@ C:\booq\                          # Obsidian vault root
 │   ├── skills\humanizer\         # installed as-is
 │   ├── skills\light-novel-style\ # new: accessible-prose conventions layered on humanizer
 │   └── commands\                 # /book  <- the only one you need; drives the rest:
-│   │                             # /book-idea, /book-new, /book-write, /book-resume,
-│   │                             # /book-publish, /book-compact, /book-export, /book-cover,
-│   │                             # /book-learn, /book-doctor, /book-dashboard, /market-pulse
+│   │                             # /book-idea, /book-new, /book-write, /book-revise,
+│   │                             # /book-resume, /book-publish, /book-compact, /book-export,
+│   │                             # /book-cover, /book-learn, /book-doctor, /book-dashboard,
+│   │                             # /market-pulse
 └── projects\
     ├── <standalone-book-name>\   # a single, unconnected book — layout as below
     │   ├── project.json          # project type, genre, depth dial, platform convention,
@@ -580,6 +581,53 @@ matter, and a KDP metadata document (4,000-char description whose first
 EPUB generation is explicitly out of scope — KDP needs embedded NCX
 navigation, which is Calibre/Vellum/Pandoc's job, not a Markdown
 export's.
+
+**The style-exemplar loop, and why its entry bar is not the quality score.**
+`deconstruction-agent` captures strong passages; `context-agent` reads
+2-3 scene-matched ones back into every chapter's writing brief. Both halves
+are required — for a long stretch only the capture half existed, which made
+the whole "drafts toward your demonstrated voice" mechanism a library
+nothing read.
+
+The entry bar is **a clean first pass** (every reviewer's attempt counter at
+zero, no Override Contracts, no unresolved soft findings), with
+`quality_score >= 80` only as a secondary filter. That ordering is
+deliberate: `quality_score` is the single assessment in this pipeline made
+by the same context that produced the work. Gating exemplars on it alone
+would let the drafter certify its own output as a model of good writing and
+then be taught by it — a loop with nothing external in it, entrenching
+mediocrity rather than voice. A clean pass is six independent checks
+agreeing on the first try, none of them written by the drafter.
+
+**Revision after reading** (`/book-forge:book-revise`). `book-write` refuses
+to re-run a finalized chapter by design, but once chapters are readable in
+the dashboard the author will want one changed. This re-enters the pipeline
+with the author's note as a *binding* constraint — if it conflicts with the
+planned beat, the note wins and the outline changes through its changelog,
+because the author read the chapter and the outline was written before
+anyone had. Full six-reviewer QA re-runs (a revision can break continuity
+with neighbours or drop a thread the original paid off). It **refuses on a
+published chapter** unless explicitly overridden, per the immutability rule.
+A revised chapter is never exemplar-captured — that falls out of the clean
+first-pass bar rather than needing its own rule.
+
+**Mechanical craft analysis** (`dashboard/craft.py`, surfaced on the
+dashboard's Craft page). Repeated phrasing across chapters, chapter-opening
+variety, and sentence-length spread. These share the property that makes
+them worth *computing* rather than reviewing: **a per-chapter check cannot
+see them by construction** — each chapter reads fine alone, and the defect
+lives only in the relationship between chapters. Same insight as the
+longitudinal voice-drift check. Being counting rather than judgement, it
+costs no tokens and invites no taste call.
+
+The boundary is explicit and matches the reasoning that ruled out reader
+simulation: **measurable craft is automated, taste is not.** Whether
+dialogue carries subtext or description is evocative stays drafting
+guidance in `light-novel-style`, never a pass/fail verdict. The one
+in-between case, scene staging ("white room" scenes nobody grounded), lives
+as a *soft* check on `clarity-reviewer` — it needs judgement, so it can
+never be blocking, and a deliberately abstract passage is a legitimate
+craft choice the check must not punish.
 
 **Override Contract debt visibility.** The dashboard's System Health page
 now reads `.project-memory/override-contracts.json` directly and surfaces

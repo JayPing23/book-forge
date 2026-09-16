@@ -41,6 +41,9 @@ exist for that shape specifically:
 - `/book-forge:book-compact` — compress a closed volume and consolidate
   story-bible Facts Logs, so context cost stays flat at chapter 950 as at
   chapter 50. This is what makes a 1,000-chapter project feasible.
+- `/book-forge:book-revise` — read a chapter, decide it isn't working, and
+  say so. Your note re-enters the pipeline as a binding constraint and the
+  full QA gate re-runs. Refuses on a published chapter, which is immutable.
 - `/book-forge:book-export` — an upload-ready package: listing document
   (blurb, tags, characters, cover spec), plain-text chapter files, and a
   posting schedule, built against a real platform profile (Royal Road,

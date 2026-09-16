@@ -114,6 +114,17 @@ somewhere to hold them, those findings are computed and thrown away.
    technically passed, since none of them are designed to catch
    "technically correct but bland." Record it in `quality_score`.
 
+   **Know what this number is and isn't.** It is the one assessment in this
+   pipeline made by the same context that produced the work — the single
+   exception to the never-self-adjudicated rule everything else runs on.
+   Treat it as a weak hint for the author's attention, never as evidence.
+   Specifically: it is **not sufficient on its own** to qualify a chapter
+   for style-exemplar capture, because those exemplars get read back into
+   later chapters' writing briefs — letting a self-assessed score decide
+   what the model is later taught by would close a loop with nothing
+   external in it. The objective signal for that decision is a clean first
+   pass across all six reviewers; see `deconstruction-agent`'s Job 2.
+
 7. **Disposition every finding.** Findings come in two classes and are
    handled differently, but **neither class is ever silently dropped**.
    Collect findings from *all six* reviewers here, not just the failing

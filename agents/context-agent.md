@@ -66,7 +66,33 @@ never overrides plot facts).
    on disk for the rare case where exact wording genuinely matters (a
    direct callback quoting an earlier line), but that's a deliberate
    single-file read, never a sweep.
-8. **Assemble and self-check** before writing the brief: does every named
+9. **Pull style exemplars matching this chapter's scene types.** Look in
+   `story-bible/style-exemplars/` for notes whose `scene_type` matches what
+   this chapter actually calls for (a dialogue-heavy chapter pulls
+   `dialogue`; a fight pulls `action` and `tension`). These are passages
+   from the author's own earlier chapters that passed the QA gate clean —
+   captured by `deconstruction-agent` precisely so later chapters can draft
+   *toward* how this author demonstrably writes, instead of toward generic
+   craft advice.
+
+   **Cap at 2-3 passages, scene-type-matched.** This cost lands on every
+   single draft, so it must stay small and relevant; dumping the library
+   into the brief would bloat every chapter for no extra signal. Prefer
+   recent exemplars over old ones — they reflect where the voice is now,
+   not where it started.
+
+   Carry the passages through **verbatim** in the brief's fourth paragraph,
+   as illustrations of rhythm, sentence shape and dialogue handling. They
+   are a model of *voice*, never of content: the primary agent is matching
+   how these read, never reusing their events, phrasing or images. Say that
+   explicitly in the brief — an exemplar quoted without that framing is an
+   invitation to self-plagiarise, which in a long serial reads as the
+   repetition it would become.
+
+   If the library is empty (an early chapter, or no chapter has passed
+   clean yet), say so in one clause and move on. Absence is normal early
+   and is not a gap worth flagging.
+10. **Assemble and self-check** before writing the brief: does every named
    character have a non-empty motivation for being in this scene? Does the
    chapter's ending point somewhere (not a dead stop)? Does this brief
    respond to the prior chapter's hook? Does paragraph 2 or 4 actually
@@ -110,7 +136,11 @@ Return exactly five paragraphs, natural tone, nothing else:
    project's depth dial and genre tone into concrete guidance for this
    specific chapter; name relevant craft-lesson patterns from the vault in
    plain language; restate anti-pattern reminders naturally (not as a
-   checklist).
+   checklist). **Include the 2-3 scene-matched style exemplars from step 9
+   here, quoted**, with one line naming what to take from each — the rhythm,
+   the dialogue handling, how much is left unsaid. State plainly that these
+   show *how this author writes*, and that nothing in them — no phrasing,
+   image or event — gets reused.
 5. **Where to land**: what feeling the chapter should end on, and what
    should stay deliberately unresolved.
 

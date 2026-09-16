@@ -87,14 +87,37 @@ Never touch these sections — they're foundational, set once at character
 creation, never derived from chapter content. The Facts Log is for
 *state* (what's true about the character/world right now), not identity.
 
-## Job 2: Style-exemplar capture (only for strong chapters)
+## Job 2: Style-exemplar capture (only for demonstrably clean chapters)
 
-If this chapter's `quality_score` (from `/book-forge:book-write`'s QA gate)
-is at or above 80, extract 1-3 of its strongest passages as style
-exemplars — this is what lets later chapters draft *toward* the author's
-actual demonstrated voice, not just toward abstract craft guidance. Below
-80, skip this job entirely; a mediocre chapter shouldn't get banked as a
-model of what this author's writing looks like.
+Extract 1-3 of the chapter's strongest passages as style exemplars — this
+is what lets later chapters draft *toward* the author's actual demonstrated
+voice rather than toward abstract craft guidance. `context-agent` reads
+these back into every chapter's writing brief, so what lands here directly
+shapes future prose.
+
+**That makes the entry bar load-bearing, and it is deliberately NOT
+`quality_score` alone.** That score is assessed by the same context that
+drafted the chapter — the one place in this pipeline where something grades
+its own work. Banking exemplars on a self-assessment would let the model
+certify its own output as a model of good writing and then be taught by it:
+a feedback loop that entrenches mediocrity instead of voice.
+
+Capture only when **both** hold:
+
+1. **Objective evidence — a clean first pass.** Every reviewer's counter in
+   the state file's `attempts` is `0`, `override_contracts` is empty for
+   this chapter, and no unresolved entries remain in `open_soft_findings`.
+   This is six independent checks agreeing on the first try, none of them
+   written by the drafter. It's the strongest evidence this pipeline
+   produces that a chapter came out right.
+2. **`quality_score >= 80`** — a secondary filter only, never the sole
+   reason to capture. A clean pass means *correct*; the score is a weak
+   hint at *good*.
+
+If the chapter needed any revision round, carries any Override Contract, or
+left a soft finding unresolved, skip this job. A chapter that had to be
+argued into shape is not a model of how this author writes at their best,
+whatever it scored afterwards.
 
 1. **Select passages**, each self-contained (a full scene beat, not a
    fragment) and classified by scene type: `dialogue`, `action`,
@@ -154,7 +177,9 @@ should demonstrate *this author's* craft, not the source material's.
    Log status; don't conflate the two.)
 5. **World-rule reveals**: add a Facts Log entry to the relevant
    `story-bible/world/` note.
-6. **If `quality_score >= 80`**: run Job 2, style-exemplar capture.
+6. **If the chapter passed clean AND `quality_score >= 80`** (see Job 2's
+   entry bar — zero revision attempts, zero Override Contracts, no
+   unresolved soft findings): run Job 2, style-exemplar capture.
 
 ## Event categories (for your own extraction discipline, not a literal schema to output)
 
@@ -177,7 +202,10 @@ medium-confidence at best.
 - Never resolve a `contradicted` pair yourself — flag it. Silently
   picking a version destroys the evidence a conflict existed, which is
   exactly the failure mode this whole system exists to prevent.
-- Never capture a style exemplar from a chapter scoring below 80.
+- Never capture a style exemplar from a chapter that needed a revision
+  round, carries an Override Contract, has an unresolved soft finding, or
+  scored below 80. `quality_score` alone is never sufficient — it is
+  self-assessed, and these exemplars feed back into drafting.
 - This agent runs only on chapters that already passed the QA gate — it is
   not a substitute for review, and should never run on an un-reviewed draft.
 

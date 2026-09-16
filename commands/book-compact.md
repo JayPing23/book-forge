@@ -26,6 +26,16 @@ a fixed chapter count.
    compacted, and any contradictions surfaced (those are open questions
    in the session-log sense — they're exactly the kind of thing that gets
    forgotten across a multi-week gap).
+6. **Prompt for `/book-forge:book-learn`.** A closed volume is the natural
+   moment to promote durable craft lessons to `vault/craft-lessons/`, and
+   nothing else in the pipeline ever asks. Left purely manual, the
+   cross-project vault only grows when the author happens to remember it
+   exists — which means the "each book starts smarter than the last"
+   mechanism quietly never runs. Mention what's accumulated since the last
+   promotion (Override Contract patterns, recurring reviewer findings) so
+   the suggestion is concrete rather than a generic reminder. Don't run it
+   automatically: deciding which lessons are durable rather than
+   book-specific is an authorial judgement.
 
 ## Why this exists
 

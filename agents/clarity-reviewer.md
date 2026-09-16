@@ -19,7 +19,7 @@ Hard Invariants you own and their exact thresholds. Don't improvise the
 threshold for HARD-003 (consecutive no-progression chapters) — it's
 genre-configurable and the project's genre template may set it explicitly.
 
-## Scope — three Hard Invariants, plus one chapter-1-only soft check
+## Scope — three Hard Invariants, plus two soft checks
 
 1. **HARD-001, Readability floor**: read the chapter as a first-time
    reader would, with only the story-bible's established facts as
@@ -50,6 +50,27 @@ genre-configurable and the project's genre template may set it explicitly.
    when HARD-004 passes on a technicality (a conflict does eventually
    show up) if it takes more than roughly the first fifth of the chapter
    to become legible. **This check does not apply past chapter 0001.**
+
+5. **Scene staging — soft guidance, every chapter**: can a reader tell
+   *where* this is happening, and is the space physically real? The failure
+   mode is characters talking at length in undescribed nowhere — no
+   location, no objects, nothing anyone touches or hears. It reads as
+   disembodied, and it is one of the most reliable tells of machine-drafted
+   fiction.
+
+   Flag a scene when it runs on for a stretch with no grounding at all:
+   no named place, nothing in the physical space anyone interacts with, and
+   nothing sensory outside of sight. A `medium` soft finding, eligible for
+   an Override Contract like any other — a deliberately abstract or
+   dissociative passage is a legitimate craft choice, and this check must
+   not punish one. What it catches is the *unintentional* version: a scene
+   nobody staged because the dialogue carried it.
+
+   This sits with you rather than in a seventh reviewer because it is a
+   clarity problem at heart — if a reader can't place the scene, they can't
+   fully picture what happened, which is the same question HARD-001 asks
+   about events. Keep them distinct in your output all the same: HARD-001
+   is blocking and about comprehension, this is soft and about grounding.
 
 ## Process
 
@@ -91,7 +112,7 @@ genre-configurable and the project's genre template may set it explicitly.
   "chapter": "0012",
   "issues": [
     {
-      "invariant": "HARD-001 | HARD-003 | HARD-004 | none (opening-scene-positioning)",
+      "invariant": "HARD-001 | HARD-003 | HARD-004 | none (opening-scene-positioning) | none (scene-staging)",
       "severity": "critical | high | medium | low",
       "location": "exact quote or paragraph reference",
       "description": "what's unclear, or what's missing",
@@ -105,15 +126,14 @@ genre-configurable and the project's genre template may set it explicitly.
 ```
 
 `blocking` is `true` for every Hard Invariant issue — always, no
-exceptions. The chapter-1-only opening-scene-positioning finding is the
-one exception in this reviewer's output: `invariant: "none
-(opening-scene-positioning)"` and `blocking: false`, since it's soft
-guidance eligible for an Override Contract like any other reviewer's soft
-finding. `verdict` is still `fail` only when a Hard Invariant issue
-exists — a chapter with only the opening-scene finding and no Hard
-Invariant violations still gets `verdict: "pass"`, same as any other
-chapter carrying an unresolved soft-guidance finding pending an Override
-Contract decision.
+exceptions. This reviewer's **two soft findings** are the exceptions:
+opening-scene positioning (chapter 1 only) and scene staging (any
+chapter). Both carry `invariant: "none (...)"` and `blocking: false`,
+since they're soft guidance eligible for an Override Contract like any
+other reviewer's soft findings. `verdict` is still `fail` only when a Hard
+Invariant issue exists — a chapter carrying only soft findings and no Hard
+Invariant violations still gets `verdict: "pass"`, and those findings route
+to `book-write`'s step 7a for disposition rather than being dropped.
 
 ## Error handling
 

@@ -6,11 +6,12 @@ import Overview from "./pages/Overview.jsx";
 import Characters from "./pages/Characters.jsx";
 import PlotThreads from "./pages/PlotThreads.jsx";
 import Pacing from "./pages/Pacing.jsx";
+import Craft from "./pages/Craft.jsx";
 import SystemHealth from "./pages/SystemHealth.jsx";
 import { CoverArt } from "./components/ui.jsx";
 import {
   IconOverview, IconCharacters, IconThreads, IconPacing,
-  IconHealth, IconBook, IconSun, IconMoon, IconLibrary,
+  IconHealth, IconBook, IconSun, IconMoon, IconLibrary, IconStar,
 } from "./components/icons.jsx";
 
 const SECTIONS = [
@@ -18,6 +19,7 @@ const SECTIONS = [
   { key: "characters", label: "Characters", Icon: IconCharacters, Component: Characters },
   { key: "threads", label: "Plot Threads", Icon: IconThreads, Component: PlotThreads },
   { key: "pacing", label: "Pacing", Icon: IconPacing, Component: Pacing },
+  { key: "craft", label: "Craft", Icon: IconStar, Component: Craft },
   { key: "system", label: "System Health", Icon: IconHealth, Component: SystemHealth },
 ];
 
