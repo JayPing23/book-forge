@@ -1,6 +1,6 @@
-﻿{
+{
   "name": "book-forge",
-  "description": "Marketplace for the book-forge multi-agent fiction-writing plugin",
+  "description": "Multi-agent pipeline for writing novels and serialized web novels, with a seven-check QA gate for plot holes, dropped threads, voice bleed, robotic dialogue, and told-not-shown narration",
   "owner": {
     "name": "JayPing23"
   },
@@ -8,7 +8,7 @@
     {
       "name": "book-forge",
       "source": "./",
-      "description": "Multi-agent pipeline for writing novels and serialized web novels, with a seven-check QA gate for plot holes, dropped threads, voice consistency, and robotic dialogue",
+      "description": "Multi-agent pipeline for writing novels and serialized web novels, with a seven-check QA gate for plot holes, dropped threads, voice bleed, robotic dialogue, and told-not-shown narration",
       "version": "0.12.0"
     }
   ]
