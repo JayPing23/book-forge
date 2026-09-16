@@ -3,9 +3,9 @@
   "version": "0.12.0",
   "description": "Multi-agent pipeline for writing novels and serialized web novels, with a seven-check QA gate for plot holes, dropped threads, voice consistency, and robotic dialogue",
   "author": {
-    "name": "aragondanielle32"
+    "name": "JayPing23"
   },
-  "repository": "https://github.com/aragondanielle32/book-forge",
+  "repository": "https://github.com/JayPing23/book-forge",
   "license": "GPL-3.0",
   "keywords": ["fiction-writing", "novel", "web-novel", "light-novel", "multi-agent", "creative-writing"]
 }

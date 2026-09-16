@@ -112,7 +112,7 @@ same way any Claude Code plugin does — no manual file copying or symlinks:
 
 ```bash
 # From your writing workspace, install straight from GitHub:
-claude plugin marketplace add aragondanielle32/book-forge
+claude plugin marketplace add JayPing23/book-forge
 claude plugin install book-forge@book-forge --scope project
 ```
 
