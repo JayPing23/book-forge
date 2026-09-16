@@ -14,8 +14,47 @@ Forked and localized from
 
 ## Status
 
-Early scaffold. See `docs/design-spec.md` for the full architecture
-and `docs/plans/` for what's built so far vs. planned.
+**Built, but not yet proven.** Everything described below is implemented —
+15 agents, 14 commands, 4 skills, a seven-check QA gate and a local
+dashboard — and the mechanical parts have unit and integration tests. What
+it does *not* have yet is a finished book. No full novel has been written
+with it end to end, so the review thresholds are reasoned rather than
+calibrated, and the two blocking "gating" checks in particular may need
+tuning against real prose.
+
+Treat it as a working system that wants real use, not a finished product.
+If you write with it, findings that fire wrongly are the most useful thing
+you can report.
+
+See `docs/design-spec.md` for the full architecture and the reasoning
+behind each check.
+
+## Why the QA gate is shaped this way
+
+Most checks in the gate ask whether a chapter is *wrong* — contradicted
+facts, dropped threads, outline drift, out-of-character behaviour. Two do
+something different, and they exist because of what readers actually
+complain about in AI-assisted fiction rather than what is easy to measure:
+
+- **GATE-001 (dialogue naturalness)** — readers of AI-written serials
+  rarely say "the plot had a hole." They say the dialogue sounds like
+  robots rather than people, and stop reading. Note this is *not* the same
+  question as voice consistency: a cast can be perfectly distinct from one
+  another and uniformly robotic.
+- **GATE-002 (told, not shown)** — a novelist reviewing a 50,000-word
+  AI-generated novel named this as its single biggest failure: the
+  narration reports each event in sequence instead of staging any of it.
+
+Both are *blocking but contract-eligible*: they stop a chapter finalizing,
+but can be released with a stated rationale, because a formal briefing
+scene or a deliberate time-skip is legitimate and a check with no way
+through would flatten every chapter toward the same safe middle.
+
+There is deliberately **no reader-simulation and no automated verdict on
+taste**. Mechanically countable craft problems (repeated phrasing, uniform
+chapter openings, dialogue shape, recurring spoken lines, confusable
+character names) are computed without a model in `dashboard/craft.py` and
+reported as counts, never scores. Whether a scene *works* stays with you.
 
 ## Quick start
 
@@ -54,20 +93,34 @@ exist for that shape specifically:
 
 ## Dashboard
 
-A local React dashboard visualizes what you're working on — overview,
-characters, plot threads with computed urgency, strand-balance pacing, and
-per-project health. Run `/book-forge:book-dashboard` from Claude Code, or
-see `dashboard/README.md` to run it manually.
+A local dashboard visualizes what you're working on — a cover-grid library,
+an in-page chapter reader, characters, plot threads with computed urgency,
+strand-balance pacing, mechanical craft analysis, and per-project health.
+Run `/book-forge:book-dashboard` from Claude Code, or see
+`dashboard/README.md` to run it manually.
 
-## Install (local development)
+The backend is Python **standard library only** — no pip install, no
+dependencies. The frontend is React built with Vite, and the built output
+is not committed, so a fresh clone needs one `npm install && npm run build`
+inside `dashboard/frontend/` before the dashboard will serve. After that,
+Node isn't needed again — the Python server serves the built files.
 
-This plugin isn't published to a public host yet, but it ships its own
-single-plugin marketplace manifest, so it installs the same way any
-Claude Code plugin does — no manual file copying or symlinks:
+## Install
+
+It ships its own single-plugin marketplace manifest, so it installs the
+same way any Claude Code plugin does — no manual file copying or symlinks:
 
 ```bash
-# From your writing workspace (e.g. C:\booq):
-claude plugin marketplace add ../book-forge   # or the full path to this repo
+# From your writing workspace, install straight from GitHub:
+claude plugin marketplace add aragondanielle32/book-forge
+claude plugin install book-forge@book-forge --scope project
+```
+
+To hack on it instead, clone the repo and point the marketplace at your
+local copy — the manifest is the same either way:
+
+```bash
+claude plugin marketplace add /path/to/your/clone
 claude plugin install book-forge@book-forge --scope project
 ```
 
