@@ -75,6 +75,32 @@ const BARE_HINT = (
   </>
 );
 
+const REPEAT_DLG_HINT = (
+  <>
+    Spoken lines repeated word-for-word in two or more chapters. Different
+    from repeated phrasing above, which works on narration: this matches whole
+    lines, so it catches a character restating the same thing in chapter 6 and
+    again in chapter 14. A reader review of an AI novel named exactly this —
+    characters repeating their goals, dialogue recurring across chapters — as
+    why the book felt padded to five times its necessary length. Lines under
+    four words are ignored, since <code>"Yes."</code> is supposed to recur.
+    Only <em>verbatim</em> repeats show here; a goal restated in fresh words
+    every time is the same defect and needs a reader to catch.
+  </>
+);
+
+const NAMES_HINT = (
+  <>
+    Character names from the story bible that a reader could confuse. A reader
+    reviewing an AI-generated novel noted it had both a <em>Thomas</em> and a
+    <em> Brother Thomas</em> by chapter two, and nothing in the pipeline saw a
+    problem. Pure string comparison, so it costs nothing. Reported, never
+    judged — two similar names are often deliberate: aliases for one person, a
+    family sharing a surname, a formal and a familiar form of the same
+    character. This just puts the pair in front of you.
+  </>
+);
+
 const SENTENCE_HINT = (
   <>
     Spread of sentence lengths. Uniform length is the texture of machine prose;
@@ -127,6 +153,8 @@ export default function Craft({ project }) {
   const overall = data.sentences?.overall;
   const dlg = data.dialogue?.overall;
   const tagCeiling = data.dialogue?.reference?.tag_pct_ceiling ?? 30;
+  const repeatedLines = data.repeated_dialogue || [];
+  const nameClashes = data.confusable_names || [];
 
   return (
     <div>
@@ -185,6 +213,18 @@ export default function Craft({ project }) {
             hint={TAG_HINT}
           />
         )}
+        <StatTile
+          label="Repeated lines"
+          value={repeatedLines.length}
+          tone={repeatedLines.length ? "warn" : "ok"}
+          hint={REPEAT_DLG_HINT}
+        />
+        <StatTile
+          label="Confusable names"
+          value={nameClashes.length}
+          tone={nameClashes.length ? "warn" : "ok"}
+          hint={NAMES_HINT}
+        />
       </div>
 
       <Card title="Repeated phrasing" hint={ECHO_HINT}>
@@ -356,6 +396,72 @@ export default function Craft({ project }) {
               </table>
             </div>
           </>
+        )}
+      </Card>
+
+      <Card title="Repeated dialogue" hint={REPEAT_DLG_HINT}>
+        {!repeatedLines.length ? (
+          <Empty>
+            No spoken line of four words or more repeats across chapters.
+          </Empty>
+        ) : (
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Line</th>
+                  <th scope="col" className="num">Chapters</th>
+                  <th scope="col" className="num">Times</th>
+                </tr>
+              </thead>
+              <tbody>
+                {repeatedLines.map((r, i) => (
+                  <tr key={i}>
+                    <td>{r.line}</td>
+                    <td className="num">{r.chapters.join(", ")}</td>
+                    <td className="num">{r.count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+
+      <Card
+        title="Confusable names"
+        hint={NAMES_HINT}
+        note="Compared against the cast in story-bible/characters/, not against capitalised words in the prose — otherwise every place name would appear here."
+      >
+        {!nameClashes.length ? (
+          <Empty>
+            No two character names are close enough to be mistaken for each
+            other. If your story bible is empty, this check has nothing to
+            compare and will stay quiet.
+          </Empty>
+        ) : (
+          <div className="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Pair</th>
+                  <th scope="col">Why it's flagged</th>
+                  <th scope="col">Severity</th>
+                </tr>
+              </thead>
+              <tbody>
+                {nameClashes.map((n, i) => (
+                  <tr key={i}>
+                    <td>{n.names.join("  /  ")}</td>
+                    <td>{n.reason}</td>
+                    <td className={n.severity === "high" ? "is-warn" : ""}>
+                      {n.severity}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Card>
     </div>

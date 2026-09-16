@@ -91,6 +91,51 @@ check("bare volley counted, not penalised as a defect",
 check("human: interruption/fragment not counted flat",
       h["flat_pct"] < 50, "%d" % h["flat_pct"])
 
+
+# --- confusable names ------------------------------------------------------
+# The Thomas / Brother Thomas collision a reader spotted in an AI novel by
+# chapter two, plus a near-miss pair and a control pair that must stay quiet.
+cn = craft.confusable_names(
+    ["Thomas", "Brother Thomas", "Aldric", "Aldrik", "Mara", "Vance"])
+pairs = {" / ".join(sorted(r["names"])): r for r in cn}
+print()
+print("--- CONFUSABLE NAMES ---")
+for r in cn:
+    print("  %-7s %-26s %s" % (r["severity"], " / ".join(r["names"]), r["reason"]))
+
+check("Thomas / Brother Thomas flagged",
+      "Brother Thomas / Thomas" in pairs, "%d pairs" % len(cn))
+check("containment reported as such",
+      pairs.get("Brother Thomas / Thomas", {}).get("reason", "").startswith("one name"),
+      pairs.get("Brother Thomas / Thomas", {}).get("reason", "-"))
+check("Aldric / Aldrik flagged high",
+      pairs.get("Aldric / Aldrik", {}).get("severity") == "high",
+      pairs.get("Aldric / Aldrik", {}).get("severity", "-"))
+check("unrelated names NOT flagged",
+      "Mara / Vance" not in pairs, "control pair absent")
+check("empty cast is not an error",
+      craft.confusable_names([]) == [] and craft.confusable_names(None) == [],
+      "returns []")
+
+# --- repeated dialogue -----------------------------------------------------
+# "Every character just kept repeating their goals over and over."
+GOAL = u'"I will take back the city my father lost."'
+chs = [{"chapter_id": "%04d" % i,
+        "prose": GOAL + u' he said.' + chr(10)*2 + u'"Yes." she said.'}
+       for i in (1, 6, 14)]
+rd = craft.repeated_dialogue(chs)
+print()
+print("--- REPEATED DIALOGUE ---")
+for r in rd:
+    print("  x%d %s -> %s" % (r["count"], r["chapters"], r["line"]))
+
+check("repeated goal line caught across chapters",
+      len(rd) == 1 and rd[0]["count"] == 3, "%d entries" % len(rd))
+check("short line 'Yes.' not treated as repetition",
+      all("yes" not in r["line"].lower() for r in rd), "under the 4-word floor")
+check("a line in only one chapter is not flagged",
+      craft.repeated_dialogue([chs[0]]) == [], "single chapter -> []")
+
 print()
 print("RESULT:", "ALL PASS" if ok else "FAILURES PRESENT")
 sys.exit(0 if ok else 1)

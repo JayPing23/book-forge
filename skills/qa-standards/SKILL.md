@@ -42,8 +42,18 @@ released by an explicit Override Contract.
 | ID | Name | Definition | Owning reviewer |
 |---|---|---|---|
 | GATE-001 | Dialogue naturalness | An exchange reads as machine-written rather than as people talking: report-speech, uniform line shape, attribution carrying the scene with nothing staged | `dialogue-naturalness-reviewer` |
+| GATE-002 | Told, not shown | The chapter's load-bearing beats are summarised in narration rather than staged as scene — events reported to the reader in sequence instead of played out | `clarity-reviewer` |
 
-The tier exists because the binary above cannot express what GATE-001 needs.
+Both gating invariants share a shape, and it is worth naming because it is
+what the tier is for. Each describes a chapter that is **technically correct
+and unreadable** — nothing is contradicted, no thread is dropped, no
+character acts out of turn, and a reader still puts it down. Every other
+check in this gate answers "is this chapter wrong." These two answer "is this
+chapter worth reading," which is a different question and cannot be settled
+by a correctness verdict.
+
+The tier exists because the binary above cannot express what these need.
+Taking GATE-001 as the worked example:
 As Soft Guidance it would be ignorable, and the external evidence — reader
 reviews of AI-assisted serials — says stiff dialogue is the single
 most-cited reason readers drop a book, well ahead of any plot defect. As a
@@ -144,7 +154,14 @@ Override Contract instead of an ad hoc note.
 
 - **`clarity-reviewer`** (sixth) owns the three Hard Invariants no original
   reviewer covers — HARD-001, HARD-003, HARD-004 — and this taxonomy also
-  sharpens `thread-ledger-reviewer`'s scope to explicitly own HARD-002.
+  sharpens `thread-ledger-reviewer`'s scope to explicitly own HARD-002. It
+  additionally owns **GATE-002** (told, not shown), which sits with it because
+  a chapter reported rather than staged is a clarity failure at heart: the
+  events are legible, but the reader is never placed anywhere to experience
+  them. Note the difference in tier — its Hard Invariants ask whether the
+  chapter is *comprehensible*, GATE-002 asks whether it is *inhabited*, and
+  only the second is contract-eligible, because summary is a legitimate tool
+  where an unreadable chapter never is.
 - **`dialogue-naturalness-reviewer`** (seventh) owns GATE-001. It is easy to
   mistake for `voice-consistency-reviewer` and is not the same check:
   voice-consistency asks whether a line sounds like **its speaker**,

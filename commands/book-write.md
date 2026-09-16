@@ -97,6 +97,11 @@ somewhere to hold them, those findings are computed and thrown away.
    `dialogue-naturalness-reviewer` together. Record each verdict in the
    state file's `last_verdicts`.
 
+Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
+   owns GATE-001 and `clarity-reviewer` owns GATE-002. Both catch chapters
+   that are technically correct and still unreadable, which no correctness
+   check can reach. See `qa-standards`.
+
    `dialogue-naturalness-reviewer` is the one that most looks like a
    duplicate and is not. `voice-consistency-reviewer` asks whether a line
    sounds like **its speaker**; naturalness asks whether it sounds like **a
@@ -128,6 +133,18 @@ somewhere to hold them, those findings are computed and thrown away.
    pipeline made by the same context that produced the work — the single
    exception to the never-self-adjudicated rule everything else runs on.
    Treat it as a weak hint for the author's attention, never as evidence.
+
+   **Assume it runs high on exactly the wrong chapters.** A novelist who read
+   a 50,000-word AI-generated novel end to end gave it credit for precisely
+   the three things this score measures: the language was dynamic and
+   expressive, the flow was good, and it was recognisably a story. He also
+   called it unreadable, a "massive exposition dump" that could have been
+   told in a fifth of the words. Another reader put it as: all the
+   ingredients are there, but it tastes like grass. A book can score well on
+   coherence, scene-craft and readability while failing as a book, because
+   those three are surface properties and a surface read is what this score
+   performs. A *high* score is therefore not evidence of anything. Only a low
+   one carries information, and only as a prompt for the author to look.
    Specifically: it is **not sufficient on its own** to qualify a chapter
    for style-exemplar capture, because those exemplars get read back into
    later chapters' writing briefs — letting a self-assessed score decide
@@ -180,7 +197,7 @@ somewhere to hold them, those findings are computed and thrown away.
      (3): set `current_step: "escalated"`, write the specific failure and
      its evidence into `escalation`, save the state file, and **stop**.
      Do not force the chapter through. Do not keep looping.
-   - **If the finding is a gating finding** (GATE-001): increment that
+   - **If the finding is a gating finding** (GATE-001, GATE-002): increment that
      reviewer's counter in `attempts` and revise, exactly as above — but
      an Override Contract is also a legitimate resolution here, and
      resolving by contract clears the block immediately without a further

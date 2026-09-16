@@ -302,8 +302,8 @@ is a summary, kept in sync but not a substitute for it).
    - **Thread-Ledger Reviewer** — owns HARD-002 (broken promise: does this chapter respond to the prior chapter's ending hook?); also introduces an unlogged setup, or drops a thread that owed a payoff (urgency computed from tier weight × elapsed/recovery-window)?
    - **Outline-Adherence Reviewer** — diffs the chapter against its planned scene-level beats, catching drift before it compounds.
    - **Voice-Consistency Reviewer** — checks each dialogue line against its speaker's voice profile, flags voice bleed, POV/perspective slips, and tone shifts.
-   - **Motivation/Agency Reviewer** — checks whether each character action traces to their motivation core and the world's internal logic, or only makes sense because the outline needed them there; flags the specific paragraph/beat responsible, not just the chapter as a whole.
-   - **Clarity Reviewer** (added after a gap was found — no other reviewer checked this) — owns HARD-001 (readability floor: can a reader tell what happened, who, and why), HARD-003 (pacing disaster: N consecutive chapters with zero progression), and HARD-004 (conflict vacuum: does this chapter have an identifiable problem/goal/stakes).
+   - **Motivation/Agency Reviewer** — checks whether each character action traces to their motivation core and the world's internal logic, or only makes sense because the outline needed them there; flags the specific paragraph/beat responsible, not just the chapter as a whole. Also owns **real-world referent integrity** — does a thing that exists in our world behave like that thing (the worked example being an AI novel in which a character parries a *training dummy's* attack). Deliberately scoped to real-world referents only: invented magic, technology and creatures stay governed by the story bible's on-record rule, since a reviewer arguing that the author's worldbuilding is unrealistic would be worse than the gap it closes.
+   - **Clarity Reviewer** (added after a gap was found — no other reviewer checked this) — owns HARD-001 (readability floor: can a reader tell what happened, who, and why), HARD-003 (pacing disaster: N consecutive chapters with zero progression), and HARD-004 (conflict vacuum: does this chapter have an identifiable problem/goal/stakes). Also owns **GATE-002** (told, not shown): are the chapter's load-bearing beats *staged as scene*, or reported to the reader in sequence? Added from a professional novelist's teardown of a 50,000-word AI-generated novel, whose single biggest criticism was that the narrative voice simply explained each event in turn — technically legible, impossible to inhabit. Gating tier, because summary is a legitimate tool (time-skips, serial recaps) and the check must not abolish it; the test is whether the *load-bearing* beats are summarised, not whether summary appears.
    - **Dialogue-Naturalness Reviewer** (added from external evidence, not from an internal gap analysis — reader reviews of AI-assisted serials complain about dialogue more than about any plot defect: *"it sounds like robots speaking rather than people"*) — owns GATE-001 (dialogue naturalness: report-speech, uniform line shape, attribution carrying a scene with nothing staged). Deliberately separate from Voice-Consistency, which asks whether a line sounds like **its speaker** where this asks whether it sounds like **a person** — orthogonal questions, and a cast can be perfectly distinct and uniformly robotic. It is the only check in the **gating** tier: blocking like a Hard Invariant, but releasable by an Override Contract, because a briefing or courtroom scene legitimately reads formal and a check with no way through would flatten every scene toward a generic chattiness that is its own AI tell.
 5. **Humanizer + light-novel-style skills** run last, as a prose pass on a
    draft that has already passed structural QA — style polish is not asked to
@@ -613,6 +613,16 @@ deliberate: `quality_score` is the single assessment in this pipeline made
 by the same context that produced the work. Gating exemplars on it alone
 would let the drafter certify its own output as a model of good writing and
 then be taught by it — a loop with nothing external in it, entrenching
+**Why the quality score is assumed to run high on bad chapters.** A novelist
+who read a 50,000-word AI-generated novel end to end credited it with exactly
+what this score measures — expressive language, good flow, a recognisable
+story — and still called it unreadable: an exposition dump that could have
+been told in a fifth of the words. Coherence, scene-craft and readability are
+surface properties, and a self-assessment performs a surface read. A high
+score is therefore not evidence; only a low one carries information. This is
+also why GATE-001 and GATE-002 exist as blocking checks rather than as inputs
+to the score.
+
 mediocrity rather than voice. A clean pass is seven independent checks
 agreeing on the first try, none of them written by the drafter.
 

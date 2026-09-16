@@ -451,7 +451,7 @@ class Workspace:
         """
         manuscript = self.project_dir(name) / "manuscript"
         if not manuscript.exists():
-            return craft.analyze([])
+            return craft.analyze([], character_names=[])
 
         entries = []
         for path in manuscript.glob("*.md"):
@@ -466,7 +466,11 @@ class Workspace:
                 "prose": craft.extract_prose(text),
             })
         entries.sort(key=lambda c: (c["number"] is None, c["number"]))
-        return craft.analyze(entries)
+        # Character names come from the story bible so the confusable-name
+        # check compares real cast entries rather than guessing at
+        # capitalised tokens in the prose, which would flag every place name.
+        names = [c["name"] for c in self.characters(name) if c.get("name")]
+        return craft.analyze(entries, character_names=names)
 
     def override_debt(self, name):
         mem = self.project_dir(name) / ".project-memory"

@@ -352,11 +352,134 @@ def dialogue_stats(chapters):
     }
 
 
-def analyze(chapters):
+def _edit_distance(a, b):
+    """Levenshtein distance. Small inputs only — this runs on names."""
+    if a == b:
+        return 0
+    if not a or not b:
+        return max(len(a), len(b))
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def confusable_names(names, limit=40):
+    """Character names a reader could mix up.
+
+    A real reader review of an AI-generated novel noted that by chapter two it
+    had both a Thomas and a Brother Thomas, and nothing in the pipeline saw a
+    problem. That is a pure string comparison, so it costs nothing to check.
+
+    Reported, never judged. Two similar names can be entirely deliberate —
+    aliases for one character, a family sharing a surname, a title form and a
+    familiar form of the same person. The point is to put the pair in front of
+    the author, who knows which it is.
+    """
+    clean = []
+    for n in names or []:
+        n = (n or "").strip()
+        if n:
+            clean.append(n)
+
+    out = []
+    for i in range(len(clean)):
+        for j in range(i + 1, len(clean)):
+            a, b = clean[i], clean[j]
+            la, lb = a.lower(), b.lower()
+            if la == lb:
+                out.append({"names": [a, b], "reason": "identical", "severity": "high"})
+                continue
+
+            ta, tb = la.split(), lb.split()
+            # "Thomas" vs "Brother Thomas": every word of the shorter name
+            # appears in the longer one, in order.
+            short, long_ = (ta, tb) if len(ta) <= len(tb) else (tb, ta)
+            if len(short) < len(long_) and all(w in long_ for w in short):
+                out.append({
+                    "names": [a, b],
+                    "reason": "one name contains the other",
+                    "severity": "high",
+                })
+                continue
+
+            # Near-identical single names: Aldric / Aldrik, Maren / Marek.
+            if len(ta) == 1 and len(tb) == 1 and min(len(la), len(lb)) >= 4:
+                d = _edit_distance(la, lb)
+                if d <= 2:
+                    out.append({
+                        "names": [a, b],
+                        "reason": "differ by %d character%s" % (d, "" if d == 1 else "s"),
+                        "severity": "high" if d == 1 else "medium",
+                    })
+                    continue
+
+            # Shared opening: Thalen / Thane / Thaddeus all start "Tha".
+            pre = 0
+            for ca, cb in zip(la, lb):
+                if ca != cb:
+                    break
+                pre += 1
+            if pre >= 3 and min(len(la), len(lb)) >= 4:
+                out.append({
+                    "names": [a, b],
+                    "reason": "share the first %d letters" % pre,
+                    "severity": "medium",
+                })
+
+    order = {"high": 0, "medium": 1}
+    out.sort(key=lambda r: (order.get(r["severity"], 9), r["names"][0].lower()))
+    return out[:limit]
+
+
+def repeated_dialogue(chapters, min_words=4, min_chapters=2, limit=30):
+    """Spoken lines that recur across chapters.
+
+    Distinct from find_echoes, which works on narration n-grams: this matches
+    whole spoken lines, so it catches a character restating the same thing
+    verbatim in chapter 6 and chapter 14. A reader review of an AI novel named
+    exactly this — dialogue repeated across chapters, characters restating
+    their goals — as a reason the book felt padded.
+
+    It only catches *verbatim* repetition. A goal restated in fresh words each
+    time is the same defect and is invisible here; that needs a reader, and is
+    the reviewers' job.
+    """
+    seen = defaultdict(list)
+    display = {}
+    for ch in chapters:
+        cid = ch.get("chapter_id")
+        for span in QUOTED.findall(ch.get("prose") or ""):
+            words = tokenize(span)
+            if len(words) < min_words:
+                continue
+            key = " ".join(words)
+            if cid not in seen[key]:
+                seen[key].append(cid)
+            display.setdefault(key, span.strip())
+
+    out = []
+    for key, chs in seen.items():
+        if len(chs) >= min_chapters:
+            out.append({
+                "line": display[key],
+                "chapters": sorted(chs),
+                "count": len(chs),
+            })
+    out.sort(key=lambda r: (-r["count"], r["line"]))
+    return out[:limit]
+
+
+def analyze(chapters, character_names=None):
     return {
         "chapters_analyzed": len(chapters),
         "echoes": find_echoes(chapters),
         "openings": opening_patterns(chapters),
         "sentences": sentence_stats(chapters),
         "dialogue": dialogue_stats(chapters),
+        "repeated_dialogue": repeated_dialogue(chapters),
+        "confusable_names": confusable_names(character_names),
     }
