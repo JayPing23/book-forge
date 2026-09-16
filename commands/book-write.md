@@ -1,5 +1,5 @@
 ---
-description: Draft, review, and finalize one chapter — full pipeline with a pre-draft validity check, the six-check QA gate, Override Contracts for soft findings, a revision loop with hard caps, and escalation on exhausted retries
+description: Draft, review, and finalize one chapter — full pipeline with a pre-draft validity check, the seven-check QA gate, Override Contracts for soft and gating findings, a revision loop with hard caps, and escalation on exhausted retries
 argument-hint: <project-name> <chapter-id> [--compete=N]
 ---
 
@@ -85,7 +85,7 @@ somewhere to hold them, those findings are computed and thrown away.
    intuition suggests. Not default behavior; skip this step entirely when
    the flag isn't passed.
 
-5. **QA gate — six independent checks, dispatched in parallel.** Each
+5. **QA gate — seven independent checks, dispatched in parallel.** Each
    reviewer reads the story-bible/outline/plot-threads directly — none of
    them read the Writer's own account of what it did. This is the
    never-self-adjudicated rule: the Writer does not get to mark its own
@@ -93,8 +93,18 @@ somewhere to hold them, those findings are computed and thrown away.
 
    Dispatch `continuity-reviewer`, `thread-ledger-reviewer`,
    `outline-adherence-reviewer`, `voice-consistency-reviewer`,
-   `motivation-agency-reviewer`, and `clarity-reviewer` together. Record
-   each verdict in the state file's `last_verdicts`.
+   `motivation-agency-reviewer`, `clarity-reviewer`, and
+   `dialogue-naturalness-reviewer` together. Record each verdict in the
+   state file's `last_verdicts`.
+
+   `dialogue-naturalness-reviewer` is the one that most looks like a
+   duplicate and is not. `voice-consistency-reviewer` asks whether a line
+   sounds like **its speaker**; naturalness asks whether it sounds like **a
+   person**. A cast can be perfectly distinct and uniformly robotic, pass
+   voice-consistency with zero findings, and still be the chapter a reader
+   drops. Keeping them as separate reviewers also keeps their `attempts`
+   counters separate, so revising stiff dialogue never consumes the retry
+   budget for voice bleed.
 
    **Three checks activate conditionally, not on every chapter** — tell
    the relevant reviewer whether its conditional check is active when
@@ -106,11 +116,11 @@ somewhere to hold them, those findings are computed and thrown away.
    - `voice-consistency-reviewer`'s longitudinal-drift check is active
      only when `chapter_id` is a multiple of 20 (`0020`, `0040`, …).
 
-6. **Weighted quality score** (a seventh signal, not a pass/fail gate):
+6. **Weighted quality score** (a separate signal, not a pass/fail gate):
    assess coherence, insight/scene-craft quality, and readability, each
    roughly equally weighted, as a 0-100 score. This doesn't block
    finalization the way a failed check does — a low score flags the
-   chapter for the human author's review even when all six checks
+   chapter for the human author's review even when all seven checks
    technically passed, since none of them are designed to catch
    "technically correct but bland." Record it in `quality_score`.
 
@@ -123,11 +133,11 @@ somewhere to hold them, those findings are computed and thrown away.
    later chapters' writing briefs — letting a self-assessed score decide
    what the model is later taught by would close a loop with nothing
    external in it. The objective signal for that decision is a clean first
-   pass across all six reviewers; see `deconstruction-agent`'s Job 2.
+   pass across all seven reviewers; see `deconstruction-agent`'s Job 2.
 
-7. **Disposition every finding.** Findings come in two classes and are
-   handled differently, but **neither class is ever silently dropped**.
-   Collect findings from *all six* reviewers here, not just the failing
+7. **Disposition every finding.** Findings come in three classes and are
+   handled differently, but **no class is ever silently dropped**.
+   Collect findings from *all seven* reviewers here, not just the failing
    ones — a reviewer returning `verdict: "pass"` can still report real
    non-blocking findings (`medium`/`low` severity, or the conditional
    opening-chapter and longitudinal-drift checks, which are soft by
@@ -156,17 +166,32 @@ somewhere to hold them, those findings are computed and thrown away.
    **7b. Blocking findings — revision loop with a hard cap.** For each
    reviewer that returned `verdict: fail`. Note that a failing reviewer's
    *non*-blocking findings still go through 7a — 7b handles only the
-   blocking findings that caused the failure, and per the escalation
-   rules below, **no blocking finding is eligible for an Override
-   Contract**, Hard Invariant or otherwise. If a finding looks
-   contractable, that means it's non-blocking, which means it belongs in
-   7a.
+   blocking findings that caused the failure.
+
+   Blocking findings split by tier (see `qa-standards`), and the split
+   decides whether a contract is available at all:
+   - **Hard Invariants** (HARD-001–HARD-004) are **never** eligible for an
+     Override Contract. There is no way through except fixing them.
+   - **Gating findings** (GATE-001) are blocking *and* contract-eligible.
+     They are the only findings that are both.
    - **If the finding is a Hard Invariant** (HARD-001 through HARD-004,
      per `qa-standards`): increment that reviewer's counter in
      `attempts`. If the counter is now over `max_attempts_per_check`
      (3): set `current_step: "escalated"`, write the specific failure and
      its evidence into `escalation`, save the state file, and **stop**.
      Do not force the chapter through. Do not keep looping.
+   - **If the finding is a gating finding** (GATE-001): increment that
+     reviewer's counter in `attempts` and revise, exactly as above — but
+     an Override Contract is also a legitimate resolution here, and
+     resolving by contract clears the block immediately without a further
+     revision pass. Use the normal contract machinery and rationale types
+     (`CHARACTER_CREDIBILITY` citing the Voice Profile, `GENRE_CONVENTION`
+     citing the template section, or `EDITORIAL_INTENT`). **What is not
+     available is reporting it and moving on** — that disposition exists
+     only in 7a, and its absence here is the entire difference between the
+     gating tier and soft guidance. If the retry cap is exhausted with the
+     finding neither fixed nor contracted, escalate exactly as for a Hard
+     Invariant.
    - Otherwise: revise the draft to address that specific reviewer's
      issues, then re-run **only that reviewer** (not the whole QA gate) —
      the other five reviewers' passing verdicts stand unless the revision
@@ -174,13 +199,22 @@ somewhere to hold them, those findings are computed and thrown away.
      continuity fix that changes dialogue should also re-trigger
      voice-consistency). Use judgment on cross-effects rather than
      mechanically re-running everything or nothing.
-   - Loop back to 7b until all six checks pass (or are resolved via
+   - Loop back to 7b until all seven checks pass (or are resolved via
      contract) or one escalates.
 
-8. **Prose pass.** Once all six checks pass or are resolved: run
+8. **Prose pass.** Once all seven checks pass or are resolved: run
    `humanizer`, then the `light-novel-style` skill's drafting-time checks
    as a final pass (style polish only — this step doesn't re-litigate
    plot/continuity, which already passed).
+
+   **Do not treat this step as the dialogue safety net.** `humanizer`
+   carries no dialogue guidance at all — it is phrasing and rhythm at the
+   prose level. `light-novel-style` does carry the dialogue rules, but by
+   step 8 the chapter is already drafted, and stiff dialogue is a structural
+   property of an exchange rather than something a polish pass repairs
+   line by line. That is why the rules are loaded before drafting in step 4
+   and enforced by a reviewer in step 5; this step only catches what
+   survived both.
 
 9. **Finalize.** Write the chapter as **one file per chapter** — never one
    growing book-length file — to `manuscript/<chapter_id>-<title-slug>.md`
@@ -316,7 +350,7 @@ somewhere to hold them, those findings are computed and thrown away.
   correctly rather than restarting from scratch.
 - Never let a reviewer's revision loop exceed `max_attempts_per_check`.
   Exhausting the cap is escalation, never silent success.
-- Never run `deconstruction-agent` on a chapter that hasn't passed all six
+- Never run `deconstruction-agent` on a chapter that hasn't passed all seven
   checks — extraction assumes the chapter is settled fact, not a draft that
   might still change.
 - **Never drop a finding because the reviewer's verdict was `pass`.** A

@@ -107,7 +107,7 @@ Capture only when **both** hold:
 1. **Objective evidence — a clean first pass.** Every reviewer's counter in
    the state file's `attempts` is `0`, `override_contracts` is empty for
    this chapter, and no unresolved entries remain in `open_soft_findings`.
-   This is six independent checks agreeing on the first try, none of them
+   This is seven independent checks agreeing on the first try, none of them
    written by the drafter. It's the strongest evidence this pipeline
    produces that a chapter came out right.
 2. **`quality_score >= 80`** — a secondary filter only, never the sole

@@ -1,6 +1,6 @@
 ---
 name: motivation-agency-reviewer
-description: One of book-forge's six QA reviewers. Checks whether each character action traces to their Motivation Core and the world's internal logic, or only makes sense because the outline needed them there — the "puppet" failure mode. Also covers causal logic and power-balance consistency in conflict outcomes.
+description: One of book-forge's seven QA reviewers. Checks whether each character action traces to their Motivation Core and the world's internal logic, or only makes sense because the outline needed them there — the "puppet" failure mode. Also covers causal logic and power-balance consistency in conflict outcomes.
 tools: Read, Grep
 ---
 

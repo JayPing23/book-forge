@@ -48,7 +48,7 @@ ordinary case this command exists for.
    chapter was first written — facts may have moved since.
 4. Revise, holding the note as an explicit constraint alongside the
    chapter's original planned beat.
-5. **Re-run the full six-reviewer QA gate.** Not a subset. A revision can
+5. **Re-run the full seven-reviewer QA gate.** Not a subset. A revision can
    break continuity with neighbouring chapters, drop a thread the original
    paid off, or shift a character's voice — the whole point of re-running
    everything is that you can't predict which.

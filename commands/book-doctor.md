@@ -24,14 +24,15 @@ one broken thing doesn't hide the status of everything else.
    `${CLAUDE_PLUGIN_ROOT}/skills/payoff-craft/SKILL.md`, and
    `${CLAUDE_PLUGIN_ROOT}/skills/qa-standards/SKILL.md` all exist.
 
-4. **Core agents present**: confirm all fourteen exist under
+4. **Core agents present**: confirm all fifteen exist under
    `${CLAUDE_PLUGIN_ROOT}/agents/`: `context-agent.md`, `research-agent.md`,
    `ideation-agent.md`, `deconstruction-agent.md`,
    `web-novel-outline-agent.md`, `complete-book-outline-agent.md`,
    `continuity-reviewer.md`, `thread-ledger-reviewer.md`,
    `outline-adherence-reviewer.md`, `voice-consistency-reviewer.md`,
    `motivation-agency-reviewer.md`, `clarity-reviewer.md`,
-   `cover-brief-agent.md`, `continuity-archivist.md`. List any missing by
+   `dialogue-naturalness-reviewer.md`, `cover-brief-agent.md`,
+   `continuity-archivist.md`. List any missing by
    exact filename — don't just report a pass/fail count.
 
 5. **Genre templates present**: confirm at least one file exists under

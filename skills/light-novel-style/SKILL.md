@@ -112,3 +112,13 @@ Bad pacing (your default):
   encodes per character — this skill is how you write to that profile
   while drafting, the reviewer is how a chapter gets checked against it
   afterward.
+- **Dialogue-Naturalness Reviewer**: the enforcer for this skill's
+  "Dialogue specifics" section. Everything under *Bad dialogue (your
+  default)* — strict A-says/B-says alternation, every line fully answering
+  the previous one, tags running through the whole scene, characters
+  talking like they're giving a report — is what it blocks on as GATE-001.
+  Worth knowing while drafting: these rules are not advisory. They are the
+  only guidance in this skill with a reviewer that can stop a chapter
+  finalizing, because reader complaints about AI-written fiction land on
+  dialogue more than on anything else. The 30% tag ceiling above is the one
+  number `dashboard/craft.py` measures directly.

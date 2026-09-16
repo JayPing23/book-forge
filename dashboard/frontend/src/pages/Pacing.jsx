@@ -19,7 +19,7 @@ const QUALITY_HINT = (
   <>
     A 0–100 read on coherence, scene craft and readability, recorded per
     chapter. It is <strong>observation only and never gates a chapter</strong> —
-    that is always the six reviewers' pass/fail verdicts. Its job is catching
+    that is always the seven reviewers' pass/fail verdicts. Its job is catching
     "technically correct but bland," which no individual reviewer checks for.
   </>
 );
@@ -220,7 +220,7 @@ export default function Pacing({ project }) {
       <Card
         title="Quality score trend — last 20 chapters"
         hint={QUALITY_HINT}
-        note="Trend observation only. This score never gates a chapter — that's always the six reviewers' pass/fail verdicts."
+        note="Trend observation only. This score never gates a chapter — that's always the seven reviewers' pass/fail verdicts."
       >
         <QualityTrend metrics={data.review_metrics} />
       </Card>

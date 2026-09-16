@@ -295,7 +295,7 @@ is a summary, kept in sync but not a substitute for it).
    error-clustering data (see Grounding in published research) puts
    consistency errors at 40-60% of narrative length, not concentrated at the
    bookends intuition suggests.
-4. **Six** independent, parallelizable checks run against the draft, each
+4. **Seven** independent, parallelizable checks run against the draft, each
    reading the story-bible/ledger notes directly rather than trusting the
    Writer's own account of what it did (no check is self-adjudicated):
    - **Continuity Reviewer** — contradicts established story-bible facts (reading each note's status-lifecycle Facts Log), world rules/setting (a magic-system rule broken, a geography contradiction), or small details (nomenclature, appearance, quantities changing without explanation)? Pass/fail with citation, not a subjective score.
@@ -304,13 +304,18 @@ is a summary, kept in sync but not a substitute for it).
    - **Voice-Consistency Reviewer** — checks each dialogue line against its speaker's voice profile, flags voice bleed, POV/perspective slips, and tone shifts.
    - **Motivation/Agency Reviewer** — checks whether each character action traces to their motivation core and the world's internal logic, or only makes sense because the outline needed them there; flags the specific paragraph/beat responsible, not just the chapter as a whole.
    - **Clarity Reviewer** (added after a gap was found — no other reviewer checked this) — owns HARD-001 (readability floor: can a reader tell what happened, who, and why), HARD-003 (pacing disaster: N consecutive chapters with zero progression), and HARD-004 (conflict vacuum: does this chapter have an identifiable problem/goal/stakes).
+   - **Dialogue-Naturalness Reviewer** (added from external evidence, not from an internal gap analysis — reader reviews of AI-assisted serials complain about dialogue more than about any plot defect: *"it sounds like robots speaking rather than people"*) — owns GATE-001 (dialogue naturalness: report-speech, uniform line shape, attribution carrying a scene with nothing staged). Deliberately separate from Voice-Consistency, which asks whether a line sounds like **its speaker** where this asks whether it sounds like **a person** — orthogonal questions, and a cast can be perfectly distinct and uniformly robotic. It is the only check in the **gating** tier: blocking like a Hard Invariant, but releasable by an Override Contract, because a briefing or courtroom scene legitimately reads formal and a check with no way through would flatten every scene toward a generic chattiness that is its own AI tell.
 5. **Humanizer + light-novel-style skills** run last, as a prose pass on a
    draft that has already passed structural QA — style polish is not asked to
-   also catch plot holes.
-6. **Weighted quality score** (a seventh signal, distinct from the six
+   also catch plot holes. Note the converse too: this pass is not the dialogue
+   safety net. `humanizer` carries no dialogue guidance at all, and stiff
+   dialogue is a structural property of an exchange rather than something a
+   line-level polish repairs — which is why `light-novel-style`'s dialogue
+   rules load *before* drafting and are enforced by a reviewer in the gate.
+6. **Weighted quality score** (a separate signal, distinct from the seven
    pass/fail checks): coherence, insight/scene-craft quality, and readability,
    scored and weighted the way `x-to-book-system`'s evaluation stage does.
-   The six checks above catch binary violations — plot holes, voice bleed,
+   The seven checks above catch binary violations — plot holes, voice bleed,
    dropped threads, unreadable/static chapters. None of them catch a chapter
    that passes every check and is still just bland. A score below threshold
    doesn't block finalization the way a failed check does, but it does flag
@@ -443,13 +448,25 @@ where it was first set.
 pattern-matching against a fixed reference (`continuity-reviewer`,
 `thread-ledger-reviewer`, `outline-adherence-reviewer`,
 `voice-consistency-reviewer`) run on a cheaper/faster model
-(`model: haiku` in their agent frontmatter). `clarity-reviewer` and
-`motivation-agency-reviewer` — which require more interpretive judgment
-(readability, pacing, whether an action traces to a character's actual
-motivation) — and every creative/drafting agent stay on whatever model
-the author's session is running (no `model:` override, i.e. inherit).
-This is a cost lever, not a quality one: since every chapter runs all six
+(`model: haiku` in their agent frontmatter). `clarity-reviewer`,
+`motivation-agency-reviewer`, and `dialogue-naturalness-reviewer` — which
+require more interpretive judgment (readability, pacing, whether an action
+traces to a character's actual motivation, whether an exchange sounds like
+people) — and every creative/drafting agent stay on whatever model the
+author's session is running (no `model:` override, i.e. inherit).
+This is a cost lever, not a quality one: since every chapter runs all seven
 reviewers, this is the highest-volume call site in the whole pipeline.
+
+Note what inheriting does and does not buy. A `model:` line is an
+*assignment*, not a floor — there is no mechanism for "at least this good."
+Pinning `dialogue-naturalness-reviewer` to a named mid-tier model would
+therefore **cap** it below the session model whenever the author is running
+something stronger, which is the wrong trade for the check most likely to
+decide whether a reader keeps reading. Omitting the override is what lets it
+scale up with the session. The corollary is that it does not scale *down*
+either: it is the most expensive reviewer in the gate by design, and the
+mechanical dialogue metrics in `dashboard/craft.py` exist partly to keep it
+from having to do arithmetic it would do badly and expensively.
 
 **Cover art.** `cover-brief-agent` (via `/book-forge:book-cover`) produces
 a text art-direction brief — subject, composition, palette, mood,
@@ -596,7 +613,7 @@ deliberate: `quality_score` is the single assessment in this pipeline made
 by the same context that produced the work. Gating exemplars on it alone
 would let the drafter certify its own output as a model of good writing and
 then be taught by it — a loop with nothing external in it, entrenching
-mediocrity rather than voice. A clean pass is six independent checks
+mediocrity rather than voice. A clean pass is seven independent checks
 agreeing on the first try, none of them written by the drafter.
 
 **Revision after reading** (`/book-forge:book-revise`). `book-write` refuses
@@ -605,7 +622,7 @@ the dashboard the author will want one changed. This re-enters the pipeline
 with the author's note as a *binding* constraint — if it conflicts with the
 planned beat, the note wins and the outline changes through its changelog,
 because the author read the chapter and the outline was written before
-anyone had. Full six-reviewer QA re-runs (a revision can break continuity
+anyone had. Full seven-reviewer QA re-runs (a revision can break continuity
 with neighbours or drop a thread the original paid off). It **refuses on a
 published chapter** unless explicitly overridden, per the immutability rule.
 A revised chapter is never exemplar-captured — that falls out of the clean
@@ -681,7 +698,7 @@ writers should be able to clone it, use it, and suggest improvements. That
 splits the workspace into two repositories:
 
 - **`book-forge`** (new, separate git repo): the reusable plugin. Every
-  agent (Research, Ideation, Context, the six QA reviewers, Deconstruction,
+  agent (Research, Ideation, Context, the seven QA reviewers, Deconstruction,
   both outline agents), the `light-novel-style`/`payoff-craft`/
   `qa-standards` skills, `humanizer` bundled
   in-repo (MIT license, attribution notice preserved), every slash command,
@@ -767,7 +784,7 @@ phase entirely — Obsidian's skills are already installed and verified.
    rebuild can lag).
 2. **Core writing loop**: `/book-new` → outline → `/book-write` → one chapter
    out, no QA reviewers yet — proves the basic pipeline end-to-end.
-3. **QA gate** *(done — grew from five reviewers to six; see Orchestration
+3. **QA gate** *(done — grew from five reviewers to seven; see Orchestration
    flow above)*: the reviewers, built as an agent-harness-style state
    machine with the persistent per-chapter state file, retry caps, and
    escalation path.
@@ -796,7 +813,7 @@ test suite. Validation is:
   structure is intact, `obsidian-*` skills are available, plugin commands
   resolve, and (as of the self-improvement loop) flags stale market-pulse
   research per project.
-- The six-check QA gate on every chapter *is* the test suite equivalent — a
+- The seven-check QA gate on every chapter *is* the test suite equivalent — a
   chapter that fails a Hard Invariant (readability, broken promise, pacing
   disaster, conflict vacuum) or any of the other structural checks does not
   get finalized, and repeated failure escalates to you rather than silently

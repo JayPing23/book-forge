@@ -1,14 +1,23 @@
 """Mechanical craft analysis across a whole manuscript.
 
 These are the craft problems that are *measurable* — no taste judgement, no
-LLM call, no per-chapter token cost. They share one property that makes them
-worth computing rather than reviewing: **a per-chapter check cannot catch
-them by construction.** Each chapter looks fine on its own; the defect only
-exists in the relationship between chapters.
+LLM call, no per-chapter token cost. Two families live here.
 
-That's the same insight behind the longitudinal voice-drift check. A reviewer
+**Cross-chapter defects** (echoes, opening patterns) are here because a
+per-chapter check cannot catch them by construction. Each chapter looks fine
+on its own; the defect only exists in the relationship between chapters. That
+is the same insight behind the longitudinal voice-drift check — a reviewer
 reading chapter 40 in isolation has no way to know the phrase in front of it
 has appeared in thirty earlier chapters.
+
+**Dialogue shape** is different: a reviewer *can* see it in one chapter, and
+`dialogue-naturalness-reviewer` does. It is computed here anyway for two
+reasons. Counting is free and exact where a reviewer is neither, so the
+reviewer should spend its judgement on whether a line sounds human rather
+than on arithmetic it will do badly. And the per-chapter series shows drift
+a single verdict cannot — a manuscript that loosens up after chapter 80 is
+telling you its early chapters are the ones losing readers, which is exactly
+where readers decide whether to keep going.
 
 Deliberately NOT here: whether dialogue carries subtext, whether description
 is evocative, whether a scene moves anyone. Those are taste, they need
@@ -40,6 +49,31 @@ STOPWORDS = {
 
 FRONTMATTER = re.compile(r"^---\s*\n.*?\n---\s*\n?", re.DOTALL)
 WORD = re.compile(r"[a-z']+")
+
+
+# Verbs that make a clause a speech tag. `light-novel-style` caps tags at
+# roughly 30% of dialogue lines, preferring an action beat instead ("He
+# ground out his cigarette. 'Fine.'"), so this set exists to measure that
+# ratio, not to forbid the construction.
+SPEECH_TAGS = {
+    "said", "says", "say", "asked", "asks", "ask", "replied", "replies",
+    "answered", "answers", "muttered", "murmured", "whispered", "shouted",
+    "yelled", "added", "continued", "noted", "observed", "remarked",
+    "stated", "declared", "responded", "called", "breathed", "growled",
+    "snapped", "sighed", "laughed", "repeated", "offered", "admitted",
+    "explained", "insisted", "agreed", "countered", "interrupted",
+}
+
+# Straight and curly double quotes. Single quotes are deliberately excluded:
+# the apostrophe in "don't" would open a span and corrupt everything after it.
+QUOTED = re.compile(u"[\"\u201c]([^\"\u201c\u201d]+)[\"\u201d]")
+
+# The shape a reader calls "robots speaking": one complete sentence, closed
+# with a full stop, long enough to be stating a position rather than reacting
+# to one. The length floor matters — "No." is also one period-terminated
+# sentence, and it is *good* dialogue. Without the floor this metric would
+# punish exactly the blunt, clipped lines it should reward.
+FLAT_MIN_WORDS = 4
 
 
 def extract_prose(text):
@@ -191,10 +225,138 @@ def sentence_stats(chapters):
     return {"per_chapter": per_chapter, "overall": overall}
 
 
+# A speech tag that is only a speech tag runs about four words: "he said",
+# "she asked quietly", "Mara replied". Longer than that and something is
+# actually happening in the clause — "she said, folding the map" stages the
+# line even though it also tags it. Text outside the quotes carrying no tag
+# verb at all ("He ground out his cigarette.") is a beat by definition.
+#
+# This is a heuristic, and it is the shakiest number in this module: proper
+# detection needs part-of-speech tagging, which stdlib does not provide. It
+# is reported rather than enforced for exactly that reason.
+TAG_ONLY_MAX_WORDS = 4
+
+
+def has_beat(outside_words, has_tag):
+    """Does the text around this line stage it, or merely attribute it?"""
+    if not outside_words:
+        return False
+    if has_tag and len(outside_words) <= TAG_ONLY_MAX_WORDS:
+        return False
+    return True
+
+
+def dialogue_stats(chapters):
+    """Shape of the dialogue, per chapter and overall.
+
+    Every number here is a count, not a verdict, and only two of them have a
+    direction. `flat_pct` (lines that are one complete period-terminated
+    sentence) and `tag_pct` (lines attributed with "said" rather than staged
+    with an action) are the two the reviewers in those screenshots were
+    describing — higher is worse, up to a point. `beat_pct` runs the other
+    way. `bare_pct` has no direction at all: a bare volley with no attribution
+    is a legitimate, fast technique, and a scene of nothing else is airless.
+    Which one a given chapter needs is a judgement about that chapter, and it
+    belongs to `dialogue-naturalness-reviewer`, which reads the prose. This
+    function only makes the numbers available, so that the reviewer and the
+    author argue about the same measurements.
+
+    Speaker attribution is not attempted. Identifying who says each line
+    reliably needs the story-bible and a model; guessing from proximity would
+    produce confident nonsense on exactly the crowded scenes that matter most.
+    Everything below is therefore speaker-agnostic.
+    """
+    per_chapter = []
+    all_spans = []
+    tot_paras = tot_tagged = tot_bare = tot_beats = tot_flat = 0
+
+    for ch in chapters:
+        prose = ch.get("prose") or ""
+        paragraphs = [p.strip() for p in re.split(r"\n\s*\n", prose) if p.strip()]
+
+        spans, dlg_paras, tagged, bare, beats = [], 0, 0, 0, 0
+
+        for para in paragraphs:
+            found = QUOTED.findall(para)
+            if not found:
+                continue
+            dlg_paras += 1
+            spans.extend(found)
+
+            # Partition what sits outside the quote marks three ways: nothing
+            # at all (a bare volley line), a bare speech tag, or an actual
+            # action beat. See has_beat() for why the distinction matters.
+            outside = tokenize(QUOTED.sub(" ", para))
+            has_tag = any(w in SPEECH_TAGS for w in outside)
+            if has_tag:
+                tagged += 1
+            if not outside:
+                bare += 1
+            elif has_beat(outside, has_tag):
+                beats += 1
+
+        if not spans:
+            continue
+
+        lengths = [len(tokenize(s)) for s in spans]
+        flat = sum(
+            1 for s in spans
+            if len(split_sentences(s)) == 1
+            and s.rstrip().endswith(".")
+            and len(tokenize(s)) >= FLAT_MIN_WORDS
+        )
+
+        mean = sum(lengths) / len(lengths)
+        variance = sum((n - mean) ** 2 for n in lengths) / len(lengths)
+
+        all_spans.extend(spans)
+        tot_paras += dlg_paras
+        tot_tagged += tagged
+        tot_bare += bare
+        tot_beats += beats
+        tot_flat += flat
+
+        per_chapter.append({
+            "chapter_id": ch.get("chapter_id"),
+            "lines": len(spans),
+            "flat_pct": round(100.0 * flat / len(spans)),
+            "tag_pct": round(100.0 * tagged / dlg_paras),
+            "beat_pct": round(100.0 * beats / dlg_paras),
+            "bare_pct": round(100.0 * bare / dlg_paras),
+            "mean_words": round(mean, 1),
+            "stdev": round(variance ** 0.5, 1),
+        })
+
+    overall = None
+    if all_spans:
+        lengths = [len(tokenize(s)) for s in all_spans]
+        mean = sum(lengths) / len(lengths)
+        variance = sum((n - mean) ** 2 for n in lengths) / len(lengths)
+        overall = {
+            "lines": len(all_spans),
+            "flat_pct": round(100.0 * tot_flat / len(all_spans)),
+            "tag_pct": round(100.0 * tot_tagged / tot_paras) if tot_paras else 0,
+            "beat_pct": round(100.0 * tot_beats / tot_paras) if tot_paras else 0,
+            "bare_pct": round(100.0 * tot_bare / tot_paras) if tot_paras else 0,
+            "mean_words": round(mean, 1),
+            "stdev": round(variance ** 0.5, 1),
+        }
+
+    return {
+        "per_chapter": per_chapter,
+        "overall": overall,
+        # Documented reference point, not a threshold this module enforces.
+        # 30% is light-novel-style's stated tag ceiling. The other metrics
+        # have no published number, so none is invented for them here.
+        "reference": {"tag_pct_ceiling": 30},
+    }
+
+
 def analyze(chapters):
     return {
         "chapters_analyzed": len(chapters),
         "echoes": find_echoes(chapters),
         "openings": opening_patterns(chapters),
         "sentences": sentence_stats(chapters),
+        "dialogue": dialogue_stats(chapters),
     }

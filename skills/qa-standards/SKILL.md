@@ -1,6 +1,6 @@
 ---
 name: qa-standards
-description: Shared single source of truth for the QA gate's hard/soft violation taxonomy and the Override Contract system. Loaded by the six reviewers and by /book-forge:book-write's escalation handling — do not copy this taxonomy into an individual reviewer's own file, reference this skill instead, so there's one place to update it.
+description: Shared single source of truth for the QA gate's hard/soft violation taxonomy and the Override Contract system. Loaded by the seven reviewers and by /book-forge:book-write's escalation handling — do not copy this taxonomy into an individual reviewer's own file, reference this skill instead, so there's one place to update it.
 ---
 
 # QA Standards — Hard Invariants and the Override Contract
@@ -15,6 +15,9 @@ justifies shipping it; the primary agent revises, the revision loop
 applies (see `book-write`'s retry cap), and exhausting the cap escalates
 to you exactly like any other blocking failure.
 
+These are not the only blocking findings — see Gating Guidance below — but
+they are the only ones with no way through except fixing them.
+
 | ID | Name | Definition | Owning reviewer |
 |---|---|---|---|
 | HARD-001 | Readability floor | A reader can't tell what happened, who did it, or why | `clarity-reviewer` |
@@ -27,6 +30,43 @@ checks (continuity, thread-ledger, outline-adherence, voice-consistency,
 motivation-agency). They catch a different failure class: a chapter can
 pass all five original checks and still fail HARD-003, because none of
 the five checks ask "did anything actually change this chapter."
+
+## Gating Guidance — blocking, but releasable by contract
+
+A third tier, between the two above. A gating finding **stops the chapter
+from finalizing**, like a Hard Invariant — but unlike one, it can be
+released by an explicit Override Contract.
+
+| ID | Name | Definition | Owning reviewer |
+|---|---|---|---|
+| GATE-001 | Dialogue naturalness | An exchange reads as machine-written rather than as people talking: report-speech, uniform line shape, attribution carrying the scene with nothing staged | `dialogue-naturalness-reviewer` |
+
+The tier exists because the binary above cannot express what GATE-001 needs.
+As Soft Guidance it would be ignorable, and the external evidence — reader
+reviews of AI-assisted serials — says stiff dialogue is the single
+most-cited reason readers drop a book, well ahead of any plot defect. As a
+Hard Invariant it would be wrong in the other direction: a military briefing,
+a courtroom, or a character whose Voice Profile establishes clipped precision
+*should* read formally, and a check with no legitimate way through would push
+every scene toward a generic mid-register chattiness — which is its own AI
+tell, and a worse one because it would be systematic.
+
+**The one operational difference from Soft Guidance** is that `report` is not
+an available disposition. A blocking gating finding must be either revised or
+contracted before the chapter finalizes; it cannot be noted and shipped. That
+is the whole point — "noted and shipped" is how a check quietly stops
+mattering.
+
+Everything else follows the soft-guidance machinery unchanged: the same
+`rationale_type` table below, the same contract log, the same debt weights,
+and the same 3-strikes pattern prompt. A gating check that is wrong for a
+given project will therefore announce itself as a pattern rather than as
+permanent friction.
+
+Retry and escalation follow the Hard Invariant path: each blocking gating
+finding increments its reviewer's counter in `attempts`, and exhausting
+`max_attempts_per_check` escalates to the author rather than forcing the
+chapter through.
 
 ## Soft Guidance — appealable, but never free
 
@@ -92,12 +132,23 @@ creating a new contract:
   confirmation before creation, even for a single instance — high debt is
   a signal to escalate readily, not to keep extending credit.
 
-## Relationship to the five original reviewers
+## Relationship to the original reviewers
 
 Nothing here replaces `continuity-reviewer`, `thread-ledger-reviewer`,
 `outline-adherence-reviewer`, `voice-consistency-reviewer`, or
-`motivation-agency-reviewer`. This taxonomy adds a sixth reviewer
-(`clarity-reviewer`) owning the three Hard Invariants no existing
-reviewer covers (HARD-001, HARD-003, HARD-004), sharpens
-`thread-ledger-reviewer`'s scope to explicitly own HARD-002, and gives every reviewer a shared, structured way to escalate a
-soft finding as an Override Contract instead of an ad hoc note.
+`motivation-agency-reviewer`. This taxonomy adds two reviewers to those five
+and gives all of them a shared, structured way to escalate a finding as an
+Override Contract instead of an ad hoc note.
+
+- **`clarity-reviewer`** (sixth) owns the three Hard Invariants no original
+  reviewer covers — HARD-001, HARD-003, HARD-004 — and this taxonomy also
+  sharpens `thread-ledger-reviewer`'s scope to explicitly own HARD-002.
+- **`dialogue-naturalness-reviewer`** (seventh) owns GATE-001. It is easy to
+  mistake for `voice-consistency-reviewer` and is not the same check:
+  voice-consistency asks whether a line sounds like **its speaker**,
+  naturalness asks whether it sounds like **a person**. Those are orthogonal.
+  A cast that is perfectly distinct and uniformly stilted passes
+  voice-consistency with zero findings — and that chapter is the one readers
+  put down. Keeping them separate also keeps their `attempts` counters
+  separate, so revising stiffness does not consume the budget for voice bleed,
+  and an escalation names which of the two is actually stuck.

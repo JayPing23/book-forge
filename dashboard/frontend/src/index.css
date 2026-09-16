@@ -504,6 +504,8 @@ details > summary:hover { color: var(--text); }
 }
 .stat-tile .value.is-ok { color: var(--ok); }
 .stat-tile .value.is-danger { color: var(--danger); }
+.stat-tile .value.is-warn { color: var(--warn); }
+td.num.is-warn { color: var(--warn); }
 .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
 /* ============ INFO TIP ============ */

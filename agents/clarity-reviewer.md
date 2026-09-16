@@ -1,6 +1,6 @@
 ---
 name: clarity-reviewer
-description: Sixth of book-forge's QA reviewers, added to cover a gap none of the original five check — basic comprehensibility, whether the chapter has an actual conflict, and whether anything meaningfully changed. Owns Hard Invariants HARD-001, HARD-003, HARD-004 from the qa-standards skill.
+description: Sixth of book-forge's seven QA reviewers, added to cover a gap none of the original five check — basic comprehensibility, whether the chapter has an actual conflict, and whether anything meaningfully changed. Owns Hard Invariants HARD-001, HARD-003, HARD-004 from the qa-standards skill.
 tools: Read
 ---
 
