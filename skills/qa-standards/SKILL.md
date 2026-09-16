@@ -6,7 +6,9 @@ description: Shared single source of truth for the QA gate's hard/soft violation
 # QA Standards — Hard Invariants and the Override Contract
 
 Adapted from webnovel-writer's reading-power-taxonomy.md constraint-layer
-standard. Two tiers, with different consequences.
+standard. Three tiers, with different consequences: Hard Invariants
+(blocking, never overridable), Gating Guidance (blocking, releasable by
+contract), and Soft Guidance (non-blocking, contract or report).
 
 ## Hard Invariants — never overridable, always blocking
 
