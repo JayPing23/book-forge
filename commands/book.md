@@ -44,6 +44,7 @@ one sentence, then do it — don't present a menu unless genuinely ambiguous.
 | Returning after a gap (newest session-log entry isn't from today, and work exists) | Give the `/book-forge:book-resume` briefing **first** — what was decided, what's unresolved, what's due — then continue to the next matching row. |
 | Rolling outline window has <5 chapters of detail left | Extend it via the matching outline agent before drafting. Drafting must never outrun planning. |
 | A volume closed and compaction is due (`mid`/`long` tier) | Offer `/book-forge:book-compact`. Don't force it, but don't let it slide indefinitely on a `long`-tier project — that's the mechanism keeping context flat. |
+| Brand-new project, no chapters drafted yet, and `story-bible/style-exemplars/` is empty | Offer `/book-forge:book-style` once, before the first draft. The exemplar library is emptiest exactly when it matters most — at chapter one. Offer, don't force: an author with nothing to seed from should just start writing |
 | Author says a finalized chapter is wrong ("chapter 12 is flat", "the fight doesn't land") | `/book-forge:book-revise` flow — their note becomes a binding constraint and the full QA gate re-runs. Refuse only if the chapter is published; then offer fix-forward |
 | Author asked to publish / mark chapters live | `/book-forge:book-publish` flow |
 | Author asked to export / upload / package | `/book-forge:book-export` flow |

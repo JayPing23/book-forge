@@ -613,6 +613,19 @@ deliberate: `quality_score` is the single assessment in this pipeline made
 by the same context that produced the work. Gating exemplars on it alone
 would let the drafter certify its own output as a model of good writing and
 then be taught by it — a loop with nothing external in it, entrenching
+**Seeding the exemplar library.** `deconstruction-agent` only banks passages
+from chapters that passed all seven reviewers on the first try, which is the
+right bar and also means the library is empty at chapter one — exactly where
+a reader decides whether to continue. `/book-forge:book-style` seeds it from
+material that already exists, splitting hard on ownership: the author's own
+writing is banked verbatim, and anything by another author becomes a
+technique *description* with no reproduced text. That split is not
+squeamishness — `context-agent` carries exemplars into the drafting brief
+verbatim as a model to write toward, so a copyrighted passage placed there
+becomes a standing instruction to imitate one specific text. Captured
+exemplars outrank seeded ones once the book produces its own, because they
+already fit this project's genre, register and cast.
+
 **Why the quality score is assumed to run high on bad chapters.** A novelist
 who read a 50,000-word AI-generated novel end to end credited it with exactly
 what this score measures — expressive language, good flow, a recognisable

@@ -56,6 +56,15 @@ chapter openings, dialogue shape, recurring spoken lines, confusable
 character names) are computed without a model in `dashboard/craft.py` and
 reported as counts, never scores. Whether a scene *works* stays with you.
 
+The mechanical checks cover two scales deliberately. Phrase-level echoes
+match four- and five-word sequences; word-level metrics (filter-word rate,
+adverb rate, vocabulary variety, over-used content words) catch what those
+miss — a manuscript can say *suddenly* two hundred times in two hundred
+different sentences and pass an n-gram check completely. Vocabulary variety
+is a moving-average type-token ratio rather than a plain unique-over-total
+count, because the plain figure falls as a text lengthens and would make
+every long chapter look repetitive when it is only longer.
+
 ## Quick start
 
 **`/book-forge:book` is the only command you need.** Run it with an idea,
@@ -84,6 +93,12 @@ exist for that shape specifically:
 - `/book-forge:book-revise` — read a chapter, decide it isn't working, and
   say so. Your note re-enters the pipeline as a binding constraint and the
   full QA gate re-runs. Refuses on a published chapter, which is immutable.
+- `/book-forge:book-style` — seed the style-exemplar library *before* you
+  have chapters, so the first ones draft toward a voice instead of toward
+  generic craft advice. Your own earlier writing is banked verbatim; work by
+  other authors is reduced to a technique note and never stored as text,
+  because exemplars are carried into the drafting brief as a model to imitate
+  and a copyrighted passage has no business there.
 - `/book-forge:book-export` — an upload-ready package: listing document
   (blurb, tags, characters, cover spec), plain-text chapter files, and a
   posting schedule, built against a real platform profile (Royal Road,

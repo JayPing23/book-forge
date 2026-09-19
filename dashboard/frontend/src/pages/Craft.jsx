@@ -101,6 +101,50 @@ const NAMES_HINT = (
   </>
 );
 
+const VOCAB_HINT = (
+  <>
+    Word-level repetition, which the repeated-phrasing check above cannot see:
+    it matches four- and five-word sequences, so a manuscript that says
+    <em> suddenly</em> two hundred times in two hundred different sentences
+    sails straight past it. Counted, not judged — a high filter-word rate in
+    a tense internal-monologue chapter may be exactly right. What the
+    per-chapter column is good for is spotting a rate that barely moves across
+    the whole book, which is the signature of a habit rather than a choice.
+  </>
+);
+
+const FILTER_HINT = (
+  <>
+    Hedges and intensifiers per 1,000 words — <em>just, really, slightly,
+    suddenly, seemed, began to</em>. Every one is a real English word that
+    appears in good writing, which is why this is a rate rather than a list of
+    offences. It's the same family of tell the <code>humanizer</code> skill
+    removes at the phrase level.
+  </>
+);
+
+const ADVERB_HINT = (
+  <>
+    Words ending in <em>-ly</em> per 1,000 words, excluding ones that only
+    look adverbial (<em>only, early, reply</em>). Heavy adverb use usually
+    marks a verb doing too little work — <em>walked slowly</em> where
+    <em> trudged</em> was available. No target number; compare chapters
+    against each other rather than against a rule.
+  </>
+);
+
+const MATTR_HINT = (
+  <>
+    Vocabulary variety: the share of unique words in a sliding fixed-size
+    window, averaged. <strong>Not</strong> a plain unique-over-total ratio —
+    that figure falls automatically as a text gets longer, so it would make
+    every long chapter look repetitive when it is only <em>longer</em>.
+    Averaging over a fixed window removes the length effect, so these numbers
+    are genuinely comparable between chapters. Blank means the chapter is
+    shorter than one window, where no honest figure exists.
+  </>
+);
+
 const SENTENCE_HINT = (
   <>
     Spread of sentence lengths. Uniform length is the texture of machine prose;
@@ -155,6 +199,8 @@ export default function Craft({ project }) {
   const tagCeiling = data.dialogue?.reference?.tag_pct_ceiling ?? 30;
   const repeatedLines = data.repeated_dialogue || [];
   const nameClashes = data.confusable_names || [];
+  const vocab = data.vocabulary?.overall;
+  const overused = data.vocabulary?.overused || [];
 
   return (
     <div>
@@ -225,6 +271,14 @@ export default function Craft({ project }) {
           tone={nameClashes.length ? "warn" : "ok"}
           hint={NAMES_HINT}
         />
+        {vocab && (
+          <StatTile
+            label="Filter words"
+            value={vocab.filter_per_1k}
+            sub="per 1,000 words"
+            hint={FILTER_HINT}
+          />
+        )}
       </div>
 
       <Card title="Repeated phrasing" hint={ECHO_HINT}>
@@ -462,6 +516,102 @@ export default function Craft({ project }) {
               </tbody>
             </table>
           </div>
+        )}
+      </Card>
+
+      <Card
+        title="Vocabulary"
+        hint={VOCAB_HINT}
+        note="None of these have a target value. They are worth reading as a series across chapters, not as a score on any one."
+      >
+        {!vocab ? (
+          <Empty>No prose analysed yet.</Empty>
+        ) : (
+          <>
+            <div className="stat-row" style={{ marginBottom: 18 }}>
+              <StatTile
+                label="Filter words"
+                value={vocab.filter_per_1k}
+                sub="per 1,000 words"
+                hint={FILTER_HINT}
+              />
+              <StatTile
+                label="-ly adverbs"
+                value={vocab.adverb_per_1k}
+                sub="per 1,000 words"
+                hint={ADVERB_HINT}
+              />
+              <StatTile
+                label="Vocabulary variety"
+                value={vocab.mattr === null ? "\u2014" : vocab.mattr + "%"}
+                sub={`${data.vocabulary?.reference?.mattr_window ?? 400}-word window`}
+                hint={MATTR_HINT}
+              />
+              <StatTile
+                label="Words analysed"
+                value={vocab.words.toLocaleString()}
+                hint={<>Prose only — frontmatter and headings excluded, same as everywhere else on this page.</>}
+              />
+            </div>
+
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col" className="num">Chapter</th>
+                    <th scope="col" className="num">Words</th>
+                    <th scope="col" className="num">Filter /1k</th>
+                    <th scope="col" className="num">Adverbs /1k</th>
+                    <th scope="col" className="num">Variety</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data.vocabulary?.per_chapter || []).map((v) => (
+                    <tr key={v.chapter_id}>
+                      <td className="num">{v.chapter_id}</td>
+                      <td className="num">{v.words}</td>
+                      <td className="num">{v.filter_per_1k}</td>
+                      <td className="num">{v.adverb_per_1k}</td>
+                      <td className="num">{v.mattr === null ? "\u2014" : v.mattr + "%"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {overused.length > 0 && (
+              <>
+                <p className="page-sub" style={{ marginTop: 22, marginBottom: 10 }}>
+                  Content words carrying an unusual share of the manuscript,
+                  across three or more chapters. A word central to one chapter's
+                  subject is filtered out by that spread requirement; a word that
+                  is everywhere is a habit.
+                </p>
+                <div className="table-scroll">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th scope="col">Word</th>
+                        <th scope="col" className="num">Uses</th>
+                        <th scope="col" className="num">Chapters</th>
+                        <th scope="col" className="num">Per 1k</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {overused.map((w) => (
+                        <tr key={w.word}>
+                          <td>{w.word}</td>
+                          <td className="num">{w.count}</td>
+                          <td className="num">{w.chapters}</td>
+                          <td className="num">{w.per_1k}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+          </>
         )}
       </Card>
     </div>

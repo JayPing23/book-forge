@@ -76,6 +76,28 @@ QUOTED = re.compile(u"[\"\u201c]([^\"\u201c\u201d]+)[\"\u201d]")
 FLAT_MIN_WORDS = 4
 
 
+# Filter words: the hedges and intensifiers that pad machine prose. Every one
+# of these is a legitimate English word and appears in good writing — what
+# matters is the *rate*, which is why this is measured per 1,000 words rather
+# than flagged per occurrence. Drawn from the same family of tells that the
+# `humanizer` skill removes at the phrase level.
+FILTER_WORDS = {
+    "just", "really", "very", "quite", "rather", "somewhat", "slightly",
+    "suddenly", "somehow", "seemed", "seem", "seems", "felt", "feel",
+    "feels", "began", "begin", "begins", "started", "start", "starts",
+    "almost", "nearly", "perhaps", "maybe", "actually", "basically",
+    "simply", "merely", "truly", "certainly", "definitely", "literally",
+    "slowly", "carefully", "quietly", "softly",
+}
+
+# Window for the moving-average type-token ratio. Raw TTR falls as a text
+# grows — a 3,000-word chapter will always look less varied than a 1,500-word
+# one — so comparing chapters by raw TTR measures length, not vocabulary.
+# MATTR averages the ratio over a sliding fixed-size window instead, which is
+# length-invariant and therefore actually comparable between chapters.
+MATTR_WINDOW = 400
+
+
 def extract_prose(text):
     """Strip frontmatter and heading lines, leaving the prose body."""
     body = FRONTMATTER.sub("", text or "")
@@ -473,6 +495,106 @@ def repeated_dialogue(chapters, min_words=4, min_chapters=2, limit=30):
     return out[:limit]
 
 
+def _mattr(tokens, window=MATTR_WINDOW):
+    """Moving-average type-token ratio — vocabulary variety, length-invariant.
+
+    Returns None when the text is shorter than one window, rather than
+    falling back to raw TTR: a number that means something different from the
+    one beside it is worse than no number.
+    """
+    if len(tokens) < window:
+        return None
+    ratios = []
+    for i in range(len(tokens) - window + 1):
+        chunk = tokens[i:i + window]
+        ratios.append(len(set(chunk)) / float(window))
+    return round(100.0 * sum(ratios) / len(ratios), 1)
+
+
+def vocabulary_stats(chapters, min_chapters=3, limit=25):
+    """Word-level repetition: the tic a phrase-level echo check cannot see.
+
+    `find_echoes` matches 4- and 5-word sequences, so a manuscript that says
+    "suddenly" two hundred times in two hundred different sentences passes it
+    completely. Single-word overuse is the other half of the same defect and
+    is just as countable.
+
+    As everywhere else in this module, these are counts with no verdict
+    attached. A high filter-word rate in a tense internal-monologue chapter
+    may be exactly right. What the per-chapter series is good for is spotting
+    a rate that is uniform across the whole book, which is the signature of a
+    habit rather than a choice.
+    """
+    per_chapter = []
+    all_tokens = []
+    content_chapters = defaultdict(set)
+    content_counts = Counter()
+
+    for ch in chapters:
+        tokens = tokenize(ch.get("prose"))
+        if not tokens:
+            continue
+        cid = ch.get("chapter_id")
+        n = len(tokens)
+        filt = sum(1 for t in tokens if t in FILTER_WORDS)
+        # -ly adverbs, excluding words that merely end in "ly" (only, reply).
+        adv = sum(1 for t in tokens
+                  if t.endswith("ly") and len(t) > 4 and t not in ("only", "early", "reply", "apply", "imply"))
+
+        for t in tokens:
+            if t not in STOPWORDS and len(t) > 3:
+                content_counts[t] += 1
+                content_chapters[t].add(cid)
+
+        all_tokens.extend(tokens)
+        per_chapter.append({
+            "chapter_id": cid,
+            "words": n,
+            "mattr": _mattr(tokens),
+            "filter_per_1k": round(1000.0 * filt / n, 1),
+            "adverb_per_1k": round(1000.0 * adv / n, 1),
+        })
+
+    overall = None
+    if all_tokens:
+        n = len(all_tokens)
+        filt = sum(1 for t in all_tokens if t in FILTER_WORDS)
+        adv = sum(1 for t in all_tokens
+                  if t.endswith("ly") and len(t) > 4 and t not in ("only", "early", "reply", "apply", "imply"))
+        overall = {
+            "words": n,
+            "mattr": _mattr(all_tokens),
+            "filter_per_1k": round(1000.0 * filt / n, 1),
+            "adverb_per_1k": round(1000.0 * adv / n, 1),
+        }
+
+    # Content words spread across many chapters at a high rate. Restricted to
+    # words appearing in several chapters so that a word central to one
+    # chapter's subject matter does not look like a tic.
+    overused = []
+    total_words = len(all_tokens) or 1
+    for word, count in content_counts.most_common(400):
+        chs = content_chapters[word]
+        if len(chs) < min_chapters:
+            continue
+        rate = 1000.0 * count / total_words
+        if rate >= 1.0:
+            overused.append({
+                "word": word,
+                "count": count,
+                "chapters": len(chs),
+                "per_1k": round(rate, 2),
+            })
+    overused.sort(key=lambda r: -r["per_1k"])
+
+    return {
+        "per_chapter": per_chapter,
+        "overall": overall,
+        "overused": overused[:limit],
+        "reference": {"mattr_window": MATTR_WINDOW},
+    }
+
+
 def analyze(chapters, character_names=None):
     return {
         "chapters_analyzed": len(chapters),
@@ -482,4 +604,5 @@ def analyze(chapters, character_names=None):
         "dialogue": dialogue_stats(chapters),
         "repeated_dialogue": repeated_dialogue(chapters),
         "confusable_names": confusable_names(character_names),
+        "vocabulary": vocabulary_stats(chapters),
     }

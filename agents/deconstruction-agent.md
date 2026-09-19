@@ -126,7 +126,10 @@ whatever it scored afterwards.
    type specifically — not just "a good paragraph," but a good example of
    *this kind* of writing.
 2. **Write each as its own note** in
-   `story-bible/style-exemplars/<scene-type>-<chapter>-<n>.md`:
+   `story-bible/style-exemplars/<scene-type>-<chapter>-<n>.md`. Note the
+   filename carries the chapter number, so it never collides with a
+   `seeded-<scene-type>-<n>.md` note written by `/book-forge:book-style`;
+   the two kinds coexist, and `context-agent` prefers yours:
    ```markdown
    ---
    type: style-exemplar

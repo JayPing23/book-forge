@@ -69,11 +69,26 @@ never overrides plot facts).
 9. **Pull style exemplars matching this chapter's scene types.** Look in
    `story-bible/style-exemplars/` for notes whose `scene_type` matches what
    this chapter actually calls for (a dialogue-heavy chapter pulls
-   `dialogue`; a fight pulls `action` and `tension`). These are passages
-   from the author's own earlier chapters that passed the QA gate clean —
-   captured by `deconstruction-agent` precisely so later chapters can draft
-   *toward* how this author demonstrably writes, instead of toward generic
-   craft advice.
+   `dialogue`; a fight pulls `action` and `tension`). These let later
+   chapters draft *toward* how this author demonstrably writes, instead of
+   toward generic craft advice.
+
+   The library holds up to three kinds of note, and they are not
+   interchangeable. Check the `source` field:
+
+   | `source` | What it is | How to use it |
+   |---|---|---|
+   | *(absent)* or a `source_chapter` | Captured by `deconstruction-agent` from a chapter of **this book** that passed all seven reviewers first try | Quote verbatim. This is the book's own voice |
+   | `author-seeded` | The author's own writing from elsewhere, banked by `/book-forge:book-style` | Quote verbatim. It is their voice, just not from this book |
+   | `reference-derived` | A **technique description** derived from someone else's work. Contains no reproduced text by design | **Never quote it as prose.** Summarise the technique in one line as craft guidance. It is a `style-technique` note, not a passage |
+
+   **Captured exemplars outrank seeded ones.** Seeded material exists to stop
+   the first chapters drafting into a vacuum; once this book has produced its
+   own clean chapters, those are the better model, because they already fit
+   this project's genre, register and cast. Fill from captured first, and
+   only top up from seeded if fewer than two captured passages match the
+   scene type. Do not mix a `reference-derived` technique note into the
+   passage count at all — it is guidance, not an exemplar.
 
    **Cap at 2-3 passages, scene-type-matched.** This cost lands on every
    single draft, so it must stay small and relevant; dumping the library
@@ -81,7 +96,9 @@ never overrides plot facts).
    recent exemplars over old ones — they reflect where the voice is now,
    not where it started.
 
-   Carry the passages through **verbatim** in the brief's fourth paragraph,
+   Carry the *passages* through **verbatim** in the brief's fourth paragraph
+   (never a `reference-derived` note — those carry as a one-line technique
+   instruction instead),
    as illustrations of rhythm, sentence shape and dialogue handling. They
    are a model of *voice*, never of content: the primary agent is matching
    how these read, never reusing their events, phrasing or images. Say that

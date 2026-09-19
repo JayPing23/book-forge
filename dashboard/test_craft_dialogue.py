@@ -136,6 +136,50 @@ check("short line 'Yes.' not treated as repetition",
 check("a line in only one chapter is not flagged",
       craft.repeated_dialogue([chs[0]]) == [], "single chapter -> []")
 
+# --- vocabulary ------------------------------------------------------------
+# Word-level repetition is what an n-gram echo check structurally cannot see.
+import random
+random.seed(11)
+WIDE = ["soldier","bridge","smoke","radio","rifle","mud","frost","engine",
+        "signal","trench","ash","wire","ridge","convoy","flare","crater",
+        "boot","canvas","diesel","static","ration","helmet","shell","ravine"]
+NARROW = ["soldier","bridge","smoke","radio"]
+TICS = "he just suddenly felt slightly uneasy and really seemed very quietly tense".split()
+
+def mk(pool, n):
+    return " ".join(random.choice(pool) for _ in range(n))
+
+wide = craft.vocabulary_stats([{"chapter_id": "0001", "prose": mk(WIDE, 1200)}])
+narrow = craft.vocabulary_stats([{"chapter_id": "0001", "prose": mk(NARROW, 1200)}])
+ticky = craft.vocabulary_stats([{"chapter_id": "0001", "prose": " ".join(TICS * 90)}])
+clean = craft.vocabulary_stats([{"chapter_id": "0001", "prose": mk(WIDE, 1200)}])
+short = craft.vocabulary_stats([{"chapter_id": "0001", "prose": "a very short chapter"}])
+
+print()
+print("--- VOCABULARY ---")
+print("  wide mattr=%s  narrow mattr=%s" % (wide["overall"]["mattr"], narrow["overall"]["mattr"]))
+print("  tic filter/1k=%s  clean filter/1k=%s" % (
+    ticky["overall"]["filter_per_1k"], clean["overall"]["filter_per_1k"]))
+
+check("MATTR: wide vocabulary scores above narrow",
+      wide["overall"]["mattr"] > narrow["overall"]["mattr"],
+      "%s vs %s" % (wide["overall"]["mattr"], narrow["overall"]["mattr"]))
+check("MATTR is None below one window, not a fake number",
+      short["per_chapter"][0]["mattr"] is None, "short text -> None")
+check("filter-word rate separates tic-heavy from clean",
+      ticky["overall"]["filter_per_1k"] > clean["overall"]["filter_per_1k"] + 100,
+      "%s vs %s" % (ticky["overall"]["filter_per_1k"], clean["overall"]["filter_per_1k"]))
+check("adverb rate excludes words that merely end in -ly",
+      craft.vocabulary_stats(
+          [{"chapter_id": "0001", "prose": "only early reply apply imply " * 40}]
+      )["overall"]["adverb_per_1k"] == 0.0, "only/early/reply/apply/imply -> 0")
+check("overused needs spread across chapters",
+      craft.vocabulary_stats(
+          [{"chapter_id": "0001", "prose": "artillery " * 300}]
+      )["overused"] == [], "single chapter -> no overuse claim")
+check("empty manuscript is not an error",
+      craft.vocabulary_stats([])["overall"] is None, "returns None overall")
+
 print()
 print("RESULT:", "ALL PASS" if ok else "FAILURES PRESENT")
 sys.exit(0 if ok else 1)
