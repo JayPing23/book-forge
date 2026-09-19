@@ -595,6 +595,89 @@ def vocabulary_stats(chapters, min_chapters=3, limit=25):
     }
 
 
+def hook_variety(chapters, run_threshold=3, window=10, window_threshold=4):
+    """Distribution of chapter-ending hooks, and runs of the same one.
+
+    `thread-ledger-reviewer` classifies every chapter's ending in order to
+    check HARD-002, and `book-write` records the answer in the chapter's
+    frontmatter. This reads it back.
+
+    It is the cheapest possible closure of a real gap: hook monotony is
+    invisible inside any single chapter — each ending is individually fine —
+    and only exists in the sequence. That is the same class of defect as
+    repeated phrasing, and like that check it needs no model to see.
+
+    Chapters with no recorded hook are counted as `unclassified` rather than
+    guessed at. A wrong label would corrupt exactly the distribution this
+    exists to report.
+    """
+    seq = []
+    for ch in chapters:
+        seq.append({
+            "chapter_id": ch.get("chapter_id"),
+            "type": (ch.get("hook_type") or "unclassified"),
+            "technique": (ch.get("hook_technique") or None),
+        })
+
+    types = Counter(s["type"] for s in seq)
+    techniques = Counter(s["technique"] for s in seq if s["technique"])
+
+    # Consecutive repeats of the same hook type.
+    runs = []
+    i = 0
+    while i < len(seq):
+        j = i
+        while j + 1 < len(seq) and seq[j + 1]["type"] == seq[i]["type"]:
+            j += 1
+        length = j - i + 1
+        if length >= run_threshold and seq[i]["type"] != "unclassified":
+            runs.append({
+                "type": seq[i]["type"],
+                "length": length,
+                "from": seq[i]["chapter_id"],
+                "to": seq[j]["chapter_id"],
+            })
+        i = j + 1
+
+    # Over-concentration inside any rolling window.
+    crowded = []
+    if len(seq) >= window:
+        for start in range(len(seq) - window + 1):
+            chunk = seq[start:start + window]
+            local = Counter(s["type"] for s in chunk if s["type"] != "unclassified")
+            for t, n in local.items():
+                if n >= window_threshold:
+                    crowded.append({
+                        "type": t,
+                        "count": n,
+                        "window": window,
+                        "from": chunk[0]["chapter_id"],
+                        "to": chunk[-1]["chapter_id"],
+                    })
+        # Collapse overlapping windows reporting the same type.
+        seen = set()
+        deduped = []
+        for c in sorted(crowded, key=lambda r: (-r["count"], r["from"])):
+            if c["type"] in seen:
+                continue
+            seen.add(c["type"])
+            deduped.append(c)
+        crowded = deduped
+
+    classified = sum(n for t, n in types.items() if t != "unclassified")
+    return {
+        "sequence": seq,
+        "by_type": [{"type": t, "count": n} for t, n in types.most_common()],
+        "by_technique": [{"technique": t, "count": n} for t, n in techniques.most_common()],
+        "runs": runs,
+        "crowded": crowded,
+        "classified": classified,
+        "reference": {"run_threshold": run_threshold,
+                      "window": window,
+                      "window_threshold": window_threshold},
+    }
+
+
 def analyze(chapters, character_names=None):
     return {
         "chapters_analyzed": len(chapters),
@@ -605,4 +688,5 @@ def analyze(chapters, character_names=None):
         "repeated_dialogue": repeated_dialogue(chapters),
         "confusable_names": confusable_names(character_names),
         "vocabulary": vocabulary_stats(chapters),
+        "hooks": hook_variety(chapters),
     }

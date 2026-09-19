@@ -244,12 +244,24 @@ Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
    far" snapshot) is a separate, later concern — see
    `/book-forge:book-export`, never built by concatenating files here.
 
+   Carry `hook_type` and `hook_technique` through from
+   `thread-ledger-reviewer`'s output. It classifies the chapter's ending
+   anyway in order to check HARD-002, so recording the answer costs nothing
+   and is what makes hook repetition visible across the manuscript — a
+   defect no per-chapter review can see, because every chapter's hook is
+   individually fine and the problem is that they are all the same one. If
+   the reviewer was skipped or returned nothing, omit both fields rather
+   than guessing; a wrong label is worse than a missing one, since the whole
+   point is the distribution.
+
    File shape:
    ```markdown
    ---
    chapter_id: "0012"
    title: "The Broken Oath"
    status: finalized
+   hook_type: crisis
+   hook_technique: unfinished-action
    provenance:
      ai_drafted_pct: 100
      human_revised_pct: 0

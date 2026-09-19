@@ -32,6 +32,52 @@ same one out of habit:
   must fit the character making it — a hook where the "right" answer is
   obvious isn't actually a hook.
 
+### Six closing techniques that cut across those types
+
+The five above name the *mechanism* a hook uses on a reader. These name the
+*move* the prose makes. They combine freely with the types — an image hook
+can carry a Crisis or an Emotion — and they exist as a separate list because
+reaching for the same move repeatedly is a habit that no amount of varying
+the underlying mechanism will hide.
+
+- **Unfinished action**: cut mid-motion. The blow is thrown and the chapter
+  ends before it lands. Cheap to overuse and very effective once.
+- **Ticking clock**: a deadline becomes explicit and short. Distinct from a
+  Crisis hook, where danger *arrives*; here nothing has happened yet and
+  that is the point.
+- **Subtext**: a line whose real meaning is plainly not its surface meaning,
+  left unexplained. The reader understands something the scene does not say.
+- **Image**: close on a concrete physical detail carrying the weight instead
+  of on a statement. Works when the image has been earned earlier; reads as
+  affectation when it hasn't.
+- **Echo**: a callback to an earlier line, object or gesture, recontextualised
+  by what has happened since. Requires a long memory and pays for it.
+- **Withholding**: deliberately omit the outcome the scene has been building
+  toward. The strongest of these and the easiest to abuse — a reader who
+  feels cheated rather than teased will not forgive it twice.
+
+## Chapter openings (what pulls a reader past the first line)
+
+A serial is judged at its openings as much as its endings, and monotony here
+is invisible while drafting one chapter and obvious to anyone reading ten in
+a row. `dashboard/craft.py` measures opening repetition mechanically; these
+are what to vary *toward*.
+
+- **Suspense dialogue**: open on a line of speech with no context, so the
+  reader reads on to learn who is talking and why it matters.
+- **Flash-forward fragment**: a glimpse of a later moment, then back.
+- **Countdown**: open on the time, distance or quantity remaining.
+- **Mysterious monologue**: interiority from an unidentified or unexpected
+  viewpoint.
+- **Contrast scene**: open somewhere tonally opposite to where the last
+  chapter ended — calm after carnage, or the reverse.
+- **Unfinished action**: open mid-motion, with the setup supplied afterwards.
+- **Image as foreshadowing**: open on a detail whose significance only
+  becomes clear later in the chapter.
+
+**Do not open consecutive chapters the same way**, and treat three of the
+same opening move inside any ten chapters as a habit worth breaking.
+
 **Placement**: Crisis, Desire, and Choice hooks are strongest as chapter
 endings — they're what pulls a reader into the next chapter. Mystery and
 Emotion hooks work well *inside* a chapter to keep a reader immersed
@@ -198,6 +244,17 @@ a city → a country → the setting's whole power structure).
 - Three or more of the same pattern back to back → rotate patterns or
   interleave with a Fire-strand beat (see the outline agents' strand
   balance) to avoid reader fatigue.
+
+## Attribution
+
+The six closing techniques and the seven opening moves above were informed by
+the hook taxonomy in
+[chinese-novelist-skill](https://github.com/PenglongHuang/chinese-novelist-skill)
+(MIT, © PenglongHuang), which catalogues thirteen chapter-ending and seven
+chapter-opening techniques for Chinese web fiction. They are restated here in
+this project's own terms and mapped onto its existing five-mechanism model
+rather than reproduced; the source is worth reading directly for its worked
+examples.
 
 ## Relationship to other components
 

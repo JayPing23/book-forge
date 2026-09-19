@@ -113,6 +113,32 @@ in the EPUB. This command produces Markdown; converting to EPUB/DOCX with
 correct navigation is a job for Calibre, Vellum, or Pandoc. Say so rather
 than producing something that looks finished but won't ingest cleanly.
 
+## Optional: cast manifest (`--cast`)
+
+When the author asks for a cast list, or is preparing the book for audiobook
+production, also write `export/cast-manifest.md`.
+
+The story bible already holds everything this needs — it is assembled, not
+generated. For each character with a Voice Profile, one row: name, role
+prominence (protagonist / recurring / minor, inferred from how many chapters
+they speak in), `speech_register` verbatim from the profile, and a one-line
+note on any vocal quality the prose has established (an accent, a habitual
+pace, a damaged voice).
+
+This exists because the same data serves two different purposes and only one
+of them was ever exposed. Voice Profiles were built so that
+`voice-consistency-reviewer` could check dialogue against a record. An
+audiobook producer or a text-to-speech pipeline needs precisely the same
+facts to cast and direct readers, and currently has to reconstruct them by
+reading the whole manuscript.
+
+**State plainly what it is not.** It is a casting reference, not a recording
+script: it does not attribute individual lines to speakers. Line-level
+attribution needs either a human pass or a model pass over the full
+manuscript, and guessing it from proximity would produce confident errors on
+exactly the crowded scenes where getting it right matters most — the same
+reason `dashboard/craft.py` reports dialogue statistics speaker-agnostically.
+
 ## Hard rules
 
 - Never modify a `manuscript/` chapter file — read-only.

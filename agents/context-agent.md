@@ -67,6 +67,16 @@ never overrides plot facts).
    on disk for the rare case where exact wording genuinely matters (a
    direct callback quoting an earlier line), but that's a deliberate
    single-file read, never a sweep.
+8b. **Order the brief by load-bearing weight, not by category.** What comes
+   first in a prompt carries the most influence on what gets written, and a
+   brief organised by tidy category order will lead with whatever section
+   happens to be listed first rather than with what this chapter most needs
+   to get right. If the chapter turns on one constraint — a character
+   knowing something they must not reveal, a world rule that makes the
+   obvious solution impossible, a promise the previous chapter made — that
+   belongs in the opening sentences, not in paragraph four because that is
+   where its category lives.
+
 9. **Pull style exemplars matching this chapter's scene types.** Look in
    `story-bible/style-exemplars/` for notes whose `scene_type` matches what
    this chapter actually calls for (a dialogue-heavy chapter pulls

@@ -180,6 +180,41 @@ check("overused needs spread across chapters",
 check("empty manuscript is not an error",
       craft.vocabulary_stats([])["overall"] is None, "returns None overall")
 
+# --- hook variety ----------------------------------------------------------
+# thread-ledger-reviewer classifies every chapter ending anyway; this reads it
+# back. Monotony is invisible per-chapter and only exists in the sequence.
+def _hch(i, t=None, tech=None):
+    d = {"chapter_id": "%04d" % i, "prose": "text"}
+    if t: d["hook_type"] = t
+    if tech: d["hook_technique"] = tech
+    return d
+
+hseq = ([_hch(i, "crisis", "unfinished-action") for i in range(1, 6)] +
+        [_hch(6, "mystery", "withholding"), _hch(7, "desire"), _hch(8, "emotion"),
+         _hch(9, "choice"), _hch(10, "mystery", "echo"), _hch(11)])
+hv = craft.hook_variety(hseq)
+varied = craft.hook_variety([_hch(1, "crisis"), _hch(2, "mystery"),
+                             _hch(3, "desire"), _hch(4, "emotion")])
+
+print()
+print("--- HOOK VARIETY ---")
+print("  types:", [(r["type"], r["count"]) for r in hv["by_type"]])
+print("  runs :", [(r["type"], r["length"]) for r in hv["runs"]])
+
+check("consecutive same-hook run detected",
+      any(r["length"] == 5 and r["type"] == "crisis" for r in hv["runs"]),
+      "%d run(s)" % len(hv["runs"]))
+check("crowded window flags the cluster",
+      any(r["type"] == "crisis" for r in hv["crowded"]), "%d" % len(hv["crowded"]))
+check("unrecorded hook counted as unclassified, not guessed",
+      hv["classified"] == 10, "%d of %d" % (hv["classified"], len(hseq)))
+check("unclassified never starts a run",
+      all(r["type"] != "unclassified" for r in hv["runs"]), "ok")
+check("a varied book reports no runs",
+      varied["runs"] == [], "%d" % len(varied["runs"]))
+check("empty manuscript is safe",
+      craft.hook_variety([])["by_type"] == [], "ok")
+
 print()
 print("RESULT:", "ALL PASS" if ok else "FAILURES PRESENT")
 sys.exit(0 if ok else 1)

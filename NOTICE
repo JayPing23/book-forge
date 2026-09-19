@@ -6,6 +6,13 @@ This program incorporates modified code from webnovel-writer
 lingfengQAQ, licensed under the GNU General Public License v3.0.
 See LICENSE for the full license text.
 
+The hook taxonomy in skills/payoff-craft draws on
+chinese-novelist-skill (https://github.com/PenglongHuang/chinese-novelist-skill),
+Copyright (C) PenglongHuang, licensed under the MIT License. No text is
+reproduced from it; its thirteen chapter-ending and seven chapter-opening
+techniques were restated in this project's own terms and mapped onto its
+existing hook model. Credited here because MIT requires attribution.
+
 This program bundles the "humanizer" skill
 (https://github.com/blader/humanizer), Copyright (C) blader,
 licensed under the MIT License. See skills/humanizer/LICENSE for

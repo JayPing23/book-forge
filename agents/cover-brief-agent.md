@@ -67,6 +67,35 @@ Write to `story-bible/cover-brief.md` with these sections:
   composition wholesale.
 - **Handoff note**: explicit reminder that this is a brief for an artist
   or a separate image tool, not a finished asset.
+- **Prompt block**: the same brief restated as an ordered, comma-separated
+  keyword line, for pasting into an image generator.
+
+### Why the prompt block is ordered, and ordered that way
+
+Prose is what an artist needs; it is not what an image model consumes well.
+Image generators weight terms by **position** — earlier terms carry more
+influence — so a brief that reads beautifully as paragraphs and is pasted in
+whole will emphasise whatever happens to come first, which is usually genre
+throat-clearing rather than the subject.
+
+Write the block in this order, most load-bearing first:
+
+1. **Subject and action** — who, doing what.
+2. **Composition and framing** — shot type, focal point, aspect ratio.
+3. **Lighting and mood.**
+4. **Palette** — the named colours, dominant first, accent last.
+5. **Medium and finish** — painted, photographic, line-and-wash.
+6. **Negative terms**, separated under a `avoid:` label — what must not
+   appear (visible text, extra limbs, modern objects in a period setting).
+
+Keep it to roughly 40-60 comma-separated terms. Longer dilutes: every term
+added reduces the weight of the ones that mattered.
+
+**Do not name a living artist or a specific copyrighted work as a style
+term.** Comp titles belong in the prose section above, where they read as
+reference points for a human. In a generation prompt the same words are an
+instruction to imitate, which is a different act. Describe the *qualities*
+that make the comp work instead.
 
 ## Hard rules
 

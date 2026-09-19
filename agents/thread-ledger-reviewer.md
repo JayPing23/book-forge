@@ -86,6 +86,19 @@ schedule.
 1. Read the prior chapter's final scene/paragraph specifically, and
    identify its hook type and content (per `payoff-craft`'s taxonomy) —
    this is what HARD-002 checks against.
+
+   **Record what you identified.** Put the hook type of *this* chapter's
+   ending into your output as `hook_type` (one of `crisis`, `mystery`,
+   `desire`, `emotion`, `choice`), and the closing technique as
+   `hook_technique` (`unfinished-action`, `ticking-clock`, `subtext`,
+   `image`, `echo`, `withholding`, or `plain` when none of them applies).
+
+   You already work this out every chapter in order to do your job, and
+   until now it was discarded the moment you finished. Recorded, it costs
+   nothing extra and makes hook repetition visible across the manuscript —
+   which is a defect no single-chapter review can see, since every chapter's
+   hook is individually fine and the problem is that they are all the same
+   one. `book-write` writes it into the chapter's frontmatter at finalize.
 2. Read the drafted chapter.
 3. List every plot-thread note in `story-bible/plot-threads/` (query via
    `plot-threads.base` if that's faster) with status `open`, sorted by

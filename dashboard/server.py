@@ -464,6 +464,10 @@ class Workspace:
                 "chapter_id": fm.get("chapter_id") or path.stem,
                 "number": chapter_number(fm.get("chapter_id")) or chapter_number(path.stem),
                 "prose": craft.extract_prose(text),
+                # Recorded by thread-ledger-reviewer at finalize; absent on
+                # older chapters, which hook_variety counts as unclassified.
+                "hook_type": fm.get("hook_type"),
+                "hook_technique": fm.get("hook_technique"),
             })
         entries.sort(key=lambda c: (c["number"] is None, c["number"]))
         # Character names come from the story bible so the confusable-name

@@ -145,6 +145,19 @@ const MATTR_HINT = (
   </>
 );
 
+const HOOKS_HINT = (
+  <>
+    How each chapter ends, and whether the book keeps reaching for the same
+    move. The thread-ledger reviewer already classifies every chapter's ending
+    to check the broken-promise invariant — this reads back what it recorded,
+    so it costs nothing extra. Hook monotony is invisible inside any one
+    chapter (each ending is individually fine) and only exists in the
+    sequence, which is why no per-chapter review can catch it. Chapters
+    written before this was recorded show as <em>unclassified</em> rather than
+    being guessed at.
+  </>
+);
+
 const SENTENCE_HINT = (
   <>
     Spread of sentence lengths. Uniform length is the texture of machine prose;
@@ -201,6 +214,9 @@ export default function Craft({ project }) {
   const nameClashes = data.confusable_names || [];
   const vocab = data.vocabulary?.overall;
   const overused = data.vocabulary?.overused || [];
+  const hooks = data.hooks;
+  const hookRuns = hooks?.runs || [];
+  const hookCrowded = hooks?.crowded || [];
 
   return (
     <div>
@@ -611,6 +627,104 @@ export default function Craft({ project }) {
                 </div>
               </>
             )}
+          </>
+        )}
+      </Card>
+
+      <Card
+        title="Chapter endings"
+        hint={HOOKS_HINT}
+        note="A run or a crowded window is an observation, not a verdict. A siege arc that ends five chapters running on escalating danger may be exactly right — the question is whether it was chosen."
+      >
+        {!hooks || !hooks.classified ? (
+          <Empty>
+            No chapter has a recorded hook type yet. These are written at
+            finalize, so they appear once chapters go through the full pipeline.
+          </Empty>
+        ) : (
+          <>
+            <div className="stat-row" style={{ marginBottom: 18 }}>
+              <StatTile
+                label="Classified"
+                value={hooks.classified}
+                sub={`of ${hooks.sequence.length} chapters`}
+                hint={<>Chapters carrying a recorded hook type. The rest are counted as unclassified and excluded from every figure here.</>}
+              />
+              <StatTile
+                label="Distinct types"
+                value={hooks.by_type.filter((t) => t.type !== "unclassified").length}
+                sub="of 5 possible"
+                hint={<>Crisis, mystery, desire, emotion and choice. Using only one or two across a long stretch is what a run or crowded window is pointing at.</>}
+              />
+              <StatTile
+                label="Repeat runs"
+                value={hookRuns.length}
+                tone={hookRuns.length ? "warn" : "ok"}
+                hint={<>Stretches of {hooks.reference.run_threshold}+ consecutive chapters ending on the same hook type.</>}
+              />
+              <StatTile
+                label="Crowded windows"
+                value={hookCrowded.length}
+                tone={hookCrowded.length ? "warn" : "ok"}
+                hint={<>One hook type used {hooks.reference.window_threshold}+ times inside any {hooks.reference.window}-chapter window, even when not consecutive.</>}
+              />
+            </div>
+
+            {(hookRuns.length > 0 || hookCrowded.length > 0) && (
+              <div className="table-scroll" style={{ marginBottom: 18 }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Pattern</th>
+                      <th scope="col">Hook type</th>
+                      <th scope="col" className="num">Count</th>
+                      <th scope="col">Chapters</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {hookRuns.map((r, i) => (
+                      <tr key={"r" + i}>
+                        <td>consecutive run</td>
+                        <td className="is-warn">{r.type}</td>
+                        <td className="num">{r.length}</td>
+                        <td>{r.from}–{r.to}</td>
+                      </tr>
+                    ))}
+                    {hookCrowded.map((c, i) => (
+                      <tr key={"c" + i}>
+                        <td>crowded window</td>
+                        <td className="is-warn">{c.type}</td>
+                        <td className="num">{c.count}</td>
+                        <td>{c.from}–{c.to}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Hook type</th>
+                    <th scope="col" className="num">Chapters</th>
+                    <th scope="col">Closing technique</th>
+                    <th scope="col" className="num">Uses</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {hooks.by_type.map((t, i) => (
+                    <tr key={t.type}>
+                      <td>{t.type}</td>
+                      <td className="num">{t.count}</td>
+                      <td>{hooks.by_technique[i]?.technique ?? ""}</td>
+                      <td className="num">{hooks.by_technique[i]?.count ?? ""}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </>
         )}
       </Card>

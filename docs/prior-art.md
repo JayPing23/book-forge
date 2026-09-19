@@ -46,6 +46,25 @@ hundred times in two hundred different sentences and pass completely. Added:
 filter-word rate, adverb rate, over-used content words, and vocabulary
 variety as a moving-average type-token ratio.
 
+### Hook taxonomy — from chinese-novelist-skill (MIT)
+
+Its `hook-techniques.md` catalogues thirteen chapter-ending techniques and
+seven chapter-opening ones. Our `payoff-craft` had five hook *mechanisms*
+(crisis, mystery, desire, emotion, choice) and almost nothing on openings.
+
+Taken: six closing *techniques* that cut across the mechanisms — unfinished
+action, ticking clock, subtext, image, echo, withholding — and the seven
+opening moves, restated in our terms and credited in `NOTICE`. The openings
+matter more than they look: `craft.py` already *measured* opening monotony
+(our own test manuscript opened four consecutive chapters with "The") while
+nothing taught opening variety.
+
+The larger win was second-order. Naming the taxonomy made hook repetition
+**mechanically trackable**, and `thread-ledger-reviewer` was already
+classifying every chapter's ending to check HARD-002 and discarding the
+answer. Recording it closed part of the long-orphaned "pattern fatigue"
+soft-guidance item at no per-chapter cost.
+
 ### Show-don't-tell as a blocking check — corroborated, not sourced
 
 `chinese-novelist-skill` (MIT) makes "用动作和对话表现" — show through action
@@ -110,14 +129,44 @@ Chinese web-novel idiom — is not what this project writes.
 
 ---
 
-## Not relevant despite the names
+## Not about novel writing — but not useless
 
-- **QuickNovel** — Android app for *reading* and downloading novels.
-- **NovelAI-tag-generator** — prompt tags for *image* generation. Its licence
-  also forbids commercial derivatives, so it could not be used regardless.
-- **koishijs/novelai-bot** — *image* generation chat bot.
-- **BookForge-Studio** — audiobook text-to-speech. Note the **name
-  collision** with this project.
+These four are not novel-writing tools. Filed as irrelevant on a first pass,
+then re-read, because a tool that sits *next to* the problem often knows
+something about it. Three yielded a concrete change. None of their code is
+used; the licence on NovelAI-tag-generator forbids commercial derivatives,
+which is a further reason nothing was taken from it but the observation.
 
-The "NovelAI" in three of those refers to the image-generation service, not
-to novel writing.
+**NovelAI-tag-generator** and **koishijs/novelai-bot** — prompt tags and a
+bot for *image* generation. Their shared premise: generators weight terms by
+**position**, so tag order changes the output. `cover-brief-agent` wrote
+beautiful prose for a human artist and the author was expected to paste it
+into an image tool, where the leading paragraph is genre throat-clearing
+rather than the subject. It now also emits an ordered prompt block — subject,
+composition, lighting, palette, medium, negatives — capped at 40-60 terms,
+because each extra term dilutes the ones that mattered. Comp titles stay in
+the prose section: naming a work as a reference point for a human and naming
+it as a style token in a generator are different acts.
+
+The same insight generalised inward. `context-agent` now orders the writing
+brief by what the chapter most needs to get right rather than by tidy
+category order, for exactly the reason tag order matters.
+
+**BookForge-Studio** — audiobook text-to-speech, built on reusable voice
+"actors" assigned to characters. It needs the same facts our Voice Profiles
+already hold, which existed only so `voice-consistency-reviewer` could check
+dialogue against a record. `/book-forge:book-export --cast` now assembles
+them into a casting reference. It deliberately stops short of line-level
+speaker attribution, for the same reason `craft.py` reports dialogue
+speaker-agnostically: guessing from proximity fails worst on crowded scenes.
+
+Also worth knowing: it is a **name collision** with this project.
+
+**QuickNovel** — an Android app for *reading* novels, aggregating 40+ sites
+including Royal Road and Scribble Hub. Nothing taken, but it is a useful
+reminder of where a finished serial ends up and what a reader's app expects
+of it. Our platform profiles cover three sites; its source list is a ready
+survey of the rest if more are ever wanted.
+
+The "NovelAI" in two of these refers to the image-generation service, not to
+novel writing.

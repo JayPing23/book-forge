@@ -121,6 +121,31 @@ no external check (no cited world rule, no cited genre section, no named
 payoff window) — it's pure assertion, and pure assertions are the
 easiest category to hide a real problem behind.
 
+## A note on the soft-guidance examples
+
+Three of the examples above — missing micro-payoff, flat emotional arc, and
+pattern fatigue — have historically had **no reviewer whose scope could raise
+them**. They were named in this taxonomy as though they were checked, and
+nothing checked them.
+
+**Pattern fatigue is now partly closed**, for hooks specifically.
+`thread-ledger-reviewer` already classified every chapter's ending in order
+to check HARD-002 and then discarded the answer; it now records `hook_type`
+and `hook_technique`, `book-write` writes them into the chapter's
+frontmatter, and `dashboard/craft.py`'s `hook_variety` reports runs of the
+same hook and over-concentration inside a rolling window. No model call, no
+new reviewer, no per-chapter cost — the classification was already being
+made.
+
+That is the shape a fix here should take where possible: find the place the
+judgement is already happening and stop throwing it away.
+
+**Still unowned**: missing micro-payoff, flat emotional arc, and pattern
+fatigue in forms other than hook repetition (a repeated *scene shape*, a
+recurring cool-point structure). These are recorded as open rather than
+quietly dropped, because a taxonomy that lists checks nobody performs is
+worse than one that admits the gap.
+
 ## Debt tracking
 
 Every Override Contract is logged to
