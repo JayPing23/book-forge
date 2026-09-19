@@ -100,6 +100,25 @@ schedule.
    hook is individually fine and the problem is that they are all the same
    one. `book-write` writes it into the chapter's frontmatter at finalize.
 2. Read the drafted chapter.
+
+   While reading, note whether it contains **any micro-payoff** — the light,
+   frequent "this chapter wasn't wasted" beat, per `payoff-craft`'s seven
+   types: information, relationship, ability, resource, recognition,
+   emotional, or clue. You already own that skill's taxonomy for hooks;
+   this is the same taxonomy's other half, and it had no reviewer at all.
+
+   A chapter containing **none of the seven** is a `medium` soft finding.
+   Not a shortfall against the genre-tuned frequency guidance — that is
+   advice, and counting beats against a target would turn a pacing note
+   into a quota. The finding is for the floor case only: a chapter where
+   nothing was learned, nobody moved, nothing was gained or recognised and
+   no thread advanced. That chapter can pass every other check in the gate,
+   because nothing in it is *wrong*; it is simply a chapter the reader did
+   not need.
+
+   A deliberate breather or transition chapter is a legitimate answer here,
+   which is why this is soft and `TRANSITIONAL_SETUP` is its natural
+   rationale. Genre governs how much weight to give it, per `qa-standards`.
 3. List every plot-thread note in `story-bible/plot-threads/` (query via
    `plot-threads.base` if that's faster) with status `open`, sorted by
    `payoff_chapter`.

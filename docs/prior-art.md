@@ -164,11 +164,24 @@ Two were not, and both have been acted on:
 - **"User intent and durable constraints"** as a standing dimension. Closest
   match here is the drafting brief, which now orders itself by what the
   chapter most needs to get right rather than by category.
-- **"Promised versus delivered emotion."** This is our long-orphaned "flat
-  emotional arc" soft-guidance item, and an independent project treating it
-  as *always inspected* is a point in favour of eventually giving it an
-  owner. Still unowned; now recorded as such in `qa-standards` rather than
-  listed as though it were checked.
+- **"Promised versus delivered emotion."** This was our long-orphaned "flat
+  emotional arc" item, and an independent project treating it as *always
+  inspected* was the argument for finally giving it an owner. **Now built**,
+  on `motivation-agency-reviewer`.
+
+  The phrasing carried the whole design. *Is this scene moving?* is the
+  reader-simulation this project refuses — taste varies by reader and a
+  confident verdict would be invention. But **promised versus delivered** is
+  a consistency question of exactly the same kind as HARD-002's broken
+  promise: the story spent chapters establishing that something mattered,
+  this chapter resolved it, and the only question is whether the response
+  was proportionate to *the story's own* valuation. That is answerable from
+  the record, and it never asks whether the writing is good.
+
+  Soft and never blocking, because deliberate flatness is a real technique —
+  shock, dissociation, a character who cannot afford to feel it yet — and a
+  check that could block would punish precisely the restraint that makes
+  those scenes work.
 
 Its genuinely new idea was not a dimension at all: the matrix **adapts by
 form**. Comedy may accept coincidence; mystery demands fair-play evidence;

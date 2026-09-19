@@ -124,9 +124,32 @@ easiest category to hide a real problem behind.
 ## A note on the soft-guidance examples
 
 Three of the examples above — missing micro-payoff, flat emotional arc, and
-pattern fatigue — have historically had **no reviewer whose scope could raise
+pattern fatigue — historically had **no reviewer whose scope could raise
 them**. They were named in this taxonomy as though they were checked, and
-nothing checked them.
+nothing checked them. All three now have an owner:
+
+| Example | Owner | Shape of the check |
+|---|---|---|
+| Missing micro-payoff | `thread-ledger-reviewer` | A chapter containing **none** of `payoff-craft`'s seven micro-payoff types. A floor, not a quota — counting beats against the genre-tuned frequency guidance would turn advice into a target |
+| Flat emotional arc | `motivation-agency-reviewer` | **Promised versus delivered weight**: did the chapter treat as mattering what the story already established as mattering |
+| Pattern fatigue | `thread-ledger-reviewer` + `craft.py` | Hook type recorded per chapter; runs and crowded windows reported mechanically |
+
+**Why "flat emotional arc" is phrased the way it is.** The obvious version of
+that check — *is this scene moving?* — is the reader-simulation this project
+deliberately does not do. Whether prose lands emotionally is taste, it varies
+by reader, and a confident verdict would be invention wearing a reviewer's
+frontmatter.
+
+The version that is buildable asks a **consistency** question instead, of
+exactly the same kind as HARD-002's broken promise: the story spent chapters
+establishing that something mattered, then this chapter resolved it — was the
+response proportionate to the story's *own* valuation? That is answerable
+from the record. It never asks whether the writing is good.
+
+All three are soft and never blocking. Deliberate flatness is a real
+technique — shock, dissociation, a character who cannot afford to feel it yet
+— and a breather chapter with no micro-payoff is a legitimate choice. A check
+that could block would punish exactly the restraint that makes those work.
 
 **Pattern fatigue is now partly closed**, for hooks specifically.
 `thread-ledger-reviewer` already classified every chapter's ending in order
@@ -140,11 +163,10 @@ made.
 That is the shape a fix here should take where possible: find the place the
 judgement is already happening and stop throwing it away.
 
-**Still unowned**: missing micro-payoff, flat emotional arc, and pattern
-fatigue in forms other than hook repetition (a repeated *scene shape*, a
-recurring cool-point structure). These are recorded as open rather than
-quietly dropped, because a taxonomy that lists checks nobody performs is
-worse than one that admits the gap.
+**Still unowned**: pattern fatigue in forms *other than* hook repetition — a
+repeated scene shape, a recurring cool-point structure. Recorded as open
+rather than quietly dropped, because a taxonomy that lists checks nobody
+performs is worse than one that admits the gap.
 
 ## The standard adapts by form
 
