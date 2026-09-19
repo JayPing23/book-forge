@@ -27,6 +27,19 @@ Given a project name as `$ARGUMENTS`:
    `${CLAUDE_PLUGIN_ROOT}/templates/standalone-project/` into
    `./projects/$ARGUMENTS/`, including the `.gitkeep` files, the
    `story-bible/characters|world|plot-threads|style-exemplars|archive/`
+
+   Character notes carry, in addition to the motivation and voice fields:
+   a **`possessions`** list (what they carry, wear or own that the story has
+   named, each with its current state) and a **`relationships`** map (other
+   named characters, and where the two currently stand in one line). Both
+   are maintained by `deconstruction-agent` from finalized chapters and
+   checked by `continuity-reviewer`.
+
+   They exist because objects and relationships are the two things a long
+   serial loses track of most reliably, and for the same reason: each
+   individual mention feels too small to record, so nothing records it, and
+   the contradiction only becomes visible fifty chapters later when it is
+   expensive to fix.
    subfolders, `outline/volume-summaries/`, the `plot-threads.base` and
    `style-exemplars.base` views, and the
    `.story-system`/`.project-memory` dot-directories.

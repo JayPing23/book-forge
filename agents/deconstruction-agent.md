@@ -144,7 +144,19 @@ whatever it scored afterwards.
    **Why this works**: {one or two sentences — what makes this passage a
    strong example of its scene type, specifically}
    ```
-3. **Cross-project promotion is `/book-forge:book-learn`'s job, not
+3. **Update possessions and relationship state.** When a chapter gives a
+   character an object, takes one away, breaks or spends one, update that
+   character's `possessions` list. When a chapter moves two characters'
+   standing — a rupture, a debt incurred, a trust extended or withdrawn —
+   update the `relationships` entry on **both** notes, not just the
+   viewpoint character's.
+
+   Updating only one side is the failure that makes this worth doing at all:
+   a relationship recorded asymmetrically is worse than one not recorded,
+   because `continuity-reviewer` will then find a contradiction inside the
+   bible itself and have no way to tell which side is right.
+
+4. **Cross-project promotion is `/book-forge:book-learn`'s job, not
    yours** — you only ever write to this project's own
    `story-bible/style-exemplars/`. Whether an exemplar is distinctive
    enough to promote to the shared vault (as a *description* of technique,

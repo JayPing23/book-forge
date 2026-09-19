@@ -120,6 +120,24 @@ genre-configurable and the project's genre template may set it explicitly.
    chapter serving a named later payoff), `EDITORIAL_INTENT` (weighted
    heaviest, as always).
 
+   **The specificity test.** Alongside told-versus-shown, ask of a suspect
+   passage: *could this sentence sit unchanged in a different story, about
+   different people?* A line that would work just as well in any novel of
+   this genre is generic by definition, and generic prose is what a reader
+   means by "it reads like AI" even when nothing in it is wrong.
+
+   This is distinct from `voice-consistency-reviewer`, which asks whether a
+   line matches its speaker's recorded profile. A line can match the profile
+   perfectly and still be a line *anyone* could have said in *any* book. The
+   profile test needs a record to check against; this one needs none — it
+   asks whether the prose is attached to this story at all.
+
+   Detail is the usual tell. Ask what a given description is carrying:
+   evidence, relationship, pressure, or voice. Detail carrying none of those
+   is furniture, and furniture is what fills a chapter that has nothing to
+   say. Treat a passage of unattached detail as `medium` under GATE-002
+   rather than blocking, unless the whole chapter reads that way.
+
    **Do not rewrite the passage for the author.** Name the beat that was
    summarised and say it needs staging. Supplying the replacement prose
    would make this reviewer an author, and its voice would propagate.

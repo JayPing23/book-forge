@@ -146,6 +146,31 @@ recurring cool-point structure). These are recorded as open rather than
 quietly dropped, because a taxonomy that lists checks nobody performs is
 worse than one that admits the gap.
 
+## The standard adapts by form
+
+The invariants above are fixed; what counts as a violation of the *soft*
+guidance is not. A reviewer applying one register's standards to another
+form produces confident, wrong findings — and an author who has to contract
+around them every chapter learns to stop reading the findings at all.
+
+- **Comedy** may accept coincidence and exaggeration where setup, rhythm and
+  character logic carry the joke. A causal-logic finding against a punchline
+  is usually the reviewer missing the form.
+- **Romance** prioritises relationship movement, subtext and emotional
+  credibility over plot velocity.
+- **Mystery** requires evidence visibility and fair inference — a withheld
+  clue the reader could not have seen is a real defect here and merely a
+  pacing choice elsewhere.
+- **Commercial serials** need continuation pressure, but not at the cost of
+  a scene that completes.
+- **Literary work** may trade plot velocity for perception, language or
+  thematic movement — but not for empty repetition, which is not the same
+  thing and is the excuse most often made for it.
+
+Check `project.json`'s `genre` and `depth_dial` before deciding that a soft
+finding applies. This does not soften the Hard Invariants or the gating
+tier: a chapter nobody can follow is unreadable in every form.
+
 ## Debt tracking
 
 Every Override Contract is logged to

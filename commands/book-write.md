@@ -224,6 +224,18 @@ Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
    as a final pass (style polish only — this step doesn't re-litigate
    plot/continuity, which already passed).
 
+   **Never revise by deleting flagged words.** `dashboard/craft.py` reports
+   filter-word rates, adverb rates and over-used words, and the tempting
+   response to a high number is to strip every occurrence. Do not. Those
+   figures are counts with no verdict attached, and prose edited to satisfy
+   a counter reads worse than prose that scored badly — transitions,
+   metaphors and three-part lists are legitimate and each flagged word is a
+   real English word that appears in good writing.
+
+   The repair for a high filter-word rate is to restore concrete cause and
+   character-specific behaviour, which usually removes the hedges as a
+   side-effect. The repair is never a find-and-replace.
+
    **Do not treat this step as the dialogue safety net.** `humanizer`
    carries no dialogue guidance at all — it is phrasing and rhythm at the
    prose level. `light-novel-style` does carry the dialogue rules, but by

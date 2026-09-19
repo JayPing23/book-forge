@@ -65,6 +65,47 @@ classifying every chapter's ending to check HARD-002 and discarding the
 answer. Recording it closed part of the long-orphaned "pattern fatigue"
 soft-guidance item at no per-chapter cost.
 
+### The specificity test — from inkos's de-slop rubric
+
+`inkos-story-deslop/references/semantic-cleanup.md` asks seven diagnostic
+questions of suspect prose. Most map onto checks we already had. One did not:
+**"could the sentence fit any character or story unchanged?"**
+
+That is sharper than anything we were asking. `voice-consistency-reviewer`
+tests a line against its speaker's recorded profile — a line can pass that
+perfectly and still be a line anyone could have said in any book. The
+specificity test needs no record at all; it asks whether the prose is
+attached to this story. It now sits with `clarity-reviewer` alongside
+GATE-002, together with its companion question about whether a given detail
+carries evidence, relationship, pressure or voice, or is merely furniture.
+
+The rubric's closing warning was the more valuable half, because it names a
+risk this project created for itself: *do not mechanically delete
+transitions, metaphors, three-part lists, or every occurrence of a flagged
+word.* Our `craft.py` reports filter-word and over-use rates, and the obvious
+response to a bad number is a find-and-replace that makes the prose worse.
+`book-write` now says so explicitly — the repair for a high filter-word rate
+is restoring concrete cause and character-specific behaviour, which removes
+the hedges as a side-effect.
+
+### Character state: possessions and relationships — from AI_NovelGenerator and MuMuAINovel
+
+Two independent projects model per-character state we did not.
+`AI_NovelGenerator`'s character-state schema tracks **items** (each named
+possession with its condition) and a **relationship network** (named, pairwise,
+with current standing); `MuMuAINovel` ships relationship mapping as a headline
+feature. Our character notes held motivation and voice in isolation, and
+`continuity-reviewer` checked quantities — money, distances, ages — but never
+objects or relationship state.
+
+Both are now tracked on character notes, maintained by `deconstruction-agent`
+and checked by `continuity-reviewer`. These are the two things a long serial
+loses track of most reliably, and for the same reason: each mention feels too
+small to record, so nothing records it, and the contradiction surfaces fifty
+chapters later when it is expensive to fix. Relationships are written to
+**both** characters' notes, because a relationship recorded asymmetrically is
+worse than one not recorded at all.
+
 ### Show-don't-tell as a blocking check — corroborated, not sourced
 
 `chinese-novelist-skill` (MIT) makes "用动作和对话表现" — show through action
@@ -106,16 +147,35 @@ padding: a story that "could have been run through in less than 10k words" at
 five times that length. A pipeline whose core loop is "make this longer"
 seems likely to produce that.
 
-### A 37-dimension continuity audit
+### ~~A 37-dimension continuity audit~~ — the number was wrong
 
-`inkos` audits continuity across 37 named dimensions. We have seven
-reviewers. More dimensions are not obviously better: each is a dispatch or a
-prompt section, every chapter, forever. Our seven were consolidated
-deliberately, and two of them (GATE-001, GATE-002) exist because of evidence
-about what makes readers *stop*, not because of what is easy to enumerate.
+Recorded here as a correction. An earlier pass refused a "37-dimension
+continuity audit" from `inkos` on cost grounds. Reading the actual artifact —
+`packages/core/skills/inkos-story-review/references/review-matrix.md` — it is
+a **seven-item** matrix, almost exactly the size of our own gate. The refusal
+was made against a number that does not exist.
 
-Worth revisiting if real use shows gaps — that would be evidence, which is
-the bar everything else here had to meet.
+Mapped against our reviewers, five of its seven are covered: continuity and
+causal coherence, character motivation and voice, information and evidence
+consistency, prose clarity and viewpoint stability, and scene function.
+
+Two were not, and both have been acted on:
+
+- **"User intent and durable constraints"** as a standing dimension. Closest
+  match here is the drafting brief, which now orders itself by what the
+  chapter most needs to get right rather than by category.
+- **"Promised versus delivered emotion."** This is our long-orphaned "flat
+  emotional arc" soft-guidance item, and an independent project treating it
+  as *always inspected* is a point in favour of eventually giving it an
+  owner. Still unowned; now recorded as such in `qa-standards` rather than
+  listed as though it were checked.
+
+Its genuinely new idea was not a dimension at all: the matrix **adapts by
+form**. Comedy may accept coincidence; mystery demands fair-play evidence;
+literary work may trade velocity for perception "but not for empty
+repetition". That is now stated in `qa-standards` — soft findings are judged
+against the project's genre and Depth Dial, while Hard Invariants and the
+gating tier stay fixed.
 
 ### Multi-provider model routing
 

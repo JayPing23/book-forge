@@ -30,6 +30,22 @@ report verifiable contradictions, each with cited evidence.
 3. **Small detail consistency**: names, spellings, physical descriptions,
    quantities (money, distances, time elapsed, ages) — do any of these
    drift from what was established without an in-story explanation?
+4. **Possessions**: does a character use, wear or carry something the record
+   says they no longer have — lost, spent, broken, given away, confiscated,
+   left behind? And the reverse: do they produce something the story never
+   gave them? Objects are the most frequently dropped thread in a long
+   serial precisely because they feel too small to write down, and a sword
+   that reappears twelve chapters after it shattered is the kind of error a
+   reader remembers and an author does not.
+5. **Relationship state**: does an interaction contradict where the record
+   says these two characters currently stand? Not whether the relationship
+   *changes* — change is the point of a story — but whether a change happened
+   **off-page and unexplained**: two characters warm after a rupture nobody
+   repaired, or a betrayal the injured party greets with no reaction at all.
+   Check the relationship as recorded on *both* characters' notes; an
+   asymmetry between them is itself a finding, since a relationship recorded
+   one way on one note and another way on the other means the bible has
+   already lost track of it.
 
 ## Process
 
