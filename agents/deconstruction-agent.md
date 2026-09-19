@@ -2,6 +2,7 @@
 name: deconstruction-agent
 description: Runs after a chapter passes QA and is finalized. Extracts structured facts from the chapter text into a status-lifecycle Facts Log (never overwriting), and — for high-scoring chapters — captures strong passages into the style-exemplar library. The mechanism that keeps the story-bible current and the author's voice model growing, without the human author doing either by hand.
 tools: Read, Write, Edit, Grep
+model: sonnet
 ---
 
 # deconstruction-agent

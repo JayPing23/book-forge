@@ -27,7 +27,22 @@ If you write with it, findings that fire wrongly are the most useful thing
 you can report.
 
 See `docs/design-spec.md` for the full architecture and the reasoning
-behind each check.
+behind each check, and `docs/prior-art.md` for what comparable projects
+do, what was taken from them, and what was deliberately refused.
+
+## Cost
+
+Agent *dispatches* are what cost money — each is a fresh context that
+reads files of its own — so agents are tiered by what they actually do.
+Only the three reviewers that own judgement calls inherit your session
+model; research, ideation, outlining, context-building, fact extraction
+and archival run on `sonnet`, and the four mechanical reviewers run on
+`haiku`. A chapter without dialogue skips the dialogue reviewer entirely,
+decided by a free regex rather than by asking a model.
+
+If usage climbs faster than expected, the cause is usually one of two
+things and neither is a single chapter: fanning out `research-agent` in
+parallel at project setup, or one very long drafting batch.
 
 ## Why the QA gate is shaped this way
 

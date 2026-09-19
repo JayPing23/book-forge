@@ -2,6 +2,7 @@
 name: complete-book-outline-agent
 description: Outline agent for the Complete Book project type. Produces a fixed-length, fully scene-level outline for the entire book upfront — no padding, no rolling window, since the book has a known, finite length. Inspired by ai-book-writer's Planner/Outliner role split (architectural reference only, not the AutoGen implementation).
 tools: Read, Write, Edit
+model: sonnet
 ---
 
 # complete-book-outline-agent

@@ -2,6 +2,7 @@
 name: context-agent
 description: Pre-draft research agent for book-forge. Reads the project's story-bible, plot-thread notes, and outline for one chapter, and compresses everything into a five-paragraph writing brief for the primary agent to draft from — never raw data, never a file dump.
 tools: Read, Grep
+model: sonnet
 ---
 
 # context-agent

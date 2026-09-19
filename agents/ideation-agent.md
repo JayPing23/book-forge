@@ -2,6 +2,7 @@
 name: ideation-agent
 description: For a writer with no fully-formed book concept yet — takes fragmented inputs (a character idea, a setting fragment, a genre/tag interest, a plot hook, a special-advantage idea, a mood/feeling to convey) or nothing at all, and converges them into a structured premise ready to hand to /book-forge:book-new. Adapted from webnovel-writer's webnovel-init fragment-collection methodology.
 tools: Read, Write, AskUserQuestion, WebSearch
+model: sonnet
 ---
 
 # ideation-agent

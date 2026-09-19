@@ -74,7 +74,11 @@ Between chapters, check cheaply: did a chapter escalate (stop and surface),
 did the outline window run low (extend), did a volume just close (offer
 compaction). After the last one, report and update the session log.
 
-**Respect the token reality.** A long web novel is months of work across
+**Respect the token reality.** What costs money is agent *dispatches*, not the length of anything anyone types. Each dispatch is a fresh context that re-reads files of its own. The pipeline is tiered so only the three judgement reviewers inherit the session model; everything else runs on `sonnet` or `haiku`.
+
+If the author reports burning through their allowance unexpectedly fast, the cause is almost always one of two things, and neither is a single chapter: a **parallel fan-out of `research-agent`** at project setup (each copy reads the open web — dispatch it once, sequentially), or a **long uninterrupted drafting batch**. On a plan with a rolling 5-hour window rather than a large monthly budget, several short sessions beat one long one.
+
+A long web novel is months of work across
 many sessions — nobody finishes 1,000 chapters in one sitting, and trying
 to burns the session's budget without a clean stopping point. If the
 author asks for a large batch, say plainly how far you expect to get, and

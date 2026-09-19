@@ -2,6 +2,7 @@
 name: research-agent
 description: Runs automatically at project creation. Does craft research (how the genre is actually structured), market research (what's currently trending vs. oversaturated on the target platform), and reference-novel pattern extraction — never full-text reproduction of copyrighted work, only transferable structural/technique patterns.
 tools: Read, Write, WebSearch, WebFetch
+model: sonnet
 ---
 
 # research-agent

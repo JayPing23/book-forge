@@ -367,6 +367,7 @@ Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
   correctly rather than restarting from scratch.
 - Never let a reviewer's revision loop exceed `max_attempts_per_check`.
   Exhausting the cap is escalation, never silent success.
+- **Know what a chapter costs before promising a batch.** One chapter is the drafting pass plus up to nine dispatches — `context-agent`, seven reviewers, `deconstruction-agent` — each a fresh context reading files of its own. The dialogue pre-gate in step 5 removes one of the three most expensive on any chapter without dialogue. Revision loops re-run only the failing reviewer, never the whole gate, for the same reason.
 - Never run `deconstruction-agent` on a chapter that hasn't passed all seven
   checks — extraction assumes the chapter is settled fact, not a draft that
   might still change.

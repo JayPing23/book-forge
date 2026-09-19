@@ -2,6 +2,7 @@
 name: continuity-archivist
 description: Keeps long-project memory bounded — compresses closed volumes into summaries and consolidates story-bible Facts Logs so a chapter-950 session costs the same context as a chapter-50 one. Runs on volume boundaries, not per chapter. Never deletes anything; archives only.
 tools: Read, Write, Edit, Grep
+model: sonnet
 ---
 
 # continuity-archivist

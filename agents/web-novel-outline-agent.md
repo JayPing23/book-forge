@@ -2,6 +2,7 @@
 name: web-novel-outline-agent
 description: Outline agent for the Web Novel project type. Produces a three-layer outline (skeleton, volume, chapter) using a hybrid-flow approach — the whole book gets a skeleton and volume plan, but scene-level chapter detail is only maintained for the next 10-20 chapters at a time and refilled as writing progresses.
 tools: Read, Write, Edit
+model: sonnet
 ---
 
 # web-novel-outline-agent
