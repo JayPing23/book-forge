@@ -256,8 +256,8 @@ Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
    far" snapshot) is a separate, later concern — see
    `/book-forge:book-export`, never built by concatenating files here.
 
-   Carry `hook_type` and `hook_technique` through from
-   `thread-ledger-reviewer`'s output. It classifies the chapter's ending
+   Carry `scene_types` through from `context-agent`'s brief, and
+   `hook_type` / `hook_technique` from `thread-ledger-reviewer`'s output. It classifies the chapter's ending
    anyway in order to check HARD-002, so recording the answer costs nothing
    and is what makes hook repetition visible across the manuscript — a
    defect no per-chapter review can see, because every chapter's hook is
@@ -274,6 +274,7 @@ Two of the seven carry gating invariants: `dialogue-naturalness-reviewer`
    status: finalized
    hook_type: crisis
    hook_technique: unfinished-action
+   scene_types: [action, tension]
    provenance:
      ai_drafted_pct: 100
      human_revised_pct: 0

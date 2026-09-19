@@ -678,6 +678,79 @@ def hook_variety(chapters, run_threshold=3, window=10, window_threshold=4):
     }
 
 
+def scene_variety(chapters, run_threshold=3, window=10, window_threshold=5):
+    """Repetition in the *shape* of chapters, not their content.
+
+    `context-agent` determines which scene types a chapter calls for in order
+    to retrieve matching style exemplars, and `book-write` records the answer.
+    This reads it back — the same zero-cost pattern as `hook_variety`.
+
+    What it catches: a serial where every chapter is action-then-tension, or
+    where `description` has not appeared in thirty chapters. Each chapter is
+    individually fine; the monotony exists only in the sequence, which is why
+    no per-chapter reviewer can see it.
+
+    What it does not catch: whether the drafted prose actually delivered those
+    scene types. These are the types the chapter was *planned* around. That is
+    the more useful end of the problem — structural repetition originates in
+    planning, and an outline is cheaper to change than a chapter.
+    """
+    seq = []
+    for ch in chapters:
+        types = ch.get("scene_types") or []
+        if isinstance(types, str):
+            types = [t.strip() for t in types.strip("[]").split(",") if t.strip()]
+        seq.append({
+            "chapter_id": ch.get("chapter_id"),
+            "types": sorted(set(t.lower() for t in types if t)),
+        })
+
+    flat = Counter(t for s_ in seq for t in s_["types"])
+    shapes = Counter(" + ".join(s_["types"]) for s_ in seq if s_["types"])
+
+    # Consecutive chapters built from the identical set of scene types.
+    runs = []
+    i = 0
+    while i < len(seq):
+        j = i
+        while (j + 1 < len(seq) and seq[j + 1]["types"] == seq[i]["types"]
+               and seq[i]["types"]):
+            j += 1
+        length = j - i + 1
+        if length >= run_threshold:
+            runs.append({
+                "shape": " + ".join(seq[i]["types"]),
+                "length": length,
+                "from": seq[i]["chapter_id"],
+                "to": seq[j]["chapter_id"],
+            })
+        i = j + 1
+
+    # Scene types the book has stopped using: present early, absent since.
+    ALL = ["dialogue", "action", "description", "transition",
+           "emotion", "tension", "comedy"]
+    classified = [s_ for s_ in seq if s_["types"]]
+    dormant = []
+    if len(classified) >= window:
+        recent = classified[-window:]
+        recent_types = set(t for s_ in recent for t in s_["types"])
+        for t in ALL:
+            if flat.get(t) and t not in recent_types:
+                dormant.append({"type": t,
+                                "total_uses": flat[t],
+                                "absent_for": len(recent)})
+
+    return {
+        "by_type": [{"type": t, "count": n} for t, n in flat.most_common()],
+        "by_shape": [{"shape": k, "count": n} for k, n in shapes.most_common(10)],
+        "runs": runs,
+        "dormant": dormant,
+        "classified": len(classified),
+        "chapters": len(seq),
+        "reference": {"run_threshold": run_threshold, "window": window},
+    }
+
+
 def analyze(chapters, character_names=None):
     return {
         "chapters_analyzed": len(chapters),
@@ -689,4 +762,5 @@ def analyze(chapters, character_names=None):
         "confusable_names": confusable_names(character_names),
         "vocabulary": vocabulary_stats(chapters),
         "hooks": hook_variety(chapters),
+        "scenes": scene_variety(chapters),
     }

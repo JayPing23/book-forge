@@ -106,6 +106,27 @@ chapters later when it is expensive to fix. Relationships are written to
 **both** characters' notes, because a relationship recorded asymmetrically is
 worse than one not recorded at all.
 
+### The pattern worth naming
+
+Three separate gaps closed the same way, and the rule generalises:
+**the judgement was already being made and thrown away.**
+
+- `deconstruction-agent` banked style exemplars that nothing read.
+- `thread-ledger-reviewer` classified every chapter's ending to check
+  HARD-002, then discarded the classification.
+- `context-agent` determined each chapter's scene types to retrieve matching
+  exemplars, then discarded those too.
+
+None of the three fixes cost a new dispatch, because none required a new
+judgement — only that an existing one be written down. Recording the hook
+classification closed hook pattern fatigue; recording the scene types closed
+structural pattern fatigue. Both are defects no per-chapter reviewer can see,
+because every individual chapter is fine and the monotony exists only in the
+sequence.
+
+This is now the first thing to check before adding a reviewer to close a gap:
+does something in the pipeline already know the answer?
+
 ### Show-don't-tell as a blocking check — corroborated, not sourced
 
 `chinese-novelist-skill` (MIT) makes "用动作和对话表现" — show through action

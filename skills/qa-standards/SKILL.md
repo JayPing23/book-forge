@@ -132,7 +132,8 @@ nothing checked them. All three now have an owner:
 |---|---|---|
 | Missing micro-payoff | `thread-ledger-reviewer` | A chapter containing **none** of `payoff-craft`'s seven micro-payoff types. A floor, not a quota — counting beats against the genre-tuned frequency guidance would turn advice into a target |
 | Flat emotional arc | `motivation-agency-reviewer` | **Promised versus delivered weight**: did the chapter treat as mattering what the story already established as mattering |
-| Pattern fatigue | `thread-ledger-reviewer` + `craft.py` | Hook type recorded per chapter; runs and crowded windows reported mechanically |
+| Pattern fatigue (hooks) | `thread-ledger-reviewer` + `craft.py` | Hook type recorded per chapter; runs and crowded windows reported mechanically |
+| Pattern fatigue (structure) | `context-agent` + `craft.py` | Scene types recorded per chapter; repeated chapter shapes and dormant scene types reported mechanically |
 
 **Why "flat emotional arc" is phrased the way it is.** The obvious version of
 that check — *is this scene moving?* — is the reader-simulation this project
@@ -163,10 +164,20 @@ made.
 That is the shape a fix here should take where possible: find the place the
 judgement is already happening and stop throwing it away.
 
-**Still unowned**: pattern fatigue in forms *other than* hook repetition — a
-repeated scene shape, a recurring cool-point structure. Recorded as open
-rather than quietly dropped, because a taxonomy that lists checks nobody
-performs is worse than one that admits the gap.
+**Nothing in this taxonomy is now unowned.** Every soft-guidance example
+above has a reviewer or a mechanical check that can raise it.
+
+Three of the four closures shared one shape, and it is worth stating as a
+rule for future work: **the judgement was already being made and thrown
+away.** `deconstruction-agent` banked exemplars nothing read;
+`thread-ledger-reviewer` classified every chapter's ending to check HARD-002
+and discarded it; `context-agent` determined each chapter's scene types to
+retrieve exemplars and discarded those too. None of the three fixes cost a
+new dispatch, because none of them required a new judgement — only that an
+existing one be written down.
+
+Before adding a reviewer to close a gap, check whether something in the
+pipeline already knows the answer.
 
 ## The standard adapts by form
 

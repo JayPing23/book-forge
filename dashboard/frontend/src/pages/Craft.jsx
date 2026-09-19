@@ -158,6 +158,20 @@ const HOOKS_HINT = (
   </>
 );
 
+const SCENES_HINT = (
+  <>
+    Repetition in the <em>shape</em> of chapters rather than their content.
+    The context agent works out which scene types a chapter calls for in order
+    to pull matching style exemplars, and that answer is now recorded — so
+    this costs nothing extra. It catches a serial where every chapter is
+    action-then-tension, or where <em>description</em> has not appeared in
+    thirty chapters. Each chapter is individually fine; the monotony exists
+    only in the sequence. Note these are the types a chapter was
+    <em> planned</em> around, not a post-mortem of the drafted prose — which is
+    the more useful end, since an outline is cheaper to change than a chapter.
+  </>
+);
+
 const SENTENCE_HINT = (
   <>
     Spread of sentence lengths. Uniform length is the texture of machine prose;
@@ -217,6 +231,9 @@ export default function Craft({ project }) {
   const hooks = data.hooks;
   const hookRuns = hooks?.runs || [];
   const hookCrowded = hooks?.crowded || [];
+  const scenes = data.scenes;
+  const sceneRuns = scenes?.runs || [];
+  const dormant = scenes?.dormant || [];
 
   return (
     <div>
@@ -720,6 +737,103 @@ export default function Craft({ project }) {
                       <td className="num">{t.count}</td>
                       <td>{hooks.by_technique[i]?.technique ?? ""}</td>
                       <td className="num">{hooks.by_technique[i]?.count ?? ""}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </Card>
+
+      <Card
+        title="Chapter shape"
+        hint={SCENES_HINT}
+        note="A repeated shape is an observation, not a verdict. A siege arc genuinely is action and tension for five chapters running; the question is whether that was chosen."
+      >
+        {!scenes || !scenes.classified ? (
+          <Empty>
+            No chapter has recorded scene types yet. These are written at
+            finalize, from the brief the context agent builds.
+          </Empty>
+        ) : (
+          <>
+            <div className="stat-row" style={{ marginBottom: 18 }}>
+              <StatTile
+                label="Classified"
+                value={scenes.classified}
+                sub={`of ${scenes.chapters} chapters`}
+                hint={<>Chapters with recorded scene types. The rest are excluded from every figure here.</>}
+              />
+              <StatTile
+                label="Distinct shapes"
+                value={scenes.by_shape.length}
+                hint={<>Unique combinations of scene types across the book. One shape dominating a long stretch is what a run points at.</>}
+              />
+              <StatTile
+                label="Repeated shapes"
+                value={sceneRuns.length}
+                tone={sceneRuns.length ? "warn" : "ok"}
+                hint={<>Stretches of {scenes.reference.run_threshold}+ consecutive chapters built from the identical set of scene types.</>}
+              />
+              <StatTile
+                label="Dormant types"
+                value={dormant.length}
+                tone={dormant.length ? "warn" : "ok"}
+                hint={<>Scene types the book has used before but not once in the last {scenes.reference.window} chapters. Not necessarily wrong — a book may genuinely be done with comedy — but worth knowing it stopped.</>}
+              />
+            </div>
+
+            {(sceneRuns.length > 0 || dormant.length > 0) && (
+              <div className="table-scroll" style={{ marginBottom: 18 }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col">Observation</th>
+                      <th scope="col">Detail</th>
+                      <th scope="col" className="num">Count</th>
+                      <th scope="col">Where</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sceneRuns.map((r, i) => (
+                      <tr key={"sr" + i}>
+                        <td>repeated shape</td>
+                        <td className="is-warn">{r.shape}</td>
+                        <td className="num">{r.length}</td>
+                        <td>{r.from}–{r.to}</td>
+                      </tr>
+                    ))}
+                    {dormant.map((d, i) => (
+                      <tr key={"sd" + i}>
+                        <td>dormant type</td>
+                        <td className="is-warn">{d.type}</td>
+                        <td className="num">{d.total_uses}</td>
+                        <td>unused for {d.absent_for} chapters</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Shape</th>
+                    <th scope="col" className="num">Chapters</th>
+                    <th scope="col">Scene type</th>
+                    <th scope="col" className="num">Uses</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scenes.by_shape.map((sh, i) => (
+                    <tr key={sh.shape}>
+                      <td>{sh.shape}</td>
+                      <td className="num">{sh.count}</td>
+                      <td>{scenes.by_type[i]?.type ?? ""}</td>
+                      <td className="num">{scenes.by_type[i]?.count ?? ""}</td>
                     </tr>
                   ))}
                 </tbody>

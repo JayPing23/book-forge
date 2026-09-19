@@ -101,6 +101,21 @@ never overrides plot facts).
    scene type. Do not mix a `reference-derived` technique note into the
    passage count at all — it is guidance, not an exemplar.
 
+   **Record the scene types you matched on.** Return them in the brief as
+   `scene_types` — the subset of `dialogue`, `action`, `description`,
+   `transition`, `emotion`, `tension`, `comedy` that this chapter actually
+   calls for. You determine this anyway in order to retrieve anything at
+   all, and until now it was discarded the moment the brief was written.
+
+   Recorded, it makes **structural monotony** visible: a serial where every
+   chapter is the same shape — action then tension, over and over — is
+   repetitive in a way no single chapter can reveal, because each one is
+   individually fine. Note what this measures and what it does not: these
+   are the scene types the chapter is *planned* to contain, not a
+   post-mortem of the drafted prose. That is the more useful end. Structural
+   repetition originates in planning, and catching it before drafting means
+   fixing an outline rather than rewriting chapters.
+
    **Cap at 2-3 passages, scene-type-matched.** This cost lands on every
    single draft, so it must stay small and relevant; dumping the library
    into the brief would bloat every chapter for no extra signal. Prefer

@@ -215,6 +215,43 @@ check("a varied book reports no runs",
 check("empty manuscript is safe",
       craft.hook_variety([])["by_type"] == [], "ok")
 
+# --- scene variety ---------------------------------------------------------
+# context-agent determines scene types to retrieve exemplars; this reads the
+# recorded answer back. Structural monotony lives in the sequence only.
+def _sch(i, types): return {"chapter_id": "%04d" % i, "scene_types": types}
+
+sseq = ([_sch(0, ["comedy", "dialogue"])] +
+        [_sch(i, ["action", "tension"]) for i in range(1, 6)] +
+        [_sch(6, ["dialogue", "emotion"]), _sch(7, ["description"]),
+         _sch(8, ["action", "dialogue"]), _sch(9, ["tension"]),
+         _sch(10, ["dialogue"]), _sch(11, ["action"]), _sch(12, [])])
+sv = craft.scene_variety(sseq)
+
+print()
+print("--- SCENE VARIETY ---")
+print("  shapes :", [(r["shape"], r["count"]) for r in sv["by_shape"][:3]])
+print("  runs   :", [(r["shape"], r["length"]) for r in sv["runs"]])
+print("  dormant:", [(r["type"], r["absent_for"]) for r in sv["dormant"]])
+
+check("identical chapter-shape run detected",
+      any(r["length"] >= 3 and r["shape"] == "action + tension" for r in sv["runs"]),
+      "%d run(s)" % len(sv["runs"]))
+check("scene type gone dormant is surfaced",
+      any(r["type"] == "comedy" for r in sv["dormant"]), "%d" % len(sv["dormant"]))
+check("chapter with no scene types excluded",
+      sv["classified"] == sv["chapters"] - 1,
+      "%d of %d" % (sv["classified"], sv["chapters"]))
+check("YAML list-as-string frontmatter parses",
+      craft.scene_variety([{"chapter_id": "0001",
+                            "scene_types": "[action, tension]"}])["classified"] == 1,
+      "string form ok")
+check("varied book reports no shape runs",
+      craft.scene_variety([_sch(1, ["action"]), _sch(2, ["dialogue"]),
+                           _sch(3, ["emotion"]), _sch(4, ["tension"])])["runs"] == [],
+      "ok")
+check("empty manuscript is safe",
+      craft.scene_variety([])["by_type"] == [], "ok")
+
 print()
 print("RESULT:", "ALL PASS" if ok else "FAILURES PRESENT")
 sys.exit(0 if ok else 1)

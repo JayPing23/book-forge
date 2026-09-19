@@ -468,6 +468,7 @@ class Workspace:
                 # older chapters, which hook_variety counts as unclassified.
                 "hook_type": fm.get("hook_type"),
                 "hook_technique": fm.get("hook_technique"),
+                "scene_types": fm.get("scene_types"),
             })
         entries.sort(key=lambda c: (c["number"] is None, c["number"]))
         # Character names come from the story bible so the confusable-name
